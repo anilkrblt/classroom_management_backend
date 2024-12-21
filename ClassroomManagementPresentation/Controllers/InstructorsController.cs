@@ -19,11 +19,26 @@ namespace class_management_backend.controllers
         }
 
 
-
+        /*
         [HttpGet("department/{id:int}")]
         public async Task<ActionResult<IEnumerable<InstructorDTO>>> GetInstructorsByDepartmentId([FromRoute]int departmentId)
         {
-            var instructors=_servisManager.InstructorService.Get
+            var instructors=_servisManager.InstructorService.
+        }
+        */
+        [HttpGet("lecture/{id:int}")]
+        public async Task<ActionResult<IEnumerable<InstructorDto>>> GetInstructorForLectureSession([FromRoute]int instructorId)
+        {
+            var instructor=_servisManager.InstructorService.GetInstructorForLectureSessionsAsync(instructorId,false);
+            return Ok(instructor);
+        }
+
+
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<InstructorDto>> GetInstructor([FromRoute]int instructorId)
+        {
+            var instructor = await _servisManager.InstructorService.GetInstructorByIdAsync(instructorId, false);
+            return Ok(instructor);
         }
     }
 }
