@@ -112,24 +112,6 @@ namespace Service
             return _mapper.Map<RoomDto>(examRoom);
         }
 
-//GetExamsByDepartmentId
-
-
-/*
-        public async IEnumerable<ExamDto> GetExamsByStudentIdAsync(int studentId, bool trackChanges)
-        {
-            var student=await _repository.Student.GetStudentAsync(studentId,trackChanges);
-            if(student is null)
-                throw new StudentNotFoundException(studentId);
-            var exams= await _repository.Exam.GetAllExamsAsync(trackChanges);
-            var studentEnrollments = await _repository.Enrollment.GetEnrollmentByStudentIdsAsync(trackChanges);
-            exams.Where(e =>e.Code.Contains());
-        }
-*/
-
-
-
-
 
         private async Task<Exam> GetExamAndCheckIfItExists(int examId, bool trackChanges)
         {
@@ -147,9 +129,19 @@ namespace Service
             return examClass;
         }
 
-        public IEnumerable<ExamDto> GetExamsByStudentIdAsync(int studentId, bool trackChanges)
+        public async Task<IEnumerable<ExamDto>> GetExamsByStudentIdAsync(int studentId, bool trackChanges)
         {
-            throw new NotImplementedException();
+            var student=await _repository.Student.GetStudentAsync(studentId,trackChanges);
+            if(student is null)
+                throw new StudentNotFoundException(studentId);
+            var studentEnrollments = await _repository.Enrollment.GetEnrollmentsByStudentIdAsync(studentId,trackChanges);
+            var studentLectures = studentEnrollments.Select(e => e.Code);
+            var exams = await _repository.Exam.GetAllExamsAsync(trackChanges);
+            var studentExams = exams.Where(e => studentLectures.Contains(e.Code));
+            return _mapper.Map<IEnumerable<ExamDto>>(studentExams);
+            /*var exams= await _repository.Exam.GetAllExamsAsync(trackChanges);
+            var studentEnrollments = await _repository.Enrollment.GetEnrollmentByStudentIdsAsync(trackChanges);
+            exams.Where(e =>e.Code.Contains());*/
         }
 
         public async Task<IEnumerable<ExamDto>> GetExamsByDepartmentId(int departmentId, bool trackChanges)

@@ -13,7 +13,7 @@ namespace Service.Contracts
         Task<ExamDto> GetExamByIdAsync(int examId, bool trackChanges);
         Task<IEnumerable<ExamDto>> GetExamsByIdsAsync(IEnumerable<int> ids, bool trackChanges);
 
-        IEnumerable<ExamDto> GetExamsByStudentIdAsync(int studentId, bool trackChanges);
+        Task<IEnumerable<ExamDto>> GetExamsByStudentIdAsync(int studentId, bool trackChanges);
 
         Task DeleteExamAsync(int examId, bool trackChanges);
 

@@ -5,41 +5,39 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Service.Contracts;
 
 
 
-namespace backend.controllers
+namespace ClassroomManagementPresentation.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/requests")]
     public class RequestsController : ControllerBase
     {
-        /*
-        private readonly ILogger<RequestsController> _logger;
-        private readonly AppDbContext _context;
 
-        public RequestsController(ILogger<RequestsController> logger, AppDbContext context)
+        private readonly IServiceManager _servisManager;
+
+        public RequestsController(ILogger<RequestsController> logger, IServiceManager serviceManager)
         {
-            _logger = logger;
-            _context = context;
+            _servisManager = serviceManager;
         }
 
 
 
-        [HttpGet]
+        [HttpGet()]
         public IActionResult GetAllRequests()
         {
-            var requests = _context.Requests.ToList();
-            if (requests is null)
-            {
-                return NotFound();
-            }
-
-
+            var requests=_servisManager.RequestService.GetAllRequestsAsync(false);
             return Ok(requests);
         }
 
-
+        [HttpGet("request/{id:int}")]
+        public async Task<IActionResult> GetRequestsByRoomId([FromRoute(Name ="id")]int roomId)
+        {
+            var request=await _servisManager.RequestService.GetRequestsByRoomId(roomId,false,false);
+            return Ok(request);
+        }
 
         /*
         Route	Method
