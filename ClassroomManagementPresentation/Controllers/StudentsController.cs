@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Entities.Models;
+using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 
 namespace backend.controllers
@@ -17,37 +18,25 @@ namespace backend.controllers
         [HttpGet]
         public IActionResult GetAllStudent()
         {
-            var sudents = context.Students;
+            var sudents = _serviceManager.StudentService.GetAllStudent(false);
             return Ok(sudents);
         }
 
         [HttpGet("{id:int}")]
         public IActionResult GetStudentById([FromRoute(Name ="id")] int id)
         {
-            var student = context.Students.Where(b => b.StudentId.Equals(id)).SingleOrDefault();
-
-            if (student is null)
-                return NotFound();
+            var student = _serviceManager.StudentService.GetStudentById(id, false);
             return Ok(student);
-
         }
+
 
         [HttpGet("department/{departmentid:int}")]
-        public async Task<ActionResult<IEnumerable<Student>>> GetStudentsByDepartmentId(int departmentid)
+        public ActionResult<IEnumerable<Student>> GetStudentsByDepartmentId(int departmentid)
         {
 
-            var students = await context.Students.Where(s => s.DepartmentId==departmentid).ToListAsync();
-
-
-            if(students is null || !students.Any())
-            {
-                return NotFound(new {message="No students found for this department."});
-            }
+            var students = _serviceManager.StudentService.GetStudentsByDepartmentId(departmentid, false);
             return Ok(students);
         }
-
-
-
 
     }
 }

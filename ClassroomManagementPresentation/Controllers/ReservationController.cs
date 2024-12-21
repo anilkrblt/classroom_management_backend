@@ -1,10 +1,6 @@
-using System;
-using AutoMapper;
-using backend.controllers;
-using backend.Dto;
-using backend.models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Service.Contracts;
+using Shared.DataTransferObjects;
 
 namespace class_management_backend.controllers
 {
@@ -13,55 +9,19 @@ namespace class_management_backend.controllers
 
     public class ReservationController : ControllerBase
     {
-        
-        private readonly AppDbContext context;
-        private readonly IMapper mapper;
-        public ReservationController(AppDbContext context, IMapper mapper)
+        private readonly IServiceManager _serviceManager;
+        public ReservationController(IServiceManager serviceManager)
         {
-            this.context = context;
-            this.mapper = mapper;
+            _serviceManager = serviceManager;
         }
 
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ReservationDto>>> GetReservations()
         {
-            var reservations = await context.Reservations
-                .Include(r => r.Room)
-                .Include(r => r.Instructor)  // ApprovedBy yerine Instructor'ı include et
-                .Include(r => r.LectureReservations)
-                .Include(r => r.ClubReservations)
-                .ToListAsync();
+            var reservations = await _serviceManager.ReservationService.GetAllReservationsAsync(false);
 
-            var reservationsDTO = reservations.Select(r => new ReservationDto
-            {
-                Id = r.ReservationId,
-                EventDate = r.EventDate,
-                StartTime = r.StartTime.ToString("HH:mm"), // Saat formatı ekleyin
-                EndTime = r.EndTime.ToString("HH:mm"), // Saat formatı ekleyin
-                Description = r.Description,
-                RoomId = r.RoomId,
-                Approver = r.Instructor != null ? new ApproverDto
-                {
-                    InstructorId = r.Instructor.InstructorId,
-                    Instructor = r.Instructor.Name // Null kontrolü burada
-                } : null,  // Eğer Instructor null ise null döndürecektir
-                           // LectureReservations ve ClubReservations için ilişkilendirilmiş detayları döndürme
-                LectureReservations = r.LectureReservations.Select(lr => new LectureReservationDto
-                {
-                    ReservationId = lr.ReservationId,
-                    InstructorId = lr.InstructorId,
-                    Reservation = lr.Reservation != null ? lr.Reservation.ToString() : "No Reservation" // Null kontrolü ekle
-                }).ToList(),
-                ClubReservations = r.ClubReservations.Select(cr => new ClubReservationDto
-                {
-                    ReservationId = cr.ReservationId,
-                    ClubId = cr.ClubId,
-                    Reservation = cr.Reservation != null ? cr.Reservation.ToString() : "No Reservation" // Null kontrolü ekle
-                }).ToList()
-            }).ToList();
-
-            return Ok(reservationsDTO);
+            return Ok(reservations);
         }
 
 
@@ -587,7 +547,7 @@ namespace class_management_backend.controllers
 
 
         [HttpDelete("deletelecturereservation/{reservationId}")]
-       
+
         public async Task<IActionResult> DeleteLectureReservation(int reservationId)
         {
             try
