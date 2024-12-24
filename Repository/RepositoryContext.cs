@@ -1,6 +1,7 @@
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Repository.Configuration;
+using Repository.Configuration;
 
 namespace Repository
 {
@@ -25,6 +26,14 @@ namespace Repository
             modelBuilder.ApplyConfiguration(new EnrollmentConfiguration());
             modelBuilder.ApplyConfiguration(new InstructorConfiguration());
             modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+            modelBuilder.ApplyConfiguration(new DepartmentConfiguration());
+            modelBuilder.ApplyConfiguration(new NotificationConfiguration());
+            modelBuilder.ApplyConfiguration(new NotificationRecipientConfiguration());
+            modelBuilder.ApplyConfiguration(new RequestConfiguration());
+            modelBuilder.ApplyConfiguration(new ReservationConfiguration());
+            modelBuilder.ApplyConfiguration(new RoomConfiguration());
+            modelBuilder.ApplyConfiguration(new StudentConfiguration());
+            modelBuilder.ApplyConfiguration(new BuildingConfiguration());
 
         }
 
@@ -47,7 +56,5 @@ namespace Repository
         public DbSet<NotificationRecipient>? NotificationRecipients { get; set; }
         public DbSet<Notification>? Notifications { get; set; }
         public DbSet<ExamSession>? ExamSessions { get; set; }
-
-
     }
 }
