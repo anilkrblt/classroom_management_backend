@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Repository.Configuration
 {
-    public class CompanyConfiguration : IEntityTypeConfiguration<Building>
+    public class BuildingConfiguration : IEntityTypeConfiguration<Building>
     {
         public void Configure(EntityTypeBuilder<Building> builder)
         {
