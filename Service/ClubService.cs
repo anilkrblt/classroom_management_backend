@@ -1,93 +1,106 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Contracts;
-using Entities.Exceptions;
-using Entities.Models;
-using NLog;
-using Service.Contracts;
 using Shared.DataTransferObjects;
+using Service.Contracts;
+using Contracts;
+using AutoMapper;
+using Entities.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Service
 {
     public class ClubService : IClubService
     {
-
-
-        private readonly IRepositoryManager _repository;
-        private readonly ILogger _logger;
+        private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
+        
 
-
-        public ClubService(IRepositoryManager repository,ILogger logger,IMapper mapper)
+        public ClubService(IRepositoryManager repositoryManager, IMapper mapper)
         {
-            _repository = repository;
-            _logger = logger;
-            _mapper=mapper;
+            _repositoryManager = repositoryManager;
+            _mapper = mapper;
         }
 
-        public async Task<ClubDto> CreateClub(ClubDto clubForCreation, bool trackChanges)
-        {
-            var clubEntity=_mapper.Map<Club>(clubForCreation);
-            _repository.Club.CreateClub(clubEntity);
-            await _repository.SaveAsync();
-            var clubToReturn=_mapper.Map<ClubDto>(clubEntity);
-            return clubToReturn;
-        }
-
-        public async Task DeleteClubAsync(int clubId, bool trackChanges)
-        {
-            var club=await GetClubAndCheckIfItExists(clubId,trackChanges);
-            _repository.Club.DeleteClub(club);
-            await _repository.SaveAsync();
-        }
-
+        // Get all clubs
         public async Task<IEnumerable<ClubDto>> GetAllClubsAsync(bool trackChanges)
         {
-            var clubs=await _repository.Club.GetAllClubsAsync(trackChanges);
-            var clubsDto=_mapper.Map<IEnumerable<ClubDto>>(clubs);
-            return clubsDto;
+            var clubs = await _repositoryManager.Club.GetAllClubsAsync(trackChanges);
+            return _mapper.Map<IEnumerable<ClubDto>>(clubs);
         }
 
+        // Get a specific club by ID
         public async Task<ClubDto> GetClubByIdAsync(int clubId, bool trackChanges)
         {
-            var club=await GetClubAndCheckIfItExists(clubId,trackChanges);
-            var clubDto=_mapper.Map<ClubDto>(club);
-            return clubDto;
+            var club = await _repositoryManager.Club.GetClubAsync(clubId, trackChanges);
+
+            if (club == null)
+                throw new KeyNotFoundException($"Club with ID {clubId} not found.");
+
+            return _mapper.Map<ClubDto>(club);
         }
 
-        public async Task<IEnumerable<ClubDto>> GetClubsByIdsAsync(IEnumerable<int> ids, bool trackChanges)
+        // Get members of a specific club
+        public async Task<IEnumerable<StudentDto>> GetClubMembersAsync(int clubId, bool trackChanges)
         {
-            if (ids is null)
-                throw new IdParametersBadRequestException();
+            var club = await _repositoryManager.Club.GetClubAsync(clubId, trackChanges);
 
-            var clubEntities=await _repository.Club.GetByIdsAsync(ids,trackChanges);
-            if (ids.Count() != clubEntities.Count())
-                throw new CollectionByIdsBadRequestException();
+            if (club == null)
+                throw new KeyNotFoundException($"Club with ID {clubId} not found.");
 
-            var clubsToReturn = _mapper.Map<IEnumerable<ClubDto>>(clubEntities);
+            var members = await _repositoryManager.ClubMembership.GetAllClubMembershipsAsync(trackChanges);
+            var studentIds = members.Where(m => m.ClubId == clubId).Select(m => m.StudentId);
 
-            return clubsToReturn;
+            var students = await _repositoryManager.Student.GetAllStudentsAsync(trackChanges);
+            var clubMembers = students.Where(s => studentIds.Contains(s.StudentId));
 
-
+            return _mapper.Map<IEnumerable<StudentDto>>(clubMembers);
         }
 
-        public async Task UpdateClubAsync(int clubId, ClubDto clubForUpdate, bool trackChanges)
+        // Update club manager (president)
+        public async Task UpdateClubManagerAsync(int clubId, int studentId)
         {
-            var club=await GetClubAndCheckIfItExists(clubId,trackChanges);
-            _mapper.Map(clubForUpdate, club);
-            await _repository.SaveAsync();
+            var club = await _repositoryManager.Club.GetClubAsync(clubId, true);
 
+            if (club == null)
+                throw new KeyNotFoundException($"Club with ID {clubId} not found.");
+
+            var student = await _repositoryManager.Student.GetStudentAsync(studentId, false);
+            if (student == null)
+                throw new KeyNotFoundException($"Student with ID {studentId} not found.");
+
+            club.PresidentId = studentId;
+            await _repositoryManager.SaveAsync();
         }
 
-        private async Task<Club> GetClubAndCheckIfItExists(int clubId, bool trackChanges)
+        // Create a new club
+        public async Task CreateClubAsync(ClubDto clubDto)
         {
-            var club = await _repository.Club.GetClubAsync(clubId, trackChanges);
-            if (club is null)
-                throw new ClubNotFoundException(clubId);
-            return club;
+            var club = _mapper.Map<Club>(clubDto);
+            _repositoryManager.Club.CreateClub(club);
+            await _repositoryManager.SaveAsync();
+        }
+
+        // Update an existing club
+        public async Task UpdateClubAsync(int clubId, ClubDto clubDto)
+        {
+            var club = await _repositoryManager.Club.GetClubAsync(clubId, true);
+
+            if (club == null)
+                throw new KeyNotFoundException($"Club with ID {clubId} not found.");
+
+            _mapper.Map(clubDto, club);
+            await _repositoryManager.SaveAsync();
+        }
+
+        // Delete a club
+        public async Task DeleteClubAsync(int clubId)
+        {
+            var club = await _repositoryManager.Club.GetClubAsync(clubId, true);
+
+            if (club == null)
+                throw new KeyNotFoundException($"Club with ID {clubId} not found.");
+
+            await _repositoryManager.Club.DeleteClubAsync(club);
+            await _repositoryManager.SaveAsync();
         }
     }
 }

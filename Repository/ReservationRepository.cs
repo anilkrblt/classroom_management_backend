@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,35 +13,60 @@ namespace Repository
         {
         }
 
+        // Get all reservations
         public async Task<IEnumerable<Reservation>> GetAllReservationsAsync(bool trackChanges)
         {
-            return await FindAll(trackChanges).OrderBy(r => r.EventDate) .ToListAsync();
+            return await FindAll(trackChanges)
+                .OrderBy(r => r.EventDate) // Reservations sorted by event date
+                .ToListAsync();
         }
 
+        // Get a specific reservation by ID
         public async Task<Reservation> GetReservationAsync(int reservationId, bool trackChanges)
         {
-            return await FindByCondition(r => r.ReservationId == reservationId, trackChanges).SingleOrDefaultAsync();
+            return await FindByCondition(r => r.ReservationId == reservationId, trackChanges)
+                .SingleOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Reservation>> GetByIdsAsync(IEnumerable<int> ids, bool trackChanges)
+        // Get reservations by user ID (teacher or club president)
+        public async Task<IEnumerable<Reservation>> GetReservationsByUserId(int userId, bool trackChanges)
         {
-            return await FindByCondition(r => ids.Contains(r.ReservationId), trackChanges).ToListAsync();
+            return await FindByCondition(r => r.CreatedBy == userId, trackChanges)
+                .OrderBy(r => r.EventDate) // Reservations sorted by event date
+                .ToListAsync();
         }
 
-        public void DeleteReservation(Reservation reservation)
+        // Create a new reservation
+        public void CreateReservation(Reservation reservation)
         {
-            Delete(reservation);
-        }
-
-        public void CreateReservationForRoom(int roomId, Reservation reservation)
-        {
-            reservation.RoomId = roomId; 
             Create(reservation);
         }
 
-        public async Task<IEnumerable<Reservation>> GetReservationsByRoomIdAsync(int roomId, bool trackChanges)
+        // Update an existing reservation
+        public async Task UpdateReservationAsync(Reservation reservation)
         {
-                return await FindByCondition(r => r.RoomId == roomId, trackChanges).ToListAsync();
+            var existingReservation = await GetReservationAsync(reservation.ReservationId, true);
+            if (existingReservation != null)
+            {
+                existingReservation.EventDate = reservation.EventDate;
+                existingReservation.StartTime = reservation.StartTime;
+                existingReservation.EndTime = reservation.EndTime;
+                existingReservation.ReservationType = reservation.ReservationType;
+                existingReservation.LectureCode = reservation.LectureCode;
+                existingReservation.RoomId = reservation.RoomId;
+
+                Update(existingReservation);
+            }
+        }
+
+        // Delete a reservation
+        public async Task DeleteReservationAsync(Reservation reservation)
+        {
+            var existingReservation = await GetReservationAsync(reservation.ReservationId, true);
+            if (existingReservation != null)
+            {
+                Delete(existingReservation);
+            }
         }
     }
 }

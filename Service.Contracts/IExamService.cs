@@ -1,35 +1,24 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Shared;
 using Shared.DataTransferObjects;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Service.Contracts
 {
     public interface IExamService
     {
+        // Get all exams
         Task<IEnumerable<ExamDto>> GetAllExamsAsync(bool trackChanges);
+
+        // Get a specific exam by ID
         Task<ExamDto> GetExamByIdAsync(int examId, bool trackChanges);
-        Task<IEnumerable<ExamDto>> GetExamsByIdsAsync(IEnumerable<int> ids, bool trackChanges);
 
-        Task<IEnumerable<ExamDto>> GetExamsByStudentIdAsync(int studentId, bool trackChanges);
+        // Create a new exam
+        Task CreateExamAsync(ExamDto examDto);
 
-        Task DeleteExamAsync(int examId, bool trackChanges);
+        // Update an existing exam
+        Task UpdateExamAsync(int examId, ExamDto examDto);
 
-        Task<ExamDto> CreateExam(ExamDto examForCreation, bool trackChanges);
-
-        Task UpdateExamAsync(int examId, ExamDto examForUpdate, bool trackChanges);
-
-
-        Task<IEnumerable<ExamClassDto>> GetAllExamClassesAsync(bool trackChanges);
-        Task<RoomDto> GetExamClassByExamIdAsync(int examId, bool trackChanges);
-        Task UpdateExamClassAsync(int examClassId, ExamClassDto examClassForUpdate, bool trackChanges);
-
-
-        Task DeleteExamClassForExamAsync(int examId, int examClassId, bool trackChanges);
-        Task<ExamClassDto> CreateExamClassForExam(ExamClassDto examClassForCreation, bool trackChanges);
-
-        Task<IEnumerable<ExamDto>> GetExamsByDepartmentId(int departmentId,bool trackChanges);
+        // Delete an exam
+        Task DeleteExamAsync(int examId);
     }
 }

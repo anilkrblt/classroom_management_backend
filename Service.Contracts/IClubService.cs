@@ -1,24 +1,30 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Shared.DataTransferObjects;
-
-
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Service.Contracts
 {
     public interface IClubService
     {
+        // Get all clubs
         Task<IEnumerable<ClubDto>> GetAllClubsAsync(bool trackChanges);
+
+        // Get a specific club by ID
         Task<ClubDto> GetClubByIdAsync(int clubId, bool trackChanges);
-        Task<IEnumerable<ClubDto>> GetClubsByIdsAsync(IEnumerable<int> ids, bool trackChanges);
 
-        Task DeleteClubAsync(int clubId, bool trackChanges);
+        // Get members of a specific club
+        Task<IEnumerable<StudentDto>> GetClubMembersAsync(int clubId, bool trackChanges);
 
-        Task UpdateClubAsync(int clubId, ClubDto clubForUpdate, bool trackChanges);
+        // Update club manager (president)
+        Task UpdateClubManagerAsync(int clubId, int studentId);
 
+        // Create a new club
+        Task CreateClubAsync(ClubDto clubDto);
 
-        Task<ClubDto> CreateClub(ClubDto clubForCreation, bool trackChanges);
+        // Update an existing club
+        Task UpdateClubAsync(int clubId, ClubDto clubDto);
+
+        // Delete a club
+        Task DeleteClubAsync(int clubId);
     }
 }

@@ -1,94 +1,82 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace class_management_backend.controllers
+namespace ClassroomManagementPresentation.Controllers
 {
     [Route("api/reservations")]
     [ApiController]
-
     public class ReservationController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
+
         public ReservationController(IServiceManager serviceManager)
         {
             _serviceManager = serviceManager;
         }
 
-
+        // GET: api/Reservations
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ReservationDto>>> GetReservations()
         {
-            var reservations = await _serviceManager.ReservationService.GetAllReservationsAsync(false);
+            var reservations = await _serviceManager.ReservationService.GetAllReservationsAsync(trackChanges: false);
             return Ok(reservations);
         }
 
-
-        [HttpGet("clubreservations")]
-        public async Task<IActionResult> GetAllClubReservations()
+        // GET: api/Reservations/{id}
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ReservationDto>> GetReservation(int id)
         {
-            var clubReservations = await _serviceManager.ReservationService.GetAllClubReservationsAsync(false);
-            return Ok(clubReservations);
+            var reservation = await _serviceManager.ReservationService.GetReservationByIdAsync(id, trackChanges: false);
+
+            if (reservation == null)
+                return NotFound($"Reservation with ID {id} not found.");
+
+            return Ok(reservation);
         }
 
-
-        [HttpGet("lecturereservations")]
-        public async Task<IActionResult> GetAllLectureReservations()
+        // GET: api/Reservations/ByUser/{userId}
+        [HttpGet("ByUser/{userId}")]
+        public async Task<ActionResult<IEnumerable<ReservationDto>>> GetUserReservations(int userId)
         {
-            var lecturereservations = await _serviceManager.ReservationService.GetAllLectureReservationsAsync(false);
-            return Ok(lecturereservations);
-        }
-/*
+            var reservations = await _serviceManager.ReservationService.GetUserReservationsAsync(userId, trackChanges: false);
 
-        [HttpPost("createclubreservation")]
-        public async Task<IActionResult> CreateclubReservation()
-        {
+            if (reservations == null || !reservations.Any())
+                return NotFound($"No reservations found for User with ID {userId}.");
 
+            return Ok(reservations);
         }
 
-
-        [HttpPost("createlecturereservation")]
-        public async Task<IActionResult> CreateLectureReservation()
+        // POST: api/Reservations
+        [HttpPost]
+        public async Task<ActionResult> CreateReservation([FromBody] ReservationDto reservationDto)
         {
+            if (reservationDto == null)
+                return BadRequest("ReservationDto object is null.");
+
+            await _serviceManager.ReservationService.CreateReservationAsync(reservationDto);
+            return CreatedAtAction(nameof(GetReservation), new { id = reservationDto.ReservationId }, reservationDto);
         }
 
-
-
-
-
-
-        [HttpPut("updateclubreservation/{reservationId}")]
-        public async Task<IActionResult> UpdateClubReservation()
+        // PUT: api/Reservations/{id}
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateReservation(int id, [FromBody] ReservationDto reservationDto)
         {
+            if (reservationDto == null)
+                return BadRequest("ReservationDto object is null.");
+
+            await _serviceManager.ReservationService.UpdateReservationAsync(id, reservationDto);
+            return NoContent();
         }
 
-
-        [HttpPut("updatelecturereservation/{reservationId}")]
-        public async Task<IActionResult> UpdateLectureReservation()
+        // DELETE: api/Reservations/{id}
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteReservation(int id)
         {
+            await _serviceManager.ReservationService.DeleteReservationAsync(id);
+            return NoContent();
         }
-
-
-
-
-
-
-        [HttpDelete("deletelecturereservation/{reservationId}")]
-
-        public async Task<IActionResult> DeleteLectureReservation()
-        {
-        }
-
-        [HttpDelete("deleteclubreservation/{reservationId}")]
-        public async Task<IActionResult> DeleteClubReservation()
-        {
-        }
-
-
-*/
-
-
-
     }
-
 }

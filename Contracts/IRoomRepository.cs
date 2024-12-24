@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Entities.Models;
 
 namespace Contracts
@@ -6,10 +8,10 @@ namespace Contracts
     {
         Task<IEnumerable<Room>> GetAllRoomsAsync(bool trackChanges);
         Task<Room> GetRoomAsync(int roomId, bool trackChanges);
-        Task<IEnumerable<Room>> GetByIdsAsync(IEnumerable<int> ids, bool trackChanges);
-        void DeleteRoom(Room Room);
-        void CreateRoomForBuilding(int buildingId, Room Room);
-
-
+        Task<IEnumerable<Room>> GetRoomsByDepartmentId(int departmentId, bool trackChanges);
+        Task<IEnumerable<Room>> GetRoomsByBuildingId(int buildingId, bool trackChanges);
+        void CreateRoom(Room room);
+        Task UpdateRoomAsync(Room room);
+        Task DeleteRoomAsync(Room room);
     }
 }

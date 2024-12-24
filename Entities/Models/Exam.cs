@@ -1,27 +1,28 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Entities.Models
 {
+    [Table("Exam")]
     public class Exam
     {
+        [Key]
         public int ExamId { get; set; }
-        public DateTime ExamDate { get; set; }
 
-        public DateTime StartTime { get; set; }
+        [Required]
+        public string Name { get; set; }
 
-        public DateTime EndTime { get; set; }
+        [Required]
+        public string LectureCode { get; set; }
 
-        public string Code { get; set; }
+        [ForeignKey("Lecture")]
+        public Lecture Lecture { get; set; }
 
-        [ForeignKey("Code")]
-        public Lecture Lecture { get; set; } = null!;
-
-
-        public required ICollection<ExamClass> ExamClasses { get; set; }
+        public ICollection<ExamSession> ExamSessions { get; set; }
     }
 
 }

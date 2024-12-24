@@ -1,41 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Shared.DataTransferObjects;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Service.Contracts
 {
     public interface IReservationService
     {
+        // Get all reservations
         Task<IEnumerable<ReservationDto>> GetAllReservationsAsync(bool trackChanges);
-        Task<ReservationDto> GetReservationAsync(int ReservationId, bool trackChanges);
-        Task<IEnumerable<ReservationDto>> GetByIdsAsync(IEnumerable<int> ids, bool trackChanges);
-        IEnumerable<ReservationDto> GetReservationsByRoomId(int roomId, bool trackChanges);
-        Task DeleteReservation(int roomId, int ReservationId, bool trackChanges);
-        Task<ReservationDto> CreateReservationForRoomAsync(ReservationDto Reservation, int roomId);
-        Task UpdateReservationAsync(int ReservationId, ReservationDto ReservationForUpdate, bool trackChanges);
 
+        // Get a specific reservation by ID
+        Task<ReservationDto> GetReservationByIdAsync(int reservationId, bool trackChanges);
 
-        Task<IEnumerable<ClubReservationDto>> GetAllClubReservationsAsync(bool trackChanges);
-        Task<ClubReservationDto> GetClubReservationByReservationIdAsync(int reservationId, bool trackChanges);
+        // Get reservations by user ID
+        Task<IEnumerable<ReservationDto>> GetUserReservationsAsync(int userId, bool trackChanges);
 
-        Task DeleteClubReservationForReservationAsync(int reservationId, bool trackChanges);
+        // Create a new reservation
+        Task CreateReservationAsync(ReservationDto reservationDto);
 
-        Task<ClubReservationDto> CreateClubReservationForReservation(int reservationId,
-                                            ClubReservationDto clubReservationForCreation,
-                                            bool trackChanges);
+        // Update an existing reservation
+        Task UpdateReservationAsync(int reservationId, ReservationDto reservationDto);
 
-
-        Task<IEnumerable<LectureReservationDto>> GetAllLectureReservationsAsync(bool trackChanges);
-        Task<LectureReservationDto> GetLectureReservationByReservationIdAsync(int reservationId, bool trackChanges);
-
-        Task DeleteLectureReservationForReservationAsync(int reservationId, bool trackChanges);
-
-        /*Task<LectureReservationDto> CreateLectureReservationForReservation(int reservationId,
-                                            LectureReservationDto clubReservationForCreation,
-                                            bool trackChanges);*/
-
-
+        // Delete a reservation
+        Task DeleteReservationAsync(int reservationId);
     }
 }

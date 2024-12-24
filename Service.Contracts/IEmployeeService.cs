@@ -1,22 +1,24 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Shared;
 using Shared.DataTransferObjects;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Service.Contracts
 {
     public interface IEmployeeService
     {
+        // Get all employees
         Task<IEnumerable<EmployeeDto>> GetAllEmployeesAsync(bool trackChanges);
+
+        // Get a specific employee by ID
         Task<EmployeeDto> GetEmployeeByIdAsync(int employeeId, bool trackChanges);
-        Task <IEnumerable<EmployeeDto>> GetEmployeesByIdsAsync(IEnumerable<int> ids, bool trackChanges);
 
-        Task DeleteEmployeeAsync(int employeeId, bool trackChanges);
+        // Create a new employee
+        Task CreateEmployeeAsync(EmployeeDto employeeDto);
 
-        Task UpdateEmployeeAsync(int employeeId, EmployeeDto employeeForUpdate, bool trackChanges);
+        // Update an existing employee
+        Task UpdateEmployeeAsync(int employeeId, EmployeeDto employeeDto);
 
-        Task<EmployeeDto> CreateEmployee(EmployeeDto employeeForCreation, bool trackChanges);
+        // Delete an employee
+        Task DeleteEmployeeAsync(int employeeId);
     }
 }

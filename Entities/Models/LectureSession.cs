@@ -1,34 +1,40 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Entities.Models
 {
+    [Table("LectureSession")]
     public class LectureSession
     {
+        [Key]
         public int LectureSessionId { get; set; }
 
-        public DateTime StartTime { get; set; }
+        [Required, StringLength(20)]
+        public string DayOfWeek { get; set; }
 
-        public DateTime EndTime { get; set; }
+        [Required]
+        public TimeSpan StartTime { get; set; }
 
+        [Required]
+        public TimeSpan EndTime { get; set; }
 
-        public string LectureCode { get; set; } = null!;
+        [ForeignKey("Lecture")]
+        public string LectureCode { get; set; }
 
-        public required Lecture Lecture { get; set; }
+        [ForeignKey("Room")]
+        public int RoomId { get; set; }
 
-
+        [ForeignKey("Instructor")]
         public int InstructorId { get; set; }
 
-        public required Instructor Instructor { get; set; }
-        
-
-        [ForeignKey("RoomId")]
+        public Lecture Lecture { get; set; }
         public Room Room { get; set; }
-        public int RoomId {  get; set; }
-
-
+        public Instructor Instructor { get; set; }
     }
+
+
 }

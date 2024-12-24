@@ -1,86 +1,73 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Contracts;
-using Entities.Exceptions;
-using Entities.Models;
-using NLog;
-using Service.Contracts;
 using Shared.DataTransferObjects;
+using Service.Contracts;
+using Contracts;
+using AutoMapper;
+using Entities.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Service
 {
     public class EmployeeService : IEmployeeService
     {
-
-        private readonly IRepositoryManager _repository;
-        private readonly ILogger _logger;
+        private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
-        public EmployeeService(IRepositoryManager repository,ILogger logger,IMapper mapper)
+
+        public EmployeeService(IRepositoryManager repositoryManager, IMapper mapper)
         {
-            _repository = repository;
-            _logger = logger;
-            _mapper=mapper;
-        }
-        public async Task<EmployeeDto> CreateEmployee(EmployeeDto employeeForCreation, bool trackChanges)
-        {
-            var employeeEntity=_mapper.Map<Employee>(employeeForCreation);
-            _repository.Employee.CreateEmployee(employeeEntity);
-            await _repository.SaveAsync();
-            var employeeToReturn=_mapper.Map<EmployeeDto>(employeeEntity);
-            return employeeToReturn;
+            _repositoryManager = repositoryManager;
+            _mapper = mapper;
         }
 
-        public async Task DeleteEmployeeAsync(int employeeId, bool trackChanges)
-        {
-            var employee=await GetEmployeeAndCheckIfItExists(employeeId,trackChanges);
-            _repository.Employee.DeleteEmployee(employee);
-            await _repository.SaveAsync();
-        }
-
+        // Get all employees
         public async Task<IEnumerable<EmployeeDto>> GetAllEmployeesAsync(bool trackChanges)
         {
-            var employees=await _repository.Employee.GetAllEmployeesAsync(trackChanges);
-            var employeesDto=_mapper.Map<IEnumerable<EmployeeDto>>(employees);
-            return employeesDto;
+            var employees = await _repositoryManager.Employee.GetAllEmployeesAsync(trackChanges);
+            return _mapper.Map<IEnumerable<EmployeeDto>>(employees);
         }
 
+        // Get a specific employee by ID
         public async Task<EmployeeDto> GetEmployeeByIdAsync(int employeeId, bool trackChanges)
         {
-            var employee=await GetEmployeeAndCheckIfItExists(employeeId,trackChanges);
-            var employeeDto=_mapper.Map<EmployeeDto>(employee);
-            return employeeDto;
+            var employee = await _repositoryManager.Employee.GetEmployeeAsync(employeeId, trackChanges);
+
+            if (employee == null)
+                throw new KeyNotFoundException($"Employee with ID {employeeId} not found.");
+
+            return _mapper.Map<EmployeeDto>(employee);
         }
 
-        public async Task<IEnumerable<EmployeeDto>> GetEmployeesByIdsAsync(IEnumerable<int> ids, bool trackChanges)
+        // Create a new employee
+        public async Task CreateEmployeeAsync(EmployeeDto employeeDto)
         {
-            if (ids is null)
-                throw new IdParametersBadRequestException();
+            var employee = _mapper.Map<Employee>(employeeDto);
 
-            var employeeEntities=await _repository.Employee.GetByIdsAsync(ids,trackChanges);
-            if (ids.Count() != employeeEntities.Count())
-                throw new CollectionByIdsBadRequestException();
-
-            var employeesToReturn = _mapper.Map<IEnumerable<EmployeeDto>>(employeeEntities);
-
-            return employeesToReturn;
+            _repositoryManager.Employee.CreateEmployee(employee);
+            await _repositoryManager.SaveAsync();
         }
 
-        public async Task UpdateEmployeeAsync(int employeeId, EmployeeDto employeeForUpdate, bool trackChanges)
+        // Update an existing employee
+        public async Task UpdateEmployeeAsync(int employeeId, EmployeeDto employeeDto)
         {
-            var employee=await GetEmployeeAndCheckIfItExists(employeeId,trackChanges);
-            _mapper.Map(employeeForUpdate, employee);
-            await _repository.SaveAsync();
+            var employee = await _repositoryManager.Employee.GetEmployeeAsync(employeeId, true);
+
+            if (employee == null)
+                throw new KeyNotFoundException($"Employee with ID {employeeId} not found.");
+
+            _mapper.Map(employeeDto, employee);
+            await _repositoryManager.SaveAsync();
         }
 
-        private async Task<Employee> GetEmployeeAndCheckIfItExists(int employeeId, bool trackChanges)
+        // Delete an employee
+        public async Task DeleteEmployeeAsync(int employeeId)
         {
-            var employee = await _repository.Employee.GetEmployeeAsync(employeeId, trackChanges);
-            if (employee is null)
-                throw new EmployeeNotFoundException(employeeId);
-            return employee;
+            var employee = await _repositoryManager.Employee.GetEmployeeAsync(employeeId, true);
+
+            if (employee == null)
+                throw new KeyNotFoundException($"Employee with ID {employeeId} not found.");
+
+            await _repositoryManager.Employee.DeleteEmployeeAsync(employee);
+            await _repositoryManager.SaveAsync();
         }
     }
 }

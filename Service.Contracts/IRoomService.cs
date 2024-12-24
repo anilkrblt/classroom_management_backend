@@ -1,36 +1,30 @@
 using Shared.DataTransferObjects;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Service.Contracts
 {
     public interface IRoomService
     {
-
+        // Get all rooms
         Task<IEnumerable<RoomDto>> GetAllRoomsAsync(bool trackChanges);
+
+        // Get a specific room by ID
         Task<RoomDto> GetRoomByIdAsync(int roomId, bool trackChanges);
-        Task<IEnumerable<RoomDto>> GetRoomsByDepartmentId(int departmentId, bool trackChanges);
 
-        Task DeleteRoomForBuildingAsync(int roomId, int buildingId, bool trackChanges);
+        // Get rooms by building ID
+        Task<IEnumerable<RoomDto>> GetRoomsByBuildingIdAsync(int buildingId, bool trackChanges);
 
-        Task UpdateRoomForBuilding(int buildingId, int id,
-                                   RoomDto roomForUpdate,
-                                   bool compTrackChanges, bool empTrackChanges);
-        Task<RoomDto> CreateRoomForBuilding(int buildingId,
-                                             RoomDto roomForCreation,
-                                             bool trackChanges);
+        // Get rooms by department ID
+        Task<IEnumerable<RoomDto>> GetRoomsByDepartmentIdAsync(int departmentId, bool trackChanges);
 
-        Task<IEnumerable<LectureHallDto>> GetAllLectureHallsAsync(bool trackChanges);
-        Task<LectureHallDto> CreateLectureHallForRoom(int roomId,
-                                            LectureHallDto lectureHallForCreation,
-                                            bool trackChanges);
+        // Create a new room
+        Task CreateRoomAsync(RoomDto roomDto);
 
-        Task<IEnumerable<LabDto>> GetAllLabsAsync(bool trackChanges);
+        // Update an existing room
+        Task UpdateRoomAsync(int roomId, RoomDto roomDto);
 
-        Task UpdateLabForRoom(int roomId,
-        LabDto labForUpdate, bool labTrackChanges);
-        Task<IEnumerable<ClassDto>> GetAllClassesAsync(bool trackChanges);
-        Task UpdateClassForRoom(int roomId,
-        ClassDto classForUpdate, bool classTrackChanges);
-
-
+        // Delete a room
+        Task DeleteRoomAsync(int roomId);
     }
 }

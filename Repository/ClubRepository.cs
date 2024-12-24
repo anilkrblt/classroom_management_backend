@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +13,7 @@ namespace Repository
         {
         }
 
+       
         public async Task<IEnumerable<Club>> GetAllClubsAsync(bool trackChanges)
         {
             return await FindAll(trackChanges)
@@ -27,20 +27,30 @@ namespace Repository
                 .SingleOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Club>> GetByIdsAsync(IEnumerable<int> ids, bool trackChanges)
-        {
-            return await FindByCondition(c => ids.Contains(c.ClubId), trackChanges)
-                .ToListAsync();
-        }
-
-        public void DeleteClub(Club club)
-        {
-            Delete(club);
-        }
-
         public void CreateClub(Club club)
         {
             Create(club);
+        }
+
+        public async Task UpdateClubAsync(Club club)
+        {
+            var existingClub = await GetClubAsync(club.ClubId, true);
+            if (existingClub != null)
+            {
+                existingClub.Name = club.Name;
+                existingClub.PresidentId = club.PresidentId;
+
+                Update(existingClub);
+            }
+        }
+
+        public async Task DeleteClubAsync(Club club)
+        {
+            var existingClub = await GetClubAsync(club.ClubId, true);
+            if (existingClub != null)
+            {
+                Delete(existingClub);
+            }
         }
     }
 }

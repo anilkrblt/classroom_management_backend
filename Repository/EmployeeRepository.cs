@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,24 +22,35 @@ namespace Repository
 
         public async Task<Employee> GetEmployeeAsync(int employeeId, bool trackChanges)
         {
-            return await FindByCondition(e => e.EmployeeId == employeeId, trackChanges)
-                .SingleOrDefaultAsync();
-        }
-
-        public async Task<IEnumerable<Employee>> GetByIdsAsync(IEnumerable<int> ids, bool trackChanges)
-        {
-            return await FindByCondition(e => ids.Contains(e.EmployeeId), trackChanges)
-                .ToListAsync();
-        }
-
-        public void DeleteEmployee(Employee employee)
-        {
-            Delete(employee);
+            return await FindByCondition(e => e.EmployeeId == employeeId, trackChanges).SingleOrDefaultAsync();
         }
 
         public void CreateEmployee(Employee employee)
         {
             Create(employee);
+        }
+
+        public async Task UpdateEmployeeAsync(Employee employee)
+        {
+            var existingEmployee = await GetEmployeeAsync(employee.EmployeeId, true);
+            if (existingEmployee != null)
+            {
+                existingEmployee.Name = employee.Name;
+                existingEmployee.Email = employee.Email;
+                existingEmployee.Password = employee.Password;
+                existingEmployee.IsAdmin = employee.IsAdmin;
+
+                Update(existingEmployee);
+            }
+        }
+
+        public async Task DeleteEmployeeAsync(Employee employee)
+        {
+            var existingEmployee = await GetEmployeeAsync(employee.EmployeeId, true);
+            if (existingEmployee != null)
+            {
+                Delete(existingEmployee);
+            }
         }
     }
 }

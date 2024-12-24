@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,7 +16,7 @@ namespace Repository
         public async Task<IEnumerable<Instructor>> GetAllInstructorsAsync(bool trackChanges)
         {
             return await FindAll(trackChanges)
-                .OrderBy(i => i.Name) // Eğitmenleri soyadına göre sıralar
+                .OrderBy(i => i.Name) 
                 .ToListAsync();
         }
 
@@ -26,20 +25,34 @@ namespace Repository
             return await FindByCondition(i => i.InstructorId == instructorId, trackChanges).SingleOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Instructor>> GetByIdsAsync(IEnumerable<int> ids, bool trackChanges)
+        public void CreateInstructor(Instructor instructor)
         {
-            return await FindByCondition(i => ids.Contains(i.InstructorId), trackChanges).ToListAsync();
-        }
-
-        public void DeleteInstructor(Instructor instructor)
-        {
-            Delete(instructor);
-        }
-
-        public void CreateInstructorForDepartment(Instructor instructor, int departmentId)
-        {
-            instructor.DepartmentId = departmentId; 
             Create(instructor);
+        }
+
+        public async Task UpdateInstructorAsync(Instructor instructor)
+        {
+            var existingInstructor = await GetInstructorAsync(instructor.InstructorId, true);
+            if (existingInstructor != null)
+            {
+                existingInstructor.Name = instructor.Name;
+                existingInstructor.Email = instructor.Email;
+                existingInstructor.Password = instructor.Password;
+                existingInstructor.Title = instructor.Title;
+                existingInstructor.IsAdmin = instructor.IsAdmin;
+                existingInstructor.DepartmentId = instructor.DepartmentId;
+
+                Update(existingInstructor);
+            }
+        }
+
+        public async Task DeleteInstructorAsync(Instructor instructor)
+        {
+            var existingInstructor = await GetInstructorAsync(instructor.InstructorId, true);
+            if (existingInstructor != null)
+            {
+                Delete(existingInstructor);
+            }
         }
     }
 }

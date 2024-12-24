@@ -1,61 +1,115 @@
-
-using AutoMapper;
-using Contracts;
-using Entities.Exceptions;
-using Entities.Models;
-using NLog;
-using Service.Contracts;
 using Shared.DataTransferObjects;
+using Service.Contracts;
+using Contracts;
+using AutoMapper;
+using Entities.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Service{
+namespace Service
+{
     public class DepartmentService : IDepartmentService
     {
-        private readonly IRepositoryManager _repository;
-        private readonly ILogger _logger;
+        private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
 
-        public DepartmentService(IRepositoryManager repository,ILogger logger,IMapper mapper)
+        public DepartmentService(IRepositoryManager repositoryManager, IMapper mapper)
         {
-            _repository = repository;
-            _logger = logger;
-            _mapper=mapper;
+            _repositoryManager = repositoryManager;
+            _mapper = mapper;
         }
+
+        // Get all departments
         public async Task<IEnumerable<DepartmentDto>> GetAllDepartmentsAsync(bool trackChanges)
         {
-            var departments =await _repository.Department.GetAllDepartmentsAsync(trackChanges);
-            var departmentsDto = _mapper.Map<IEnumerable<DepartmentDto>>(departments);
-
-            return departmentsDto;
+            var departments = await _repositoryManager.Department.GetAllDepartmentsAsync(trackChanges);
+            return _mapper.Map<IEnumerable<DepartmentDto>>(departments);
         }
 
+        // Get a specific department by ID
         public async Task<DepartmentDto> GetDepartmentByIdAsync(int departmentId, bool trackChanges)
         {
-            var department = await GetDepartmentAndCheckIfItExists(departmentId, trackChanges);
+            var department = await _repositoryManager.Department.GetDepartmentAsync(departmentId, trackChanges);
 
-            var departmentDto = _mapper.Map<DepartmentDto>(department);
-            return departmentDto;
+            if (department == null)
+                throw new KeyNotFoundException($"Department with ID {departmentId} not found.");
+
+            return _mapper.Map<DepartmentDto>(department);
         }
 
-        public async Task<IEnumerable<DepartmentDto>> GetDepartmentsByIdsAsync(IEnumerable<int> ids, bool trackChanges)
+        // Get instructors of a specific department
+        public async Task<IEnumerable<InstructorDto>> GetDepartmentInstructorsAsync(int departmentId, bool trackChanges)
         {
-            if (ids is null)
-                throw new IdParametersBadRequestException();
+            var department = await _repositoryManager.Department.GetDepartmentAsync(departmentId, trackChanges);
 
-            var departmentEntities = await _repository.Department.GetByIdsAsync(ids,trackChanges);
-            if (ids.Count() != departmentEntities.Count())
-                throw new CollectionByIdsBadRequestException();
+            if (department == null)
+                throw new KeyNotFoundException($"Department with ID {departmentId} not found.");
 
-            var departmentsToReturn = _mapper.Map<IEnumerable<DepartmentDto>>(departmentEntities);
+            var instructors = await _repositoryManager.Instructor.GetAllInstructorsAsync(trackChanges);
+            var departmentInstructors = instructors.Where(i => i.DepartmentId == departmentId);
 
-            return departmentsToReturn;
+            return _mapper.Map<IEnumerable<InstructorDto>>(departmentInstructors);
         }
 
-        private async Task<Department> GetDepartmentAndCheckIfItExists(int departmentId, bool trackChanges)
+        // Get rooms of a specific department
+        public async Task<IEnumerable<RoomDto>> GetDepartmentRoomsAsync(int departmentId, bool trackChanges)
         {
-            var department = await _repository.Department.GetDepartmentAsync(departmentId, trackChanges);
-            if (department is null)
-                throw new DepartmentNotFoundException(departmentId);
-            return department;
+            var department = await _repositoryManager.Department.GetDepartmentAsync(departmentId, trackChanges);
+
+            if (department == null)
+                throw new KeyNotFoundException($"Department with ID {departmentId} not found.");
+
+            var rooms = await _repositoryManager.Room.GetAllRoomsAsync(trackChanges);
+            var departmentRooms = rooms.Where(r => r.DepartmentId == departmentId);
+
+            return _mapper.Map<IEnumerable<RoomDto>>(departmentRooms);
+        }
+
+        // Get students of a specific department
+        public async Task<IEnumerable<StudentDto>> GetDepartmentStudentsAsync(int departmentId, bool trackChanges)
+        {
+            var department = await _repositoryManager.Department.GetDepartmentAsync(departmentId, trackChanges);
+
+            if (department == null)
+                throw new KeyNotFoundException($"Department with ID {departmentId} not found.");
+
+            var students = await _repositoryManager.Student.GetAllStudentsAsync(trackChanges);
+            var departmentStudents = students.Where(s => s.DepartmentId == departmentId);
+
+            return _mapper.Map<IEnumerable<StudentDto>>(departmentStudents);
+        }
+
+        // Create a new department
+        public async Task CreateDepartmentAsync(DepartmentDto departmentDto)
+        {
+            var department = _mapper.Map<Department>(departmentDto);
+            _repositoryManager.Department.CreateDepartment(department);
+            await _repositoryManager.SaveAsync();
+        }
+
+        // Update an existing department
+        public async Task UpdateDepartmentAsync(int departmentId, DepartmentDto departmentDto)
+        {
+            var department = await _repositoryManager.Department.GetDepartmentAsync(departmentId, true);
+
+            if (department == null)
+                throw new KeyNotFoundException($"Department with ID {departmentId} not found.");
+
+            _mapper.Map(departmentDto, department);
+            await _repositoryManager.SaveAsync();
+        }
+
+        // Delete a department
+        public async Task DeleteDepartmentAsync(int departmentId)
+        {
+            var department = await _repositoryManager.Department.GetDepartmentAsync(departmentId, true);
+
+            if (department == null)
+                throw new KeyNotFoundException($"Department with ID {departmentId} not found.");
+
+            await _repositoryManager.Department.DeleteDepartmentAsync(department);
+            await _repositoryManager.SaveAsync();
         }
     }
 }

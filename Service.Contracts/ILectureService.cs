@@ -1,22 +1,24 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Shared;
 using Shared.DataTransferObjects;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Service.Contracts
 {
     public interface ILectureService
     {
+        // Get all lectures
         Task<IEnumerable<LectureDto>> GetAllLecturesAsync(bool trackChanges);
-        Task<LectureDto> GetLectureByCodeAsync(string lectureCode, bool trackChanges);
-        IEnumerable<LectureDto> GetLecturesByCodesAsync(IEnumerable<string> lectureCode, bool trackChanges);
 
-        Task DeleteLectureForDepartmentAsync(string lectureCode, int departmentId, bool trackChanges);
+        // Get a specific lecture by code
+        Task<LectureDto> GetLectureByCodeAsync(string code, bool trackChanges);
 
-        Task UpdateLectureForDepartment(int departmentId, string lectureCode,
-        LectureDto lectureForUpdate, bool lectureTrackChanges, bool departmentTrackChanges);
-        Task<LectureDto> CreateLectureForDepartment(int departmentId, LectureDto lectureForCreation, bool trackChanges, bool departmentTrackChanges);
+        // Create a new lecture
+        Task CreateLectureAsync(LectureDto lectureDto);
+
+        // Update an existing lecture
+        Task UpdateLectureAsync(string code, LectureDto lectureDto);
+
+        // Delete a lecture
+        Task DeleteLectureAsync(string code);
     }
 }

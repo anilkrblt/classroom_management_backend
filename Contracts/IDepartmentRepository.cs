@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Entities.Models;
 
@@ -10,9 +8,10 @@ namespace Contracts
     {
         Task<IEnumerable<Department>> GetAllDepartmentsAsync(bool trackChanges);
         Task<Department> GetDepartmentAsync(int departmentId, bool trackChanges);
-        Task<IEnumerable<Department>> GetByIdsAsync(IEnumerable<int> ids, bool trackChanges);
-        
 
+        void CreateDepartment(Department department);
 
+        Task UpdateDepartmentAsync(Department department);
+        Task DeleteDepartmentAsync(Department department);
     }
 }

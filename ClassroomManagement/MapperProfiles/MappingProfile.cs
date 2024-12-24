@@ -25,20 +25,15 @@ namespace CompanyEmployees.AutoMap
             CreateMap<Student, StudentDto>();
             CreateMap<Request, RequestDto>();
             CreateMap<LectureSession, LectureSessionDto>();
-            CreateMap<LectureReservation, LectureReservationDto>().ReverseMap();
-            CreateMap<LectureReservation, LectureReservationDto>();
-            CreateMap<LectureHall, LectureHallDto>();
-            CreateMap<Lab, LabDto>();
             CreateMap<Instructor, InstructorDto>();
             CreateMap<Exam, ExamDto>();
-            CreateMap<ExamClass, ExamClassDto>();
             CreateMap<Lecture, LectureDto>();
             CreateMap<Enrollment, EnrollmentDto>();
             CreateMap<Department, DepartmentDto>();
-            CreateMap<ClubReservation, ClubReservationDto>();
             CreateMap<Club, ClubDto>();
-            CreateMap<Class, ClassDto>();
             CreateMap<Building, BuildingDto>();
+            CreateMap<Notification, NotificationDto>();
+            CreateMap<Reservation, ReservationDto>();
 
         }
     }

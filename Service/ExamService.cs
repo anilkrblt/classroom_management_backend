@@ -1,157 +1,69 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Contracts;
-using Entities.Exceptions;
-using Entities.Models;
-using NLog;
-using Service.Contracts;
 using Shared.DataTransferObjects;
+using Service.Contracts;
+using Contracts;
+using AutoMapper;
+using Entities.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Service
 {
     public class ExamService : IExamService
     {
-
-
-        private readonly IRepositoryManager _repository;
-        private readonly ILogger _logger;
+        private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
 
-
-        public ExamService(IRepositoryManager repository, ILogger logger, IMapper mapper)
+        public ExamService(IRepositoryManager repositoryManager, IMapper mapper)
         {
-            _repository = repository;
-            _logger = logger;
+            _repositoryManager = repositoryManager;
             _mapper = mapper;
         }
 
-        public async Task<ExamDto> CreateExam(ExamDto examForCreation, bool trackChanges)
-        {
-            var examEntity = _mapper.Map<Exam>(examForCreation);
-            _repository.Exam.CreateExamForLecture(examEntity, examEntity.Code);
-            await _repository.SaveAsync();
-            var examToReturn = _mapper.Map<ExamDto>(examEntity);
-            return examToReturn;
-        }
-        public async Task<ExamClassDto> CreateExamClassForExam(ExamClassDto examClassForCreation, bool trackChanges)
-        {
-            var examClassEntity = _mapper.Map<ExamClass>(examClassForCreation);
-            _repository.ExamClass.CreateExamClass(examClassEntity);
-            await _repository.SaveAsync();
-            var examClassToReturn = _mapper.Map<ExamClassDto>(examClassEntity);
-            return examClassToReturn;
-        }
-        public async Task DeleteExamAsync(int examId, bool trackChanges)
-        {
-            var exam = await GetExamAndCheckIfItExists(examId, trackChanges);
-            _repository.Exam.DeleteExam(exam);
-            await _repository.SaveAsync();
-        }
-        public async Task DeleteExamClassForExamAsync(int examId, int examClassId, bool trackChanges)
-        {
-            await GetExamAndCheckIfItExists(examId, trackChanges);
-            var examClass = await GetExamClassAndCheckIfItExists(examClassId, trackChanges);
-            _repository.ExamClass.DeleteExamClass(examClass);
-            await _repository.SaveAsync();
-        }
-        public async Task<IEnumerable<ExamClassDto>> GetAllExamClassesAsync(bool trackChanges)
-        {
-            var examClasses = await _repository.ExamClass.GetAllExamClasssAsync(trackChanges);
-
-            var examClassesDto = _mapper.Map<IEnumerable<ExamClassDto>>(examClasses);
-
-            return examClassesDto;
-        }
+        // Get all exams
         public async Task<IEnumerable<ExamDto>> GetAllExamsAsync(bool trackChanges)
         {
-            var exams = await _repository.Exam.GetAllExamsAsync(trackChanges);
-            var examsDto = _mapper.Map<IEnumerable<ExamDto>>(exams);
-            return examsDto;
+            var exams = await _repositoryManager.Exam.GetAllExamsAsync(trackChanges);
+            return _mapper.Map<IEnumerable<ExamDto>>(exams);
         }
+
+        // Get a specific exam by ID
         public async Task<ExamDto> GetExamByIdAsync(int examId, bool trackChanges)
         {
-            var exam = await GetExamAndCheckIfItExists(examId, trackChanges);
-            var examDto = _mapper.Map<ExamDto>(exam);
-            return examDto;
-        }
-        public async Task<IEnumerable<ExamDto>> GetExamsByIdsAsync(IEnumerable<int> ids, bool trackChanges)
-        {
-            if (ids is null)
-                throw new IdParametersBadRequestException();
+            var exam = await _repositoryManager.Exam.GetExamAsync(examId, trackChanges);
+            if (exam == null)
+                throw new KeyNotFoundException($"Exam with ID {examId} not found.");
 
-            var examEntities = await _repository.Exam.GetByIdsAsync(ids, trackChanges);
-            if (ids.Count() != examEntities.Count())
-                throw new CollectionByIdsBadRequestException();
-
-            var examsToReturn = _mapper.Map<IEnumerable<ExamDto>>(examEntities);
-
-            return examsToReturn;
-        }
-        public async Task UpdateExamAsync(int examId, ExamDto examForUpdate, bool trackChanges)
-        {
-            var exam = await GetExamAndCheckIfItExists(examId, trackChanges);
-            _mapper.Map(examForUpdate, exam);
-            await _repository.SaveAsync();
-        }
-        public async Task UpdateExamClassAsync(int examClassId, ExamClassDto examClassForUpdate, bool trackChanges)
-        {
-            var examClass = await GetExamClassAndCheckIfItExists(examClassId, trackChanges);
-            _mapper.Map(examClassForUpdate, examClass);
-            await _repository.SaveAsync();
-        }
-        public async Task<RoomDto> GetExamClassByExamIdAsync(int examId, bool trackChanges)
-        {
-            var exam = await GetExamAndCheckIfItExists(examId, trackChanges);
-            var examClass = exam.ExamClasses.FirstOrDefault();
-            if (examClass is null)
-                throw new ExamClassNotFoundException(examClass.ExamId);
-            var examRoom = examClass.Room;
-            return _mapper.Map<RoomDto>(examRoom);
+            return _mapper.Map<ExamDto>(exam);
         }
 
-
-        private async Task<Exam> GetExamAndCheckIfItExists(int examId, bool trackChanges)
+        // Create a new exam
+        public async Task CreateExamAsync(ExamDto examDto)
         {
-            var exam = await _repository.Exam.GetExamAsync(examId, trackChanges);
-            if (exam is null)
-                throw new ExamNotFoundException(examId);
-            return exam;
+            var exam = _mapper.Map<Exam>(examDto);
+            _repositoryManager.Exam.CreateExam(exam);
+            await _repositoryManager.SaveAsync();
         }
 
-        private async Task<ExamClass> GetExamClassAndCheckIfItExists(int examClassId, bool trackChanges)
+        // Update an existing exam
+        public async Task UpdateExamAsync(int examId, ExamDto examDto)
         {
-            var examClass = await _repository.ExamClass.GetExamClassAsync(examClassId, trackChanges);
-            if (examClass is null)
-                throw new ExamClassNotFoundException(examClassId);
-            return examClass;
+            var exam = await _repositoryManager.Exam.GetExamAsync(examId, trackChanges: true);
+            if (exam == null)
+                throw new KeyNotFoundException($"Exam with ID {examId} not found.");
+
+            _mapper.Map(examDto, exam);
+            await _repositoryManager.SaveAsync();
         }
 
-        public async Task<IEnumerable<ExamDto>> GetExamsByStudentIdAsync(int studentId, bool trackChanges)
+        // Delete an exam
+        public async Task DeleteExamAsync(int examId)
         {
-            var student=await _repository.Student.GetStudentAsync(studentId,trackChanges);
-            if(student is null)
-                throw new StudentNotFoundException(studentId);
-            var studentEnrollments = await _repository.Enrollment.GetEnrollmentsByStudentIdAsync(studentId,trackChanges);
-            var studentLectures = studentEnrollments.Select(e => e.Code);
-            var exams = await _repository.Exam.GetAllExamsAsync(trackChanges);
-            var studentExams = exams.Where(e => studentLectures.Contains(e.Code));
-            return _mapper.Map<IEnumerable<ExamDto>>(studentExams);
-            /*var exams= await _repository.Exam.GetAllExamsAsync(trackChanges);
-            var studentEnrollments = await _repository.Enrollment.GetEnrollmentByStudentIdsAsync(trackChanges);
-            exams.Where(e =>e.Code.Contains());*/
-        }
+            var exam = await _repositoryManager.Exam.GetExamAsync(examId, trackChanges: true);
+            if (exam == null)
+                throw new KeyNotFoundException($"Exam with ID {examId} not found.");
 
-        public async Task<IEnumerable<ExamDto>> GetExamsByDepartmentId(int departmentId, bool trackChanges)
-        {
-            var department = await _repository.Department.GetDepartmentAsync(departmentId,trackChanges);
-            if (department is null)
-                throw new DepartmentNotFoundException(departmentId);
-            var exams=await _repository.Exam.GetAllExamsAsync(trackChanges);
-            exams=exams.Where(e=>e.Lecture.DepartmentId==departmentId);
-            return _mapper.Map<IEnumerable<ExamDto>>(exams);
+            await _repositoryManager.Exam.DeleteExamAsync(exam);
+            await _repositoryManager.SaveAsync();
         }
     }
 }

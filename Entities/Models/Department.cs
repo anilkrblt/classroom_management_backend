@@ -1,26 +1,20 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Entities.Models
 {
+    [Table("Department")]
     public class Department
     {
+        [Key]
         public int DepartmentId { get; set; }
 
-        public string? Name { get; set; }
+        [Required, StringLength(100)]
+        public string Name { get; set; }
 
-        public required ICollection<Student> Students { get; set; }
-
-        public required ICollection<Instructor> Instructors { get; set; }
-
-        public required ICollection<Lecture> Lectures { get; set; }
-        public required ICollection<Lab> Labs { get; set; }
-
-        public required ICollection<Class> Classes { get; set; }
-
-        public required ICollection<LectureHall> LectureHalls { get; set; }
-
-
-
-
-
-
+        public ICollection<Room> Rooms { get; set; }
+        public ICollection<Student> Students { get; set; }
+        public ICollection<Instructor> Instructors { get; set; }
+        public ICollection<Lecture> Lectures { get; set; }
     }
 }

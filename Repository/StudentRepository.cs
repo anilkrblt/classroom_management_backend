@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts;
@@ -14,35 +13,59 @@ namespace Repository
         {
         }
 
+        // Get all students
         public async Task<IEnumerable<Student>> GetAllStudentsAsync(bool trackChanges)
         {
             return await FindAll(trackChanges)
-                .OrderBy(s => s.Name) 
+                .OrderBy(s => s.Name) // Students are sorted by name
                 .ToListAsync();
         }
 
+        // Get a specific student by ID
         public async Task<Student> GetStudentAsync(int studentId, bool trackChanges)
         {
-            return await FindByCondition(s => s.StudentId == studentId, trackChanges).SingleOrDefaultAsync();
+            return await FindByCondition(s => s.StudentId == studentId, trackChanges)
+                .SingleOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Student>> GetByIdsAsync(IEnumerable<int> ids, bool trackChanges)
+        // Get students by department ID
+        public async Task<IEnumerable<Student>> GetStudentsByDepartmentId(int departmentId, bool trackChanges)
         {
-            return await FindByCondition(s => ids.Contains(s.StudentId), trackChanges)
+            return await FindByCondition(s => s.DepartmentId == departmentId, trackChanges)
+                .OrderBy(s => s.Name) // Students are sorted by name
                 .ToListAsync();
         }
 
-        public void DeleteStudent(Student student) => Delete(student);
-
-        public void CreateStudentForDepartment(int departmentId, Student student)
+        // Create a new student
+        public void CreateStudent(Student student)
         {
-            student.DepartmentId = departmentId; 
             Create(student);
         }
 
-        public async Task<IEnumerable<Student>> GetStudentsByDepartmentId(int departmentId, bool trackChanges)
+        // Update an existing student
+        public async Task UpdateStudentAsync(Student student)
         {
-            return await FindByCondition(s => s.DepartmentId == departmentId, trackChanges).ToListAsync();
+            var existingStudent = await GetStudentAsync(student.StudentId, true);
+            if (existingStudent != null)
+            {
+                existingStudent.Name = student.Name;
+                existingStudent.Email = student.Email;
+                existingStudent.Password = student.Password;
+                existingStudent.GradeLevel = student.GradeLevel;
+                existingStudent.DepartmentId = student.DepartmentId;
+
+                Update(existingStudent);
+            }
+        }
+
+        // Delete a student
+        public async Task DeleteStudentAsync(Student student)
+        {
+            var existingStudent = await GetStudentAsync(student.StudentId, true);
+            if (existingStudent != null)
+            {
+                Delete(existingStudent);
+            }
         }
     }
 }

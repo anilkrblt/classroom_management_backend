@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,31 +16,41 @@ namespace Repository
         public async Task<IEnumerable<Exam>> GetAllExamsAsync(bool trackChanges)
         {
             return await FindAll(trackChanges)
-                .OrderBy(e => e.ExamDate) 
+                .OrderBy(e => e.Name) 
                 .ToListAsync();
         }
 
+        
         public async Task<Exam> GetExamAsync(int examId, bool trackChanges)
         {
             return await FindByCondition(e => e.ExamId == examId, trackChanges)
                 .SingleOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Exam>> GetByIdsAsync(IEnumerable<int> ids, bool trackChanges)
+        public void CreateExam(Exam exam)
         {
-            return await FindByCondition(e => ids.Contains(e.ExamId), trackChanges)
-                .ToListAsync();
-        }
-
-        public void DeleteExam(Exam exam)
-        {
-            Delete(exam);
-        }
-
-        public void CreateExamForLecture(Exam exam, string lectureCode)
-        {
-            exam.Code = lectureCode; 
             Create(exam);
+        }
+
+        public async Task UpdateExamAsync(Exam exam)
+        {
+            var existingExam = await GetExamAsync(exam.ExamId, true);
+            if (existingExam != null)
+            {
+                existingExam.Name = exam.Name;
+                existingExam.LectureCode = exam.LectureCode;
+
+                Update(existingExam);
+            }
+        }
+
+        public async Task DeleteExamAsync(Exam exam)
+        {
+            var existingExam = await GetExamAsync(exam.ExamId, true);
+            if (existingExam != null)
+            {
+                Delete(existingExam);
+            }
         }
     }
 }

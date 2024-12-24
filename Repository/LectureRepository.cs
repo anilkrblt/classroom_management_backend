@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,27 +20,45 @@ namespace Repository
                 .ToListAsync();
         }
 
+
         public async Task<Lecture> GetLectureAsync(string lectureCode, bool trackChanges)
         {
-            return await FindByCondition(l => l.Code == lectureCode, trackChanges)
-                .SingleOrDefaultAsync();
+            return await FindByCondition(l => l.Code == lectureCode, trackChanges).SingleOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Lecture>> GetByIdsAsync(IEnumerable<string> ids, bool trackChanges)
+        public void CreateLecture(Lecture lecture)
         {
-            return await FindByCondition(l => ids.Contains(l.Code), trackChanges)
-                .ToListAsync();
-        }
-
-        public void DeleteLecture(Lecture lecture)
-        {
-            Delete(lecture);
-        }
-
-        public void CreateLecture(int departmentId, Lecture lecture)
-        {
-            lecture.DepartmentId = departmentId; // Dersi belirli bir bölümle ilişkilendirir
             Create(lecture);
         }
+
+        public async Task UpdateLectureAsync(Lecture lecture, string code)
+        {
+            var existingLecture = await GetLectureAsync(code, true);
+            if (existingLecture != null)
+            {
+                existingLecture.Name = lecture.Name;
+                existingLecture.DepartmentId = lecture.DepartmentId;
+
+                Update(existingLecture);
+            }
+        }
+
+        public async Task DeleteLectureAsync(Lecture lecture)
+        {
+            var existingLecture = await GetLectureAsync(lecture.Code, true);
+            if (existingLecture != null)
+            {
+                Delete(existingLecture);
+            }
+        }
+
+        public async Task<IEnumerable<Lecture>> GetLecturesByInstructorIdAsync(int instructorId, bool trackChanges)
+        {
+            return await FindByCondition(lecture => lecture.LectureSessions.Any(ls => ls.InstructorId == instructorId), trackChanges)
+                .Include(lecture => lecture.Department) 
+                .Include(lecture => lecture.LectureSessions)
+                .ToListAsync();
+        }
+    
     }
 }

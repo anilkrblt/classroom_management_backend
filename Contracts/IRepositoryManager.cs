@@ -5,20 +5,19 @@
 
         IStudentRepository Student { get; }
         IBuildingRepository Building { get; }
-        IClassRepository Class { get; }
         IClubRepository Club { get; }
-        IClubReservationRepository ClubReservation { get; }
+        IClubMembershipRepository ClubMembership { get; }
         IDepartmentRepository Department { get; }
         IEmployeeRepository Employee { get; }
         IEnrollmentRepository Enrollment { get; }
-        IExamClassRepository ExamClass { get; }
         IExamRepository Exam { get; }
+        IExamSessionRepository ExamSession { get; }
+        IInstructorPreferenceRepository InstructorPreference { get; }
         IInstructorRepository Instructor { get; }
-        ILabRepository Lab { get; }
-        ILectureHallRepository LectureHall { get; }
         ILectureRepository Lecture { get; }
-        ILectureReservationRepository LectureReservation { get; }
         ILectureSessionRepository LectureSession { get; }
+        INotificationRecipientRepository NotificationRecipient { get; }
+        INotificationRepository Notification { get; }
         IRequestRepository Request { get; }
         IReservationRepository Reservation { get; }
         IRoomRepository Room { get; }

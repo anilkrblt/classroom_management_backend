@@ -1,157 +1,96 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Shared.DataTransferObjects;
 using Service.Contracts;
 using Contracts;
 using AutoMapper;
 using Entities.Models;
-using NLog;
-using Entities.Exceptions;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Service
 {
     public class RoomService : IRoomService
     {
-        private readonly IRepositoryManager _repository;
+        private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
 
-        private readonly ILogger _logger;
-
-        public RoomService(IRepositoryManager repository, IMapper mapper, ILogger logger)
+        public RoomService(IRepositoryManager repositoryManager, IMapper mapper)
         {
-            _repository = repository;
+            _repositoryManager = repositoryManager;
             _mapper = mapper;
-            _logger = logger;
         }
 
+        // Get all rooms
         public async Task<IEnumerable<RoomDto>> GetAllRoomsAsync(bool trackChanges)
         {
-            var rooms = await _repository.Room.GetAllRoomsAsync(trackChanges);
+            var rooms = await _repositoryManager.Room.GetAllRoomsAsync(trackChanges);
             return _mapper.Map<IEnumerable<RoomDto>>(rooms);
         }
 
+        // Get a specific room by ID
         public async Task<RoomDto> GetRoomByIdAsync(int roomId, bool trackChanges)
         {
-            var room = await _repository.Room.GetRoomAsync(roomId, trackChanges);
+            var room = await _repositoryManager.Room.GetRoomAsync(roomId, trackChanges);
+
             if (room == null)
-                throw new RoomNotFoundException(roomId);
+                throw new KeyNotFoundException($"Room with ID {roomId} not found.");
 
             return _mapper.Map<RoomDto>(room);
         }
 
-        public async Task<IEnumerable<RoomDto>> GetRoomsByDepartmentId(int departmentId, bool trackChanges)
+        // Get rooms by building ID
+        public async Task<IEnumerable<RoomDto>> GetRoomsByBuildingIdAsync(int buildingId, bool trackChanges)
         {
+            var rooms = await _repositoryManager.Room.GetRoomsByBuildingId(buildingId, trackChanges);
 
-            var lhs = await _repository.LectureHall.GetAllLectureHallsAsync(trackChanges);
-            var classes = await _repository.Class.GetAllClasssAsync(trackChanges);
-            var labs = await _repository.Lab.GetAllLabsAsync(trackChanges);
-
-            var lectureHallsByDepartment = lhs.Where(lh => lh.DepartmentId == departmentId).Select(lh => lh.Room).ToList();
-            var classesByDepartment = classes.Where(c => c.DepartmentId == departmentId).Select(c => c.Room).ToList();
-            var labsByDepartment = labs.Where(l => l.DepartmentId == departmentId).Select(l => l.Room).ToList();
-            var rooms = lectureHallsByDepartment.Concat(labsByDepartment).Concat(classesByDepartment);
-
+            if (!rooms.Any())
+                throw new KeyNotFoundException($"No rooms found for Building with ID {buildingId}.");
 
             return _mapper.Map<IEnumerable<RoomDto>>(rooms);
         }
 
-        public async Task DeleteRoomForBuildingAsync(int roomId, int buildingId, bool trackChanges)
+        // Get rooms by department ID
+        public async Task<IEnumerable<RoomDto>> GetRoomsByDepartmentIdAsync(int departmentId, bool trackChanges)
         {
-            var building = await _repository.Building.GetBuildingAsync(buildingId, trackChanges);
-            if (building == null)
-                throw new ArgumentException("aaaa");
+            var rooms = await _repositoryManager.Room.GetRoomsByDepartmentId(departmentId, trackChanges);
 
-            var room = await _repository.Room.GetRoomAsync(roomId, trackChanges);
+            if (!rooms.Any())
+                throw new KeyNotFoundException($"No rooms found for Department with ID {departmentId}.");
+
+            return _mapper.Map<IEnumerable<RoomDto>>(rooms);
+        }
+
+        // Create a new room
+        public async Task CreateRoomAsync(RoomDto roomDto)
+        {
+            var room = _mapper.Map<Room>(roomDto);
+
+            _repositoryManager.Room.CreateRoom(room);
+            await _repositoryManager.SaveAsync();
+        }
+
+        // Update an existing room
+        public async Task UpdateRoomAsync(int roomId, RoomDto roomDto)
+        {
+            var room = await _repositoryManager.Room.GetRoomAsync(roomId, trackChanges: true);
+
             if (room == null)
-                throw new RoomNotFoundException(roomId);
-            _repository.Room.DeleteRoom(room);
-            await _repository.SaveAsync();
+                throw new KeyNotFoundException($"Room with ID {roomId} not found.");
+
+            _mapper.Map(roomDto, room);
+            await _repositoryManager.SaveAsync();
         }
 
-        public async Task UpdateRoomForBuilding(int buildingId, int roomId, RoomDto roomForUpdate, bool buildingTrackChanges, bool roomTrackChanges)
+        // Delete a room
+        public async Task DeleteRoomAsync(int roomId)
         {
-            var building = await _repository.Building.GetBuildingAsync(buildingId, buildingTrackChanges);
-            if (building == null)
-                throw new ArgumentException("aaaa");
+            var room = await _repositoryManager.Room.GetRoomAsync(roomId, trackChanges: true);
 
-            var room = await _repository.Room.GetRoomAsync(roomId, roomTrackChanges);
             if (room == null)
-                throw new RoomNotFoundException(roomId);
+                throw new KeyNotFoundException($"Room with ID {roomId} not found.");
 
-            _mapper.Map(roomForUpdate, room);
-
-            await _repository.SaveAsync();
+            await _repositoryManager.Room.DeleteRoomAsync(room);
+            await _repositoryManager.SaveAsync();
         }
-
-        public async Task<RoomDto> CreateRoomForBuilding(int buildingId, RoomDto roomForCreation, bool trackChanges)
-        {
-            var building = await _repository.Building.GetBuildingAsync(buildingId, trackChanges);
-            if (building == null)
-                throw new ArgumentException("aaaa");
-
-            var roomEntity = _mapper.Map<Room>(roomForCreation);
-            roomEntity.BuildingId = buildingId;
-
-            _repository.Room.CreateRoomForBuilding(buildingId, roomEntity);
-            await _repository.SaveAsync();
-
-            return _mapper.Map<RoomDto>(roomEntity);
-        }
-
-        public async Task<IEnumerable<LectureHallDto>> GetAllLectureHallsAsync(bool trackChanges)
-        {
-            var lectureHalls = await _repository.LectureHall.GetAllLectureHallsAsync(trackChanges);
-            return _mapper.Map<IEnumerable<LectureHallDto>>(lectureHalls);
-        }
-
-        public async Task<LectureHallDto> GetLectureHallByIdAsync(int roomId, bool trackChanges)
-        {
-            var lectureHall = await _repository.LectureHall.GetLectureHallAsync(roomId, trackChanges);
-            if (lectureHall == null)
-                throw new ArgumentException("Lecture Hall not found.");
-
-            return _mapper.Map<LectureHallDto>(lectureHall);
-        }
-
-        public Task<LectureHallDto> CreateLectureHallForRoom(int roomId, LectureHallDto lectureHallForCreation, bool trackChanges)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<LabDto>> GetAllLabsAsync(bool trackChanges)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateLabForRoom(int roomId, LabDto labForUpdate, bool labTrackChanges)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<LabDto> CreateLabForRoom(int roomId, LabDto labForCreation, bool trackChanges)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<ClassDto>> GetAllClassesAsync(bool trackChanges)
-        {
-            var classes = await _repository.Class.GetAllClasssAsync(trackChanges);
-            return _mapper.Map<IEnumerable<ClassDto>>(classes);
-        }
-
-
-
-        public Task UpdateClassForRoom(int roomId, ClassDto classForUpdate, bool classTrackChanges)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ClassDto> CreateClassForRoom(int roomId, ClassDto classForCreation, bool trackChanges)
-        {
-            throw new NotImplementedException();
-        }
-
     }
 }

@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Contracts;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
@@ -10,35 +13,59 @@ namespace Repository
         {
         }
 
+        // Get all lecture sessions
         public async Task<IEnumerable<LectureSession>> GetAllLectureSessionsAsync(bool trackChanges)
         {
             return await FindAll(trackChanges)
-                .OrderBy(ls => ls.StartTime)
+                .OrderBy(ls => ls.DayOfWeek) // Lecture sessions sorted by day of week
                 .ToListAsync();
         }
 
+        // Get a specific lecture session by ID
         public async Task<LectureSession> GetLectureSessionAsync(int lectureSessionId, bool trackChanges)
         {
-            return await FindByCondition(ls => ls.LectureSessionId == lectureSessionId, trackChanges).SingleOrDefaultAsync();
+            return await FindByCondition(ls => ls.LectureSessionId == lectureSessionId, trackChanges)
+                .SingleOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<LectureSession>> GetByIdsAsync(IEnumerable<int> ids, bool trackChanges)
+        // Get lecture sessions by instructor ID
+        public async Task<IEnumerable<LectureSession>> GetLectureSessionByInstructorIdAsync(int instructorId, bool trackChanges)
         {
-            return await FindByCondition(ls => ids.Contains(ls.LectureSessionId), trackChanges).ToListAsync();
+            return await FindByCondition(ls => ls.InstructorId == instructorId, trackChanges)
+                .OrderBy(ls => ls.DayOfWeek) // Lecture sessions sorted by day of week
+                .ToListAsync();
         }
 
-        public void DeleteLectureSession(LectureSession lectureSession)
+        // Create a new lecture session
+        public void CreateLectureSession(LectureSession lectureSession)
         {
-            Delete(lectureSession);
-        }
-
-        public void CreateLectureSession(int roomId, int instructorId, string lectureCode, LectureSession lectureSession)
-        {
-            lectureSession.RoomId = roomId;
-            lectureSession.InstructorId = instructorId;
-            lectureSession.LectureCode = lectureCode;
             Create(lectureSession);
+        }
+
+        // Update an existing lecture session
+        public async Task UpdateLectureSessionAsync(LectureSession lectureSession)
+        {
+            var existingSession = await GetLectureSessionAsync(lectureSession.LectureSessionId, true);
+            if (existingSession != null)
+            {
+                existingSession.DayOfWeek = lectureSession.DayOfWeek;
+                existingSession.StartTime = lectureSession.StartTime;
+                existingSession.EndTime = lectureSession.EndTime;
+                existingSession.LectureCode = lectureSession.LectureCode;
+                existingSession.RoomId = lectureSession.RoomId;
+                existingSession.InstructorId = lectureSession.InstructorId;
+
+                Update(existingSession);
+            }
+        }
+
+        public async Task DeleteLectureSessionAsync(LectureSession lectureSession)
+        {
+            var existingSession = await GetLectureSessionAsync(lectureSession.LectureSessionId, true);
+            if (existingSession != null)
+            {
+                Delete(existingSession);
+            }
         }
     }
 }
-

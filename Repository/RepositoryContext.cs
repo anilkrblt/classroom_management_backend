@@ -3,59 +3,40 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Repository
 {
-    public class RepositoryContext(DbContextOptions<RepositoryContext> options) : DbContext(options)
+    public class RepositoryContext : DbContext
     {
+        // Constructor
+        public RepositoryContext(DbContextOptions options) : base(options)
+        {
+        }
 
-      
-/*
-// veri tabanında default veri yükleyerek başlatabilmek için
+        // Default veriler için OnModelCreating override edilebilir.
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new CompanyConfiguration());
-            modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
-        }*/
+            base.OnModelCreating(modelBuilder);
+            // Configurations (Opsiyonel: Eğer konfigürasyonlar varsa)
+            // modelBuilder.ApplyConfiguration(new CompanyConfiguration());
+            // modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+        }
 
-
-        public required DbSet<Building> Buildings { get; set; }
-        public required DbSet<Class> Classes { get; set; }
-
-        public required DbSet<Club> Clubs { get; set; }
-
-        public required DbSet<ClubReservation> ClubReservations { get; set; }
-
-        public required DbSet<Department> Departments { get; set; }
-
-        public required DbSet<Employee> Employees { get; set; }
-
-        public required DbSet<Enrollment> Enrollments { get; set; }
-
-        public required DbSet<Exam> Exams { get; set; }
-
-        public required DbSet<ExamClass> ExamClasses { get; set; }
-
-        public required DbSet<Instructor> Instructors { get; set; }
-
-        public required DbSet<Lab> Labs { get; set; }
-
-        public required DbSet<Lecture> Lectures { get; set; }
-
-        public required DbSet<LectureHall> LectureHalls { get; set; }
-
-        public required DbSet<LectureReservation> LectureReservations { get; set; }
-
-        public required DbSet<LectureSession> LectureSessions { get; set; }
-
-        public required DbSet<Request> Requests { get; set; }
-
-        public required DbSet<Reservation> Reservations { get; set; }
-
-        public required DbSet<Room> Rooms { get; set; }
-
-        public required DbSet<Student> Students { get; set; }
-
-
-
-
+        public DbSet<Building>? Buildings { get; set; }
+        public  DbSet<Club>? Clubs { get; set; }
+        public  DbSet<Department>? Departments { get; set; }
+        public DbSet<Employee>? Employees { get; set; }
+        public DbSet<Enrollment>? Enrollments { get; set; }
+        public DbSet<Exam>? Exams { get; set; }
+        public DbSet<Instructor>? Instructors { get; set; }
+        public DbSet<Lecture>? Lectures { get; set; }
+        public DbSet<LectureSession>? LectureSessions { get; set; }
+        public DbSet<Request>? Requests { get; set; }
+        public DbSet<Reservation>? Reservations { get; set; }
+        public DbSet<Room>? Rooms { get; set; }
+        public DbSet<Student>? Students { get; set; }
+        public DbSet<ClubMembership>? ClubMemberships { get; set; }
+        public DbSet<InstructorPreference>? InstructorPreferences { get; set; }
+        public DbSet<NotificationRecipient>? NotificationRecipients { get; set; }
+        public DbSet<Notification>? Notifications { get; set; }
+        public DbSet<ExamSession>? ExamSessions { get; set; }
 
 
     }

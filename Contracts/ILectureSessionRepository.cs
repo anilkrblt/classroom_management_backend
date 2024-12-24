@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Entities.Models;
 
 namespace Contracts
@@ -6,11 +8,9 @@ namespace Contracts
     {
         Task<IEnumerable<LectureSession>> GetAllLectureSessionsAsync(bool trackChanges);
         Task<LectureSession> GetLectureSessionAsync(int lectureSessionId, bool trackChanges);
-        Task<IEnumerable<LectureSession>> GetByIdsAsync(IEnumerable<int> ids, bool trackChanges);
-        void DeleteLectureSession(LectureSession LectureSession);
-
-        void CreateLectureSession(int roomId, int instructorId, string lectureCode,LectureSession LectureSession);
-
-
+        Task<IEnumerable<LectureSession>> GetLectureSessionByInstructorIdAsync(int instructorId, bool trackChanges);
+        void CreateLectureSession(LectureSession lectureSession);
+        Task UpdateLectureSessionAsync(LectureSession lectureSession);
+        Task DeleteLectureSessionAsync(LectureSession lectureSession);
     }
 }

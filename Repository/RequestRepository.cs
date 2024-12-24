@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,47 +13,69 @@ namespace Repository
         {
         }
 
+        // Get all requests
         public async Task<IEnumerable<Request>> GetAllRequestsAsync(bool trackChanges)
         {
             return await FindAll(trackChanges)
-                .OrderBy(r => r.UpdatedAt)
+                .OrderBy(r => r.CreatedAt) // Requests sorted by creation date
                 .ToListAsync();
         }
 
+        // Get a specific request by ID
         public async Task<Request> GetRequestAsync(int requestId, bool trackChanges)
         {
-            return await FindByCondition(r => r.RequestId == requestId, trackChanges).SingleOrDefaultAsync();
+            return await FindByCondition(r => r.RequestId == requestId, trackChanges)
+                .SingleOrDefaultAsync();
         }
+
+        // Get requests by room ID
         public async Task<IEnumerable<Request>> GetRequestsByRoomIdAsync(int roomId, bool trackChanges)
         {
-            return await FindByCondition(r => r.RoomId == roomId, trackChanges).ToListAsync();
-
-        }
-
-        public async Task<IEnumerable<Request>> GetByIdsAsync(IEnumerable<int> ids, bool trackChanges)
-        {
-            return await FindByCondition(r => ids.Contains(r.RequestId), trackChanges)
+            return await FindByCondition(r => r.RoomId == roomId, trackChanges)
+                .OrderBy(r => r.CreatedAt) // Requests sorted by creation date
                 .ToListAsync();
         }
 
-        public void DeleteRequest(Request request)
+        // Get requests by user ID
+        public async Task<IEnumerable<Request>> GetRequestsByUserIdAsync(int userId, bool trackChanges)
         {
-            Delete(request);
+            return await FindByCondition(r => r.SubmittedBy == userId, trackChanges)
+                .OrderBy(r => r.CreatedAt) // Requests sorted by creation date
+                .ToListAsync();
         }
 
-        public void CreateRequestByStudentId(int id, Request request)
+        // Create a new request
+        public void CreateRequest(Request request)
         {
-            request.StudentId = id;
             Create(request);
         }
 
-        public void CreateRequestByInstructorId(int id, Request request)
+        // Update an existing request
+        public async Task UpdateRequestAsync(Request request)
         {
-            request.InstructorId = id;
-            Create(request);
+            var existingRequest = await GetRequestAsync(request.RequestId, true);
+            if (existingRequest != null)
+            {
+                existingRequest.Type = request.Type;
+                existingRequest.Content = request.Content;
+                existingRequest.Status = request.Status;
+                existingRequest.PhotoPath = request.PhotoPath;
+                existingRequest.RoomId = request.RoomId;
+                existingRequest.SubmittedBy = request.SubmittedBy;
+                existingRequest.UpdatedAt = request.UpdatedAt;
+
+                Update(existingRequest);
+            }
         }
 
-       
+        // Delete a request
+        public async Task DeleteRequestAsync(Request request)
+        {
+            var existingRequest = await GetRequestAsync(request.RequestId, true);
+            if (existingRequest != null)
+            {
+                Delete(existingRequest);
+            }
+        }
     }
 }
-

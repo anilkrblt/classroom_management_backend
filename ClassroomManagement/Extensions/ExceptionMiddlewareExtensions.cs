@@ -3,7 +3,7 @@ using Contracts;
 using Entities.ErrorModel;
 using Microsoft.AspNetCore.Diagnostics;
 
-namespace CompanyEmployees.Extensions
+namespace ClassroomManagement.Extensions
 {
     public static class ExceptionMiddlewareExtensions
     {
@@ -21,7 +21,6 @@ namespace CompanyEmployees.Extensions
                                             context.Response.StatusCode = contextFeature.Error switch
                                             {
                                                
-
                                             };
                                             logger.LogError($"Something went wrong: {contextFeature.Error}");
                                             await context.Response.WriteAsync(new ErrorDetails()

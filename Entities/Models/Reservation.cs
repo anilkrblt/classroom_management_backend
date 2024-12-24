@@ -1,33 +1,51 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic;
 
 namespace Entities.Models
 {
+    public enum ReservationType
+    {
+        Regular,
+        ClubActivity,
+        LecturePostponement
+    }
+
+    [Table("Reservation")]
     public class Reservation
     {
+        [Key]
         public int ReservationId { get; set; }
+
+        [Required]
         public DateTime EventDate { get; set; }
-        public DateTime StartTime { get; set; }
 
-        public DateTime EndTime { get; set; }
+        [Required]
+        public TimeSpan StartTime { get; set; }
 
-        [ForeignKey("Instructor")]
-        public int ApprovedBy { get; set; }
-        public Instructor Instructor { get; set; }
+        [Required]
+        public TimeSpan EndTime { get; set; }
 
-        public string? Description { get; set; }
+        [Required]
+        public ReservationType ReservationType { get; set; }
 
-        public required ICollection<LectureReservation> LectureReservations { get; set; }
-        public required ICollection<ClubReservation> ClubReservations { get; set; }
+        [ForeignKey("Lecture")]
+        public string LectureCode { get; set; }
+
+        [ForeignKey("Room")]
         public int RoomId { get; set; }
-        [ForeignKey("RoomId")]
+
+        public string EventRegisterLink { get; set; }
+
+        public string ClubName { get; set; }
+
+        public int CreatedBy { get; set; }
+
+        public Lecture Lecture { get; set; }
         public Room Room { get; set; }
-
-
-
-
     }
 }

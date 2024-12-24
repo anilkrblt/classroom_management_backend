@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,14 +22,32 @@ namespace Repository
 
         public async Task<Department> GetDepartmentAsync(int departmentId, bool trackChanges)
         {
-            return await FindByCondition(d => d.DepartmentId == departmentId, trackChanges)
-                .SingleOrDefaultAsync();
+            return await FindByCondition(d => d.DepartmentId == departmentId, trackChanges).SingleOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Department>> GetByIdsAsync(IEnumerable<int> ids, bool trackChanges)
+        public void CreateDepartment(Department department)
         {
-            return await FindByCondition(d => ids.Contains(d.DepartmentId), trackChanges)
-                .ToListAsync();
+            Create(department);
+        }
+
+        public async Task UpdateDepartmentAsync(Department department)
+        {
+            var existingDepartment = await GetDepartmentAsync(department.DepartmentId, true);
+            if (existingDepartment != null)
+            {
+                existingDepartment.Name = department.Name;
+
+                Update(existingDepartment);
+            }
+        }
+
+        public async Task DeleteDepartmentAsync(Department department)
+        {
+            var existingDepartment = await GetDepartmentAsync(department.DepartmentId, true);
+            if (existingDepartment != null)
+            {
+                Delete(existingDepartment);
+            }
         }
     }
 }

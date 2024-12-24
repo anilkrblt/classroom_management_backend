@@ -1,44 +1,82 @@
-using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace class_management_backend.controllers
+namespace ClassroomManagementPresentation.Controllers
 {
     [Route("api/instructors")]
     [ApiController]
-
-
     public class InstructorsController : ControllerBase
     {
+        private readonly IServiceManager _serviceManager;
 
-        private readonly IServiceManager _servisManager;
         public InstructorsController(IServiceManager serviceManager)
         {
-            _servisManager = serviceManager;
+            _serviceManager = serviceManager;
         }
 
-
-        /*
-        [HttpGet("department/{id:int}")]
-        public async Task<ActionResult<IEnumerable<InstructorDTO>>> GetInstructorsByDepartmentId([FromRoute]int departmentId)
+        // GET: api/Instructors
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<InstructorDto>>> GetInstructors()
         {
-            var instructors=_servisManager.InstructorService.
+            var instructors = await _serviceManager.InstructorService.GetAllInstructorsAsync(trackChanges: false);
+            return Ok(instructors);
         }
-        */
-        [HttpGet("lecture/{id:int}")]
-        public async Task<ActionResult<IEnumerable<InstructorDto>>> GetInstructorForLectureSession([FromRoute]int instructorId)
+
+        // GET: api/Instructors/{id}
+        [HttpGet("{id}")]
+        public async Task<ActionResult<InstructorDto>> GetInstructor(int id)
         {
-            var instructor=_servisManager.InstructorService.GetInstructorForLectureSessionsAsync(instructorId,false);
+            var instructor = await _serviceManager.InstructorService.GetInstructorByIdAsync(id, trackChanges: false);
+
+            if (instructor == null)
+                return NotFound($"Instructor with ID {id} not found.");
+
             return Ok(instructor);
         }
 
-
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<InstructorDto>> GetInstructor([FromRoute]int instructorId)
+        // GET: api/Instructors/{id}/lectures
+        [HttpGet("{id}/lectures")]
+        public async Task<ActionResult<IEnumerable<LectureDto>>> GetInstructorsLectures(int id)
         {
-            var instructor = await _servisManager.InstructorService.GetInstructorByIdAsync(instructorId, false);
-            return Ok(instructor);
+            var lectures = await _serviceManager.InstructorService.GetInstructorLecturesAsync(id, trackChanges: false);
+
+            if (lectures == null || !lectures.Any())
+                return NotFound($"No lectures found for Instructor with ID {id}.");
+
+            return Ok(lectures);
+        }
+
+        // POST: api/Instructors
+        [HttpPost]
+        public async Task<ActionResult> CreateInstructor([FromBody] InstructorDto instructorDto)
+        {
+            if (instructorDto == null)
+                return BadRequest("InstructorDto object is null.");
+
+            await _serviceManager.InstructorService.CreateInstructorAsync(instructorDto);
+            return CreatedAtAction(nameof(GetInstructor), new { id = instructorDto.InstructorId }, instructorDto);
+        }
+
+        // PUT: api/Instructors/{id}
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateInstructor(int id, [FromBody] InstructorDto instructorDto)
+        {
+            if (instructorDto == null)
+                return BadRequest("InstructorDto object is null.");
+
+            await _serviceManager.InstructorService.UpdateInstructorAsync(id, instructorDto);
+            return NoContent();
+        }
+
+        // DELETE: api/Instructors/{id}
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteInstructor(int id)
+        {
+            await _serviceManager.InstructorService.DeleteInstructorAsync(id);
+            return NoContent();
         }
     }
 }

@@ -1,131 +1,85 @@
-using System;
+using Shared.DataTransferObjects;
+using Service.Contracts;
+using Contracts;
+using AutoMapper;
+using Entities.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
-using Contracts;
-using Entities.Exceptions;
-using Entities.Models;
-using NLog;
-using Service.Contracts;
-using Shared.DataTransferObjects;
 
 namespace Service
 {
     public class InstructorService : IInstructorService
     {
-
-        private readonly IRepositoryManager _repository;
-        private readonly ILogger _logger;
+        private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
 
-
-        public InstructorService(IRepositoryManager repository,ILogger logger,IMapper mapper)
+        public InstructorService(IRepositoryManager repositoryManager, IMapper mapper)
         {
-            _repository = repository;
-            _logger = logger;
-            _mapper=mapper;
+            _repositoryManager = repositoryManager;
+            _mapper = mapper;
         }
 
-        public async Task<InstructorDto> CreateInstructorForDepartment(InstructorDto instructorForCreation,int departmentId, bool trackChanges)
-        {
-            await GetDepartmentAndCheckIfItExists(departmentId, trackChanges);
-
-            var instructorEntity = _mapper.Map<Instructor>(instructorForCreation);
-
-            _repository.Instructor.CreateInstructorForDepartment(instructorEntity,departmentId);
-            await _repository.SaveAsync();
-            var employeeToReturn = _mapper.Map<InstructorDto>(instructorEntity);
-
-            return employeeToReturn;
-        }
-
-        public async Task DeleteInstructorForDepartmentAsync(int departmentId, int instructorId, bool trackChanges)
-        {
-            await GetDepartmentAndCheckIfItExists(departmentId, trackChanges);
-
-            var instructor = await _repository.Instructor.GetInstructorAsync(instructorId,trackChanges);
-            if (instructor is null)
-                throw new InstructorNotFoundException(instructorId);
-            _repository.Instructor.DeleteInstructor(instructor);
-            await _repository.SaveAsync();
-        }
-
+        // Get all instructors
         public async Task<IEnumerable<InstructorDto>> GetAllInstructorsAsync(bool trackChanges)
         {
-            var instructors=await _repository.Instructor.GetAllInstructorsAsync(trackChanges);
-            var instructorsDto=_mapper.Map<IEnumerable<InstructorDto>>(instructors);
-            return instructorsDto;
+            var instructors = await _repositoryManager.Instructor.GetAllInstructorsAsync(trackChanges);
+            return _mapper.Map<IEnumerable<InstructorDto>>(instructors);
         }
 
+        // Get a specific instructor by ID
         public async Task<InstructorDto> GetInstructorByIdAsync(int instructorId, bool trackChanges)
         {
-            var instructor=await GetInstructorAndCheckIfItExists(instructorId,trackChanges);
-            var instructorDto=_mapper.Map<InstructorDto>(instructor);
-            return instructorDto;
+            var instructor = await _repositoryManager.Instructor.GetInstructorAsync(instructorId, trackChanges);
+
+            if (instructor == null)
+                throw new KeyNotFoundException($"Instructor with ID {instructorId} not found.");
+
+            return _mapper.Map<InstructorDto>(instructor);
         }
 
-        public async Task<IEnumerable<LectureSessionDto>> GetInstructorForLectureSessionsAsync(int instructorId, bool trackChanges)
+        // Get lectures taught by a specific instructor
+        public async Task<IEnumerable<LectureDto>> GetInstructorLecturesAsync(int instructorId, bool trackChanges)
         {
-            var lectureSessions = await _repository.LectureSession.GetAllLectureSessionsAsync(trackChanges);
-            var instructorsSessions = lectureSessions.Where(ls => ls.InstructorId==instructorId);
-            return _mapper.Map<IEnumerable<LectureSessionDto>>(instructorsSessions);
+            var lectures = await _repositoryManager.Lecture.GetLecturesByInstructorIdAsync(instructorId, trackChanges);
 
+            if (!lectures.Any())
+                throw new KeyNotFoundException($"No lectures found for Instructor with ID {instructorId}.");
+
+            return _mapper.Map<IEnumerable<LectureDto>>(lectures);
         }
 
-        public async Task<IEnumerable<InstructorDto>> GetInstructorsByIdsAsync(IEnumerable<int> instructorId, bool trackChanges)
+        // Create a new instructor
+        public async Task CreateInstructorAsync(InstructorDto instructorDto)
         {
-            if (instructorId is null)
-                throw new IdParametersBadRequestException();
+            var instructor = _mapper.Map<Instructor>(instructorDto);
 
-            var instructorEntities=await _repository.Club.GetByIdsAsync(instructorId,trackChanges);
-            if (instructorId.Count() != instructorEntities.Count())
-                throw new CollectionByIdsBadRequestException();
-
-            var instructorsToReturn = _mapper.Map<IEnumerable<InstructorDto>>(instructorEntities);
-
-            return instructorsToReturn;
+            _repositoryManager.Instructor.CreateInstructor(instructor);
+            await _repositoryManager.SaveAsync();
         }
 
-        public async Task UpdateInstructorForDepartment(int instructorId, int departmentId, InstructorDto instructorForUpdate, bool insTrackChanges, bool depTrackChanges)
+        // Update an existing instructor
+        public async Task UpdateInstructorAsync(int instructorId, InstructorDto instructorDto)
         {
-            await GetDepartmentAndCheckIfItExists(departmentId,depTrackChanges);
+            var instructor = await _repositoryManager.Instructor.GetInstructorAsync(instructorId, trackChanges: true);
 
-            var instructor = await _repository.Instructor.GetInstructorAsync(instructorId,insTrackChanges);
-            if (instructor is null)
-                throw new InstructorNotFoundException(instructorId);
-            _mapper.Map(instructorForUpdate, instructor);
-            await _repository.SaveAsync();
+            if (instructor == null)
+                throw new KeyNotFoundException($"Instructor with ID {instructorId} not found.");
+
+            _mapper.Map(instructorDto, instructor);
+            await _repositoryManager.SaveAsync();
         }
 
-        public Task UpdateInstructorLectureSessions(int instructorId, LectureSessionDto lectureSession)
+        // Delete an instructor
+        public async Task DeleteInstructorAsync(int instructorId)
         {
-            throw new NotImplementedException();
+            var instructor = await _repositoryManager.Instructor.GetInstructorAsync(instructorId, trackChanges: true);
+
+            if (instructor == null)
+                throw new KeyNotFoundException($"Instructor with ID {instructorId} not found.");
+
+            await _repositoryManager.Instructor.DeleteInstructorAsync(instructor);
+            await _repositoryManager.SaveAsync();
         }
-
-
-
-
-
-
-
-        private async Task<Instructor> GetInstructorAndCheckIfItExists(int instructorId, bool trackChanges)
-        {
-            var instructor = await _repository.Instructor.GetInstructorAsync(instructorId, trackChanges);
-            if (instructor is null)
-                throw new InstructorNotFoundException(instructorId);
-            return instructor;
-        }
-
-
-        private async Task<Department> GetDepartmentAndCheckIfItExists(int departmentId, bool trackChanges)
-        {
-            var department = await _repository.Department.GetDepartmentAsync(departmentId, trackChanges);
-            if (department is null)
-                throw new DepartmentNotFoundException(departmentId);
-            return department;
-        }
-
-
     }
 }

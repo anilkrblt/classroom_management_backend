@@ -1,134 +1,96 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Shared.DataTransferObjects;
 using Service.Contracts;
 using Contracts;
 using AutoMapper;
 using Entities.Models;
-using NLog;
-using Entities.Exceptions;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Service
 {
     public class RequestService : IRequestService
     {
-        private readonly IRepositoryManager _repository;
+        private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
 
-        private readonly ILogger _logger;
-
-        public RequestService(IRepositoryManager repository, IMapper mapper, ILogger logger)
+        public RequestService(IRepositoryManager repositoryManager, IMapper mapper)
         {
-            _repository = repository;
+            _repositoryManager = repositoryManager;
             _mapper = mapper;
-            _logger = logger;
         }
 
+        // Get all requests
         public async Task<IEnumerable<RequestDto>> GetAllRequestsAsync(bool trackChanges)
         {
-            var requests = await _repository.Request.GetAllRequestsAsync(trackChanges);
+            var requests = await _repositoryManager.Request.GetAllRequestsAsync(trackChanges);
             return _mapper.Map<IEnumerable<RequestDto>>(requests);
         }
 
-        public async Task<RequestDto> GetRequestAsync(int requestId, bool trackChanges)
+        // Get a specific request by ID
+        public async Task<RequestDto> GetRequestByIdAsync(int requestId, bool trackChanges)
         {
-            var request = await _repository.Request.GetRequestAsync(requestId, trackChanges);
+            var request = await _repositoryManager.Request.GetRequestAsync(requestId, trackChanges);
+
             if (request == null)
-                throw new ArgumentException("Request not found.");
+                throw new KeyNotFoundException($"Request with ID {requestId} not found.");
 
             return _mapper.Map<RequestDto>(request);
         }
 
-        public async Task<IEnumerable<RequestDto>> GetByIdsAsync(IEnumerable<int> ids, bool trackChanges)
+        // Get requests by room ID
+        public async Task<IEnumerable<RequestDto>> GetRequestsByRoomIdAsync(int roomId, bool trackChanges)
         {
-            if (ids is null)
-                throw new IdParametersBadRequestException();
-            var requests = await _repository.Request.GetByIdsAsync(ids, trackChanges);
+            var requests = await _repositoryManager.Request.GetRequestsByRoomIdAsync(roomId, trackChanges);
 
-            if (ids.Count() != requests.Count())
-                throw new CollectionByIdsBadRequestException();
+            if (!requests.Any())
+                throw new KeyNotFoundException($"No requests found for Room with ID {roomId}.");
 
             return _mapper.Map<IEnumerable<RequestDto>>(requests);
         }
 
-        public IEnumerable<RequestDto> GetRequestsByRoomId(int roomId, bool roomTrackChanges, bool requestTrackChanges)
+        // Get requests by user ID
+        public async Task<IEnumerable<RequestDto>> GetRequestsByUserIdAsync(int userId, bool trackChanges)
         {
-            var room = _repository.Room.GetRoomAsync(roomId, roomTrackChanges);
-            if (room is null)
-                throw new RoomNotFoundException(roomId);
+            var requests = await _repositoryManager.Request.GetRequestsByUserIdAsync(userId, trackChanges);
 
-            var requests = _repository.Request.GetRequestsByRoomIdAsync(roomId, requestTrackChanges);
+            if (!requests.Any())
+                throw new KeyNotFoundException($"No requests found for User with ID {userId}.");
+
             return _mapper.Map<IEnumerable<RequestDto>>(requests);
         }
 
-        public async Task DeleteRequest(int roomId, int requestId, bool roomTrackChanges, bool requestTrackChanges)
+        // Create a new request
+        public async Task CreateRequestAsync(RequestDto requestDto)
         {
-            var room = _repository.Room.GetRoomAsync(roomId, roomTrackChanges);
-            if (room is null)
-                throw new RoomNotFoundException(roomId);
+            var request = _mapper.Map<Request>(requestDto);
 
-            var request = await _repository.Request.GetRequestAsync(requestId, requestTrackChanges);
+            _repositoryManager.Request.CreateRequest(request);
+            await _repositoryManager.SaveAsync();
+        }
+
+        // Update an existing request
+        public async Task UpdateRequestAsync(int requestId, RequestDto requestDto)
+        {
+            var request = await _repositoryManager.Request.GetRequestAsync(requestId, true);
+
             if (request == null)
-                throw new RequestNotFoundException(requestId);
+                throw new KeyNotFoundException($"Request with ID {requestId} not found.");
 
-            _repository.Request.DeleteRequest(request);
-
-            await _repository.SaveAsync();
+            _mapper.Map(requestDto, request);
+            await _repositoryManager.SaveAsync();
         }
 
-        public async Task<RequestDto> CreateRequestForRoomByInstructorIdAsync(RequestDto requestDto, int instructorId, int roomId, bool trackChanges)
+        // Delete a request
+        public async Task DeleteRequestAsync(int requestId)
         {
-            var room = _repository.Room.GetRoomAsync(roomId, trackChanges);
-            var instructor = _repository.Instructor.GetInstructorAsync(instructorId, trackChanges);
-            if (room is null)
-                throw new RoomNotFoundException(roomId);
-            if (instructor is null)
-                throw new ArgumentException("hoca yok amk");
-            var requestEntity = _mapper.Map<Request>(requestDto);
+            var request = await _repositoryManager.Request.GetRequestAsync(requestId, true);
 
-            requestEntity.RoomId = roomId;
-            requestEntity.InstructorId = instructorId;
-
-            _repository.Request.CreateRequestByInstructorId(instructorId, requestEntity);
-
-            await _repository.SaveAsync();
-
-            return _mapper.Map<RequestDto>(requestEntity);
-        }
-        public async Task<RequestDto> CreateRequestForRoomByStudentIdAsync(RequestDto requestDto, int studentId, int roomId, bool trackChanges)
-        {
-            var room = _repository.Room.GetRoomAsync(roomId, trackChanges);
-            if (room is null)
-                throw new RoomNotFoundException(roomId);
-            var instructor = _repository.Student.GetStudentAsync(studentId, trackChanges);
-            if (instructor is null)
-                throw new ArgumentException("sen kimsin amk");
-            var requestEntity = _mapper.Map<Request>(requestDto);
-
-            requestEntity.RoomId = roomId;
-            requestEntity.StudentId = studentId;
-
-            _repository.Request.CreateRequestByInstructorId(studentId, requestEntity);
-
-            await _repository.SaveAsync();
-
-            return _mapper.Map<RequestDto>(requestEntity);
-        }
-
-
-        public async Task UpdateRequestAsync(int requestId, RequestDto requestForUpdate, bool trackChanges)
-        {
-            var request = await _repository.Request.GetRequestAsync(requestId, trackChanges);
             if (request == null)
-                throw new ArgumentException("Request not found.");
+                throw new KeyNotFoundException($"Request with ID {requestId} not found.");
 
-            _mapper.Map(requestForUpdate, request);
-
-            await _repository.SaveAsync();
+            await _repositoryManager.Request.DeleteRequestAsync(request);
+            await _repositoryManager.SaveAsync();
         }
-
-      
     }
 }

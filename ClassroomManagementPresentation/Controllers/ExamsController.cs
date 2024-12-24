@@ -1,68 +1,69 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace class_management_backend.controllers
 {
     [Route("api/exams")]
     [ApiController]
-
-
     public class ExamsController : ControllerBase
     {
+        private readonly IServiceManager _serviceManager;
 
-        private readonly IServiceManager _servisManager;
         public ExamsController(IServiceManager serviceManager)
         {
-            _servisManager = serviceManager;
+            _serviceManager = serviceManager;
         }
 
-
-        [HttpGet()]
-        public async Task<IActionResult> GetAllExams()
+        // GET: api/Exams
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ExamDto>>> GetExams()
         {
-            var exams = await _servisManager.ExamService.GetAllExamsAsync(false);
+            var exams = await _serviceManager.ExamService.GetAllExamsAsync(trackChanges: false);
             return Ok(exams);
         }
 
-        [HttpGet("department/{id:int}")]
-        public async Task<IActionResult> GetExamsByDepartmentId([FromRoute(Name ="id")]int departmentId)
+        // GET: api/Exams/{id}
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ExamDto>> GetExam(int id)
         {
-            var exams = await _servisManager.ExamService.GetExamsByDepartmentId(departmentId,false);
-            return Ok(exams);
-        }
+            var exam = await _serviceManager.ExamService.GetExamByIdAsync(id, trackChanges: false);
+            if (exam == null)
+                return NotFound($"Exam with ID {id} not found.");
 
-
-        [HttpGet("student/{studentId:int}")]
-        public async Task<IActionResult> GetExamsByStudentId(int studentId,bool trackChanges)
-        {
-            var exams=_servisManager.ExamService.GetExamsByStudentIdAsync(studentId,trackChanges);
-            return Ok(exams);
-        }
-
-
-
-        [HttpPost("create")]
-        public async Task<IActionResult> CreateExam([FromBody] ExamDto request)
-        {
-            var exam=_servisManager.ExamService.CreateExam(request,true);
             return Ok(exam);
         }
 
-
-
-
-        [HttpPut("update/{examId:int}")]
-        public async Task<IActionResult> UpdateExam(int examId, [FromBody] ExamDto request)
+        // POST: api/Exams
+        [HttpPost]
+        public async Task<ActionResult> CreateExam([FromBody] ExamDto examDto)
         {
-            var exam=_servisManager.ExamService.UpdateExamAsync(examId,request,false);
-            return Ok(exam);
+            if (examDto == null)
+                return BadRequest("ExamDto object is null.");
+
+            await _serviceManager.ExamService.CreateExamAsync(examDto);
+            return CreatedAtAction(nameof(GetExam), new { id = examDto.ExamId }, examDto);
         }
 
+        // PUT: api/Exams/{id}
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateExam(int id, [FromBody] ExamDto examDto)
+        {
+            if (examDto == null)
+                return BadRequest("ExamDto object is null.");
 
+            await _serviceManager.ExamService.UpdateExamAsync(id, examDto);
+            return NoContent();
+        }
 
-
-
-
+        // DELETE: api/Exams/{id}
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteExam(int id)
+        {
+            await _serviceManager.ExamService.DeleteExamAsync(id);
+            return NoContent();
+        }
     }
 }
