@@ -14,7 +14,7 @@ namespace Entities.Models
         public int LectureSessionId { get; set; }
 
         [Required, StringLength(20)]
-        public string DayOfWeek { get; set; }
+        public string? DayOfWeek { get; set; }
 
         [Required]
         public TimeSpan StartTime { get; set; }
@@ -23,7 +23,7 @@ namespace Entities.Models
         public TimeSpan EndTime { get; set; }
 
         [ForeignKey("Lecture")]
-        public string LectureCode { get; set; }
+        public string? LectureCode { get; set; }
 
         [ForeignKey("Room")]
         public int RoomId { get; set; }

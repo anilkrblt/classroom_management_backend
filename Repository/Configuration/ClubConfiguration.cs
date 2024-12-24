@@ -19,70 +19,70 @@ namespace Repository.Configuration
                     ClubId = 1,
                     Name = "Mathematics Club",
                     PresidentId = 1,
-                    ImageData = null 
+                    ImageData = new byte[] {},
                 },
                 new Club
                 {
                     ClubId = 2,
                     Name = "Physics Club",
                     PresidentId = 2,
-                    ImageData = null
+                    ImageData = new byte[] {},
                 },
                 new Club
                 {
                     ClubId = 3,
                     Name = "Chemistry Society",
                     PresidentId = 3,
-                    ImageData = null
+                    ImageData = new byte[] {},
                 },
                 new Club
                 {
                     ClubId = 4,
                     Name = "Biology Club",
                     PresidentId = 4,
-                    ImageData = null
+                    ImageData = new byte[] {},
                 },
                 new Club
                 {
                     ClubId = 5,
                     Name = "Computer Science Club",
                     PresidentId = 5,
-                    ImageData = null
+                    ImageData = new byte[] {},
                 },
                 new Club
                 {
                     ClubId = 6,
                     Name = "Engineering Club",
                     PresidentId = 6,
-                    ImageData = null
+                    ImageData = new byte[] {},
                 },
                 new Club
                 {
                     ClubId = 7,
                     Name = "Economics Club",
                     PresidentId = 7,
-                    ImageData = null
+                    ImageData = new byte[] {},
                 },
                 new Club
                 {
                     ClubId = 8,
                     Name = "History Society",
                     PresidentId = 8,
-                    ImageData = null
+                    ImageData = new byte[] {},
                 },
                 new Club
                 {
                     ClubId = 9,
                     Name = "Philosophy Club",
                     PresidentId = 9,
-                    ImageData = null
+                    ImageData = new byte[] {},
                 },
                 new Club
                 {
                     ClubId = 10,
                     Name = "Art and Design Club",
                     PresidentId = 10,
-                    ImageData = null
+                    ImageData = new byte[] {},
                 }
             );
         }
