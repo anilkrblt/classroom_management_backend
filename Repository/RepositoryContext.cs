@@ -1,5 +1,6 @@
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using Repository.Configuration;
 
 namespace Repository
 {
@@ -14,14 +15,23 @@ namespace Repository
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            // Configurations (Opsiyonel: Eğer konfigürasyonlar varsa)
-            // modelBuilder.ApplyConfiguration(new CompanyConfiguration());
-            // modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+
+            modelBuilder.ApplyConfiguration(new ClubConfiguration());
+            modelBuilder.ApplyConfiguration(new ClubMembershipConfiguration());
+            modelBuilder.ApplyConfiguration(new ExamConfiguration());
+            modelBuilder.ApplyConfiguration(new ExamSessionConfiguration());
+            modelBuilder.ApplyConfiguration(new LectureConfiguration());
+            modelBuilder.ApplyConfiguration(new LectureSessionConfiguration());
+            modelBuilder.ApplyConfiguration(new EnrollmentConfiguration());
+            modelBuilder.ApplyConfiguration(new InstructorConfiguration());
+            modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+
         }
 
+
         public DbSet<Building>? Buildings { get; set; }
-        public  DbSet<Club>? Clubs { get; set; }
-        public  DbSet<Department>? Departments { get; set; }
+        public DbSet<Club>? Clubs { get; set; }
+        public DbSet<Department>? Departments { get; set; }
         public DbSet<Employee>? Employees { get; set; }
         public DbSet<Enrollment>? Enrollments { get; set; }
         public DbSet<Exam>? Exams { get; set; }
