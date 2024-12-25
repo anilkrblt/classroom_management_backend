@@ -11,4 +11,13 @@ namespace Shared.DataTransferObjects
 
         public string? Name { get; set; }
     }
+
+    public record BuildingForUpdateDto
+    {
+        public string? Name { get; set; }
+    }
+    public record BuildingForCreateDto
+    {
+        public string? Name { get; set; }
+    }
 }

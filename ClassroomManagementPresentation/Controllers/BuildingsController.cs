@@ -10,18 +10,18 @@ namespace ClassroomManagementPresentation.Controllers
     [Route("api/[controller]")]
     public class BuildingsController : ControllerBase
     {
-        private readonly IBuildingService _buildingService;
+        private readonly IServiceManager _serviceManager;
 
-        public BuildingsController(IBuildingService buildingService)
+        public BuildingsController(IServiceManager serviceManager)
         {
-            _buildingService = buildingService;
+            _serviceManager = serviceManager;
         }
 
         // GET: api/Buildings
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BuildingDto>>> GetBuildings()
         {
-            var buildings = await _buildingService.GetAllBuildingsAsync(trackChanges: false);
+            var buildings = await _serviceManager.BuildingService.GetAllBuildingsAsync(trackChanges: false);
             return Ok(buildings);
         }
 
@@ -29,7 +29,7 @@ namespace ClassroomManagementPresentation.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<BuildingDto>> GetBuilding(int id)
         {
-            var building = await _buildingService.GetBuildingByIdAsync(id, trackChanges: false);
+            var building = await _serviceManager.BuildingService.GetBuildingByIdAsync(id, trackChanges: false);
             return Ok(building);
         }
 
@@ -37,29 +37,29 @@ namespace ClassroomManagementPresentation.Controllers
         [HttpGet("{id}/rooms")]
         public async Task<ActionResult<IEnumerable<RoomDto>>> GetBuildingRooms(int id)
         {
-            var rooms = await _buildingService.GetRoomsByBuildingIdAsync(id, trackChanges: false);
+            var rooms = await _serviceManager.BuildingService.GetRoomsByBuildingIdAsync(id, trackChanges: false);
             return Ok(rooms);
         }
 
         // POST: api/Buildings
         [HttpPost]
-        public async Task<ActionResult> CreateBuilding([FromBody] BuildingDto buildingDto)
+        public async Task<ActionResult> CreateBuilding([FromBody] BuildingForCreateDto buildingForCreateDto)
         {
-            if (buildingDto == null)
+            if (buildingForCreateDto is null)
                 return BadRequest("BuildingDto object is null");
 
-            await _buildingService.CreateBuildingAsync(buildingDto);
-            return CreatedAtAction(nameof(GetBuilding), new { id = buildingDto.BuildingId }, buildingDto);
+            await _serviceManager.BuildingService.CreateBuildingAsync(buildingForCreateDto);
+            return Created();
         }
 
         // PUT: api/Buildings/{id}
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateBuilding(int id, [FromBody] BuildingDto buildingDto)
+        public async Task<ActionResult> UpdateBuilding(int id, [FromBody] BuildingForUpdateDto buildingForUpdateDto)
         {
-            if (buildingDto == null)
+            if (buildingForUpdateDto is null)
                 return BadRequest("BuildingDto object is null");
 
-            await _buildingService.UpdateBuildingAsync(id, buildingDto);
+            await _serviceManager.BuildingService.UpdateBuildingAsync(id, buildingForUpdateDto);
             return NoContent();
         }
 
@@ -67,7 +67,7 @@ namespace ClassroomManagementPresentation.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteBuilding(int id)
         {
-            await _buildingService.DeleteBuildingAsync(id);
+            await _serviceManager.BuildingService.DeleteBuildingAsync(id);
             return NoContent();
         }
     }

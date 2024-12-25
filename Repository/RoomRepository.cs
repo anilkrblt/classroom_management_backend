@@ -16,32 +16,59 @@ namespace Repository
         // Get all rooms
         public async Task<IEnumerable<Room>> GetAllRoomsAsync(bool trackChanges)
         {
-            return await FindAll(trackChanges)
-                .OrderBy(r => r.Name) // Rooms are sorted by name
-                .ToListAsync();
+            return await FindAll(trackChanges).Include(r => r.Building)
+                                              .Include(r => r.Department)
+                                              .Include(r => r.LectureSessions)
+                                                .ThenInclude(ls => ls.Lecture)
+                                                    .ThenInclude(l => l.Department)
+                                            .Include(r => r.LectureSessions)
+                                                .ThenInclude(ls => ls.Instructor)
+                                              .OrderBy(r => r.Name)
+                                              .ToListAsync();
         }
 
         // Get a specific room by ID
         public async Task<Room> GetRoomAsync(int roomId, bool trackChanges)
         {
             return await FindByCondition(r => r.RoomId == roomId, trackChanges)
-                .SingleOrDefaultAsync();
+                                        .Include(r => r.Building)
+                                        .Include(r => r.Department)
+                                        .Include(r => r.LectureSessions)
+                                            .ThenInclude(ls => ls.Lecture)
+                                                .ThenInclude(l => l.Department)
+                                        .Include(r => r.LectureSessions)
+                                            .ThenInclude(ls => ls.Instructor)
+                                        .SingleOrDefaultAsync();
         }
 
         // Get rooms by department ID
         public async Task<IEnumerable<Room>> GetRoomsByDepartmentId(int departmentId, bool trackChanges)
         {
             return await FindByCondition(r => r.DepartmentId == departmentId, trackChanges)
-                .OrderBy(r => r.Name) // Rooms are sorted by name
-                .ToListAsync();
+                                            .Include(r => r.Building)
+                                            .Include(r => r.Department)
+                                            .Include(r => r.LectureSessions)
+                                                .ThenInclude(ls => ls.Lecture)
+                                                    .ThenInclude(l => l.Department)
+                                            .Include(r => r.LectureSessions)
+                                                .ThenInclude(ls => ls.Instructor)
+                                            .OrderBy(r => r.Name) 
+                                            .ToListAsync();
         }
 
         // Get rooms by building ID
         public async Task<IEnumerable<Room>> GetRoomsByBuildingId(int buildingId, bool trackChanges)
         {
             return await FindByCondition(r => r.BuildingId == buildingId, trackChanges)
-                .OrderBy(r => r.Name) // Rooms are sorted by name
-                .ToListAsync();
+                                            .Include(r => r.Building)
+                                            .Include(r => r.Department)
+                                            .Include(r => r.LectureSessions)
+                                                .ThenInclude(ls => ls.Lecture)
+                                                    .ThenInclude(l => l.Department)
+                                            .Include(r => r.LectureSessions)
+                                                .ThenInclude(ls => ls.Instructor)
+                                            .OrderBy(r => r.Name) 
+                                            .ToListAsync();
         }
 
         // Create a new room

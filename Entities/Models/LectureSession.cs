@@ -18,6 +18,7 @@ namespace Entities.Models
 
         [Required]
         public TimeSpan StartTime { get; set; }
+        // ek ders mi değil mi
 
         [Required]
         public TimeSpan EndTime { get; set; }

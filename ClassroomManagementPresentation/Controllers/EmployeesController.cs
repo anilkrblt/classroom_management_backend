@@ -4,7 +4,7 @@ using Shared.DataTransferObjects;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace class_management_backend.controllers
+namespace ClassroomManagementPresentation.Controllers
 {
     [Route("api/employees")]
     [ApiController]
