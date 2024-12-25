@@ -24,5 +24,6 @@ namespace Entities.Models
         public ICollection<LectureSession> LectureSessions { get; set; }
         public ICollection<Notification> Notifications { get; set; }
         public ICollection<Exam> Exams { get; set; }
+        public ICollection<InstructorPreference> InstructorPreferences { get; set; }
     }
 }

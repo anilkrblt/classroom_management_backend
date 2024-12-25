@@ -88,6 +88,15 @@ namespace Repository.Configuration
             },
             new Student
             {
+                StudentId = 9,
+                Name = "Kamil",
+                Email = "kamil123@hotmail.com",
+                Password = "2131233A",
+                GradeLevel = 2,
+                DepartmentId = 3
+            },
+            new Student
+            {
                 StudentId = 10,
                 Name = "Salih",
                 Email="salih123@hotmail.com",

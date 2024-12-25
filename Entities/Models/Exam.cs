@@ -19,7 +19,7 @@ namespace Entities.Models
         [Required]
         public string LectureCode { get; set; }
 
-        [ForeignKey("Lecture")]
+        [ForeignKey("LectureCode")]
         public Lecture Lecture { get; set; }
 
         public ICollection<ExamSession> ExamSessions { get; set; }
