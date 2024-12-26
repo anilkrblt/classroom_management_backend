@@ -47,5 +47,7 @@ namespace Entities.Models
         public ICollection<LectureSession> LectureSessions { get; set; }
         public ICollection<Reservation> Reservations { get; set; }
         public ICollection<Request> Requests { get; set; }
+
+        
     }
 }

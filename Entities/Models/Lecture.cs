@@ -17,6 +17,8 @@ namespace Entities.Models
         [Required, StringLength(100)]
         public string Name { get; set; }
 
+       // public int LectureGrade { get; set; }
+
         [ForeignKey("Department")]
         public int DepartmentId { get; set; }
 

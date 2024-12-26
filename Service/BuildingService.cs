@@ -50,7 +50,7 @@ namespace Service
         }
 
         // Create a new building
-        public async Task CreateBuildingAsync(BuildingDto buildingDto)
+        public async Task CreateBuildingAsync(BuildingForCreateDto buildingDto)
         {
             var building = _mapper.Map<Building>(buildingDto);
             _repository.Building.CreateBuilding(building);
@@ -58,7 +58,7 @@ namespace Service
         }
 
         // Update an existing building
-        public async Task UpdateBuildingAsync(int buildingId, BuildingDto buildingDto)
+        public async Task UpdateBuildingAsync(int buildingId, BuildingForUpdateDto buildingDto)
         {
             var building = await _repository.Building.GetBuildingAsync(buildingId, true);
 

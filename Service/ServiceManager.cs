@@ -27,7 +27,7 @@ namespace Service
         private readonly Lazy<INotificationService> _notificationService;
 
 
-        public ServiceManager(IRepositoryManager repositoryManager, ILogger logger, IMapper mapper)
+        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper)
         {
             _studentService = new Lazy<IStudentService>(() =>
                 new StudentService(repositoryManager, mapper));

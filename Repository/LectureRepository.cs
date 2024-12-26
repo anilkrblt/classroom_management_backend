@@ -15,9 +15,11 @@ namespace Repository
 
         public async Task<IEnumerable<Lecture>> GetAllLecturesAsync(bool trackChanges)
         {
-            return await FindAll(trackChanges)
-                .OrderBy(l => l.Name) 
-                .ToListAsync();
+            return await FindAll(trackChanges).Include(l => l.LectureSessions)
+                                                .ThenInclude(ls => ls.Instructor)
+                                              .Include(l => l.Department)
+                                                .OrderBy(l => l.Name)
+                                                .ToListAsync();
         }
 
 
@@ -55,10 +57,10 @@ namespace Repository
         public async Task<IEnumerable<Lecture>> GetLecturesByInstructorIdAsync(int instructorId, bool trackChanges)
         {
             return await FindByCondition(lecture => lecture.LectureSessions.Any(ls => ls.InstructorId == instructorId), trackChanges)
-                .Include(lecture => lecture.Department) 
+                .Include(lecture => lecture.Department)
                 .Include(lecture => lecture.LectureSessions)
                 .ToListAsync();
         }
-    
+
     }
 }

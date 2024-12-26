@@ -4,7 +4,7 @@ using Shared.DataTransferObjects;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace backend.controllers
+namespace ClassroomManagementPresentation.Controllers
 {
     [Route("api/rooms")]
     [ApiController]
@@ -38,7 +38,7 @@ namespace backend.controllers
         }
 
         // GET: api/Rooms/ByBuilding/{buildingId}
-        [HttpGet("ByBuilding/{buildingId}")]
+        [HttpGet("building/{buildingId}")]
         public async Task<ActionResult<IEnumerable<RoomDto>>> GetRoomsByBuilding(int buildingId)
         {
             var rooms = await _serviceManager.RoomService.GetRoomsByBuildingIdAsync(buildingId, trackChanges: false);
@@ -50,7 +50,7 @@ namespace backend.controllers
         }
 
         // GET: api/Rooms/ByDepartment/{departmentId}
-        [HttpGet("ByDepartment/{departmentId}")]
+        [HttpGet("department/{departmentId}")]
         public async Task<ActionResult<IEnumerable<RoomDto>>> GetRoomsByDepartment(int departmentId)
         {
             var rooms = await _serviceManager.RoomService.GetRoomsByDepartmentIdAsync(departmentId, trackChanges: false);

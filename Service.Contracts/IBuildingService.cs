@@ -16,10 +16,10 @@ namespace Service.Contracts
         Task<IEnumerable<RoomDto>> GetRoomsByBuildingIdAsync(int buildingId, bool trackChanges);
 
         // Create a new building
-        Task CreateBuildingAsync(BuildingDto buildingDto);
+        Task CreateBuildingAsync(BuildingForCreateDto buildingForCreateDto);
 
         // Update an existing building
-        Task UpdateBuildingAsync(int buildingId, BuildingDto buildingDto);
+        Task UpdateBuildingAsync(int buildingId, BuildingForUpdateDto buildingForUpdateDto);
 
         // Delete a building
         Task DeleteBuildingAsync(int buildingId);
