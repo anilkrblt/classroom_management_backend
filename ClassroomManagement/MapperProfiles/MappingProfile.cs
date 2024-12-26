@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Entities.Models;
+using Microsoft.AspNetCore.SignalR;
 using Shared.DataTransferObjects;
 
 namespace CompanyEmployees.AutoMap
@@ -21,6 +22,13 @@ namespace CompanyEmployees.AutoMap
                     .ForCtorParam("FullAddress", opt => opt.MapFrom(x => string.Join(' ', x.Address, x.Country))); */
 
             CreateMap<Employee, EmployeeDto>();
+
+            CreateMap<Lecture, LectureDto>()
+            .ForMember(dest => dest.DepartmentName, 
+                      opt => opt.MapFrom(src => src.Department != null ? src.Department.Name : "No Department"))
+            .ForMember(dest => dest.InstructorName, opt=> opt.MapFrom(src =>src.LectureSessions));
+
+
 
             //CreateMap<Room, RoomDto>();
             CreateMap<Room, RoomDto>()

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace ClassroomManagementPresentation.Controllers
 {
     [ApiController]
-    [Route("api/requests")]
+    [Route("api/complaints")]
     public class RequestsController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;

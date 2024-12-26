@@ -20,7 +20,7 @@ namespace Repository
                                               .Include(r => r.Department)
                                               .Include(r => r.LectureSessions)
                                                 .ThenInclude(ls => ls.Lecture)
-                                                    .ThenInclude(l => l.Department)
+                                                .ThenInclude(l => l.Department)
                                             .Include(r => r.LectureSessions)
                                                 .ThenInclude(ls => ls.Instructor)
                                               .OrderBy(r => r.Name)

@@ -39,9 +39,13 @@ namespace Entities.Models
         [ForeignKey("Room")]
         public int RoomId { get; set; }
 
-        public string EventRegisterLink { get; set; }
+      //  public string EventRegisterLink { get; set; }
 
         public string ClubName { get; set; }
+
+       // public string EventName { get; set; }
+
+       // public string Link { get; set; }
 
         public int CreatedBy { get; set; }
 
