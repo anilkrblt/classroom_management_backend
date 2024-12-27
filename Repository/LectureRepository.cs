@@ -15,17 +15,26 @@ namespace Repository
 
         public async Task<IEnumerable<Lecture>> GetAllLecturesAsync(bool trackChanges)
         {
-            return await FindAll(trackChanges).Include(l => l.LectureSessions)
-                                                .ThenInclude(ls => ls.Instructor)
-                                              .Include(l => l.Department)
-                                                .OrderBy(l => l.Name)
-                                                .ToListAsync();
+            var query = FindAll(trackChanges)
+                .Include(l => l.LectureInstructors)
+                    .ThenInclude(li => li.Instructor)
+                .Include(l => l.Department)
+                .OrderBy(l => l.Name);
+
+            if (!trackChanges)
+                query = (IOrderedQueryable<Lecture>)query.AsNoTracking();
+
+            return await query.ToListAsync();
         }
 
 
         public async Task<Lecture> GetLectureAsync(string lectureCode, bool trackChanges)
         {
-            return await FindByCondition(l => l.Code == lectureCode, trackChanges).SingleOrDefaultAsync();
+            return await FindByCondition(l => l.Code == lectureCode, trackChanges)
+                 .Include(l => l.LectureInstructors)
+                    .ThenInclude(li => li.Instructor)
+                .Include(l => l.Department)
+                .SingleOrDefaultAsync();
         }
 
         public void CreateLecture(Lecture lecture)

@@ -13,7 +13,7 @@ namespace Service.Contracts
         Task<LectureDto> GetLectureByCodeAsync(string code, bool trackChanges);
 
         // Create a new lecture
-        Task CreateLectureAsync(LectureDto lectureDto);
+        Task<LectureDto> CreateLectureAsync(LectureCreateDto lectureCreateDto);
 
         // Update an existing lecture
         Task UpdateLectureAsync(string code, LectureDto lectureDto);

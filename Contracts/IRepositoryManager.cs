@@ -23,6 +23,8 @@
         IRoomRepository Room { get; }
         ILectureReservationRepository LectureReservation { get; }
         IClubReservationRepository ClubReservation { get; }
+        ILectureInstructor LectureInstructor { get; }
+
         Task SaveAsync();
     }
 }

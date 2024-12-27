@@ -23,30 +23,94 @@ namespace CompanyEmployees.AutoMap
 
             CreateMap<Employee, EmployeeDto>();
 
-            CreateMap<Lecture, LectureDto>()
-            .ForMember(dest => dest.DepartmentName,
-                      opt => opt.MapFrom(src => src.Department != null ? src.Department.Name : "No Department"))
-            .ForMember(dest => dest.InstructorName,
-                      opt => opt.MapFrom(src => src.LectureSessions.Select(ls => ls.Instructor.Name)));
 
+
+
+            // CREATE DTO -> ENTITY
+            CreateMap<LectureCreateDto, Lecture>()
+                .ForMember(dest => dest.DepartmentId, opt => opt.Ignore())
+                .ForMember(dest => dest.Department, opt => opt.Ignore())
+                .ForMember(dest => dest.LectureInstructors, opt => opt.Ignore())
+                .ForMember(dest => dest.LectureSessions, opt => opt.Ignore())
+                .ForMember(dest => dest.Exams, opt => opt.Ignore())
+                .ForMember(dest => dest.InstructorPreferences, opt => opt.Ignore())
+                .ForMember(dest => dest.LectureReservations, opt => opt.Ignore());
+
+            // ENTITY -> GET DTO (örnek)
+            CreateMap<Lecture, LectureDto>()
+                .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Department,
+                           opt => opt.MapFrom(src => src.Department.Name))
+                .ForMember(dest => dest.Grade, opt => opt.MapFrom(src => src.Grade))
+                .ForMember(dest => dest.Term, opt => opt.MapFrom(src => src.Term))
+                .ForMember(dest => dest.Instructors,
+                           opt => opt.MapFrom(src => src.LectureInstructors
+                               .Select(li => li.Instructor)));
+
+            // Instructor -> InstructorForLectureDto
+            CreateMap<Instructor, InstructorForLectureDto>()
+                .ForMember(dest => dest.InstructorId,
+                           opt => opt.MapFrom(src => src.InstructorId))
+                .ForMember(dest => dest.InstructorName,
+                           opt => opt.MapFrom(src => src.Name));
+
+
+
+            CreateMap<LectureDto, Lecture>()
+                // Department string -> DepartmentId (manuel handle edeceğiniz için ignore)
+                .ForMember(dest => dest.DepartmentId, opt => opt.Ignore())
+                .ForMember(dest => dest.Department, opt => opt.Ignore())
+                // Instructors -> LectureInstructors (manuel handle, ignore)
+                .ForMember(dest => dest.LectureInstructors, opt => opt.Ignore())
+                // ... diğer navigation alanlarını da ignore edin
+                ;
+
+
+
+
+
+            CreateMap<Lecture, LectureDto>()
+             // Diğer alanlar
+             .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))
+             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+             .ForMember(dest => dest.Department,
+                        opt => opt.MapFrom(src => src.Department.Name))
+             .ForMember(dest => dest.Grade,
+                        opt => opt.MapFrom(src => src.Grade))
+             .ForMember(dest => dest.Term,
+                        opt => opt.MapFrom(src => src.Term))
+
+             // Instructors alanını LectureInstructors üzerinden dolduruyoruz
+             .ForMember(dest => dest.Instructors,
+                        opt => opt.MapFrom(src => src.LectureInstructors
+                            .Select(li => li.Instructor)
+                        ));
+
+            // Instructor -> InstructorForLectureDto
+            CreateMap<Instructor, InstructorForLectureDto>()
+                .ForMember(dest => dest.InstructorId,
+                           opt => opt.MapFrom(src => src.InstructorId))
+                .ForMember(dest => dest.InstructorName,
+                           opt => opt.MapFrom(src => src.Name));
 
 
             //CreateMap<Room, RoomDto>();
             CreateMap<Room, RoomDto>()
-    .ForMember(dest => dest.DepartmentName,
-               opt => opt.MapFrom(src => src.Department != null ? src.Department.Name : "No Department"))
-    .ForMember(dest => dest.BuildingName,
-               opt => opt.MapFrom(src => src.Building.Name))
-    .ForMember(dest => dest.Lectures,
-               opt => opt.MapFrom(src => src.LectureSessions.Select(ls => new LectureInfoDto
-               {
-                   LectureName = ls.Lecture.Name,
-                   TeacherName = ls.Instructor.Name,
-                   StartTime = ls.StartTime,
-                   EndTime = ls.EndTime,
-                   DepartmentName = ls.Lecture.Department.Name,
-                   DayOfWeek = ls.DayOfWeek
-               }).ToList()));
+        .ForMember(dest => dest.DepartmentName,
+                   opt => opt.MapFrom(src => src.Department != null ? src.Department.Name : "No Department"))
+        .ForMember(dest => dest.BuildingName,
+                   opt => opt.MapFrom(src => src.Building.Name))
+        .ForMember(dest => dest.Lectures,
+                   opt => opt.MapFrom(src => src.LectureSessions.Select(ls => new LectureInfoDto
+                   {
+                       LectureName = ls.Lecture.Name,
+                       TeacherName = ls.Instructor.Name,
+                       StartTime = ls.StartTime,
+                       EndTime = ls.EndTime,
+                       DepartmentName = ls.Lecture.Department.Name,
+                       DayOfWeek = ls.DayOfWeek
+                   }).ToList()));
 
             CreateMap<LectureSession, LectureInfoDto>()
                 .ForMember(dest => dest.LectureName, opt => opt.MapFrom(src => src.Lecture.Name))
@@ -105,7 +169,6 @@ namespace CompanyEmployees.AutoMap
             CreateMap<LectureSession, LectureSessionDto>();
             CreateMap<Instructor, InstructorDto>();
             CreateMap<Exam, ExamDto>();
-            CreateMap<Lecture, LectureDto>();
             CreateMap<Enrollment, EnrollmentDto>();
 
 

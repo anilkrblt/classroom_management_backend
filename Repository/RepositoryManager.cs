@@ -26,6 +26,8 @@ namespace Repository
         private readonly Lazy<IBuildingRepository> _buildingRepository;
         private readonly Lazy<ILectureReservationRepository> _lectureReservationRepository;
         private readonly Lazy<IClubReservationRepository> _clubReservationRepository;
+        private readonly Lazy<ILectureInstructor> _lectureInstructor;
+
 
 
 
@@ -53,8 +55,9 @@ namespace Repository
             _instructorPreferenceRepository = new Lazy<IInstructorPreferenceRepository>(() => new InstructorPreferenceRepository(repositoryContext));
             _lectureReservationRepository = new Lazy<ILectureReservationRepository>(() => new LectureReservationRepository(repositoryContext));
             _clubReservationRepository = new Lazy<IClubReservationRepository>(() => new ClubReservationRepository(repositoryContext));
-
+            _lectureInstructor = new Lazy<ILectureInstructor>(() => new LectureInstructorRepository(repositoryContext));
         }
+        public ILectureInstructor LectureInstructor => _lectureInstructor.Value;
         public IStudentRepository Student => _studentRepository.Value;
         public IBuildingRepository Building => _buildingRepository.Value;
         public IClubRepository Club => _clubRepository.Value;

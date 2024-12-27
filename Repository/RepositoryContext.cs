@@ -14,28 +14,52 @@ namespace Repository
         // Default veriler için OnModelCreating override edilebilir.
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-/*
             base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfiguration(new BuildingConfiguration());
-            modelBuilder.ApplyConfiguration(new ClubConfiguration());
-            modelBuilder.ApplyConfiguration(new ClubMembershipConfiguration());
-            modelBuilder.ApplyConfiguration(new ClubReservationConfiguration());
-            modelBuilder.ApplyConfiguration(new DepartmentConfiguration());
-            modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
-            modelBuilder.ApplyConfiguration(new EnrollmentConfiguration());
-            modelBuilder.ApplyConfiguration(new ExamConfiguration());
-            modelBuilder.ApplyConfiguration(new ExamSessionConfiguration());
-            modelBuilder.ApplyConfiguration(new InstructorConfiguration());
-            modelBuilder.ApplyConfiguration(new InstructorPreferenceConfiguration());
-            modelBuilder.ApplyConfiguration(new LectureConfiguration());
-            modelBuilder.ApplyConfiguration(new LectureSessionConfiguration());
-            modelBuilder.ApplyConfiguration(new NotificationConfiguration());
-            modelBuilder.ApplyConfiguration(new NotificationRecipientConfiguration());
-            modelBuilder.ApplyConfiguration(new RequestConfiguration());
-            modelBuilder.ApplyConfiguration(new ReservationConfiguration());
-            modelBuilder.ApplyConfiguration(new RoomConfiguration());
-            modelBuilder.ApplyConfiguration(new StudentConfiguration());
+
+            // LectureInstructor Many-to-Many ilişkisinin tanımlanması
+            modelBuilder.Entity<LectureInstructor>()
+                .HasKey(li => new { li.LectureCode, li.InstructorId });
+
+            modelBuilder.Entity<LectureInstructor>()
+                .HasOne(li => li.Lecture)
+                .WithMany(l => l.LectureInstructors)
+                .HasForeignKey(li => li.LectureCode);
+
+            modelBuilder.Entity<LectureInstructor>()
+                .HasOne(li => li.Instructor)
+                .WithMany(i => i.LectureInstructors)
+                .HasForeignKey(li => li.InstructorId);
+                /*
+
+            modelBuilder.Entity<LectureInstructor>()
+                .HasOne(li => li.Lecture)
+                .WithMany(l => l.LectureInstructors)
+                .HasForeignKey(li => li.LectureCode)
+                .OnDelete(DeleteBehavior.Cascade);
 */
+
+            /*
+                        base.OnModelCreating(modelBuilder);
+                        modelBuilder.ApplyConfiguration(new BuildingConfiguration());
+                        modelBuilder.ApplyConfiguration(new ClubConfiguration());
+                        modelBuilder.ApplyConfiguration(new ClubMembershipConfiguration());
+                        modelBuilder.ApplyConfiguration(new ClubReservationConfiguration());
+                        modelBuilder.ApplyConfiguration(new DepartmentConfiguration());
+                        modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+                        modelBuilder.ApplyConfiguration(new EnrollmentConfiguration());
+                        modelBuilder.ApplyConfiguration(new ExamConfiguration());
+                        modelBuilder.ApplyConfiguration(new ExamSessionConfiguration());
+                        modelBuilder.ApplyConfiguration(new InstructorConfiguration());
+                        modelBuilder.ApplyConfiguration(new InstructorPreferenceConfiguration());
+                        modelBuilder.ApplyConfiguration(new LectureConfiguration());
+                        modelBuilder.ApplyConfiguration(new LectureSessionConfiguration());
+                        modelBuilder.ApplyConfiguration(new NotificationConfiguration());
+                        modelBuilder.ApplyConfiguration(new NotificationRecipientConfiguration());
+                        modelBuilder.ApplyConfiguration(new RequestConfiguration());
+                        modelBuilder.ApplyConfiguration(new ReservationConfiguration());
+                        modelBuilder.ApplyConfiguration(new RoomConfiguration());
+                        modelBuilder.ApplyConfiguration(new StudentConfiguration());
+            */
         }
 
 
@@ -60,5 +84,7 @@ namespace Repository
         public DbSet<ExamSession>? ExamSessions { get; set; }
         public DbSet<LectureReservation>? LectureReservations { get; set; }
         public DbSet<ClubReservation>? ClubReservations { get; set; }
+        public DbSet<LectureInstructor> LectureInstructors { get; set; }
+
     }
 }

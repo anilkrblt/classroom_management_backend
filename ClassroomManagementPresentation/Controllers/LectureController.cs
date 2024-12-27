@@ -39,14 +39,14 @@ namespace ClassroomManagementPresentation.Controllers
 
         // POST: api/Lectures
         [HttpPost]
-        public async Task<ActionResult> CreateLecture([FromBody] LectureDto lectureDto)
+        public IActionResult CreateLecture([FromBody] LectureCreateDto lectureCreateDto)
         {
-            if (lectureDto == null)
-                return BadRequest("LectureDto object is null.");
-
-            await _serviceManager.LectureService.CreateLectureAsync(lectureDto);
-            return CreatedAtAction(nameof(GetLecture), new { code = lectureDto.Code }, lectureDto);
+            var createdLecture =  _serviceManager.LectureService.CreateLectureAsync(lectureCreateDto);
+            // HTTP 201 Created + body
+            return Ok(createdLecture);
         }
+
+        
 
         // PUT: api/Lectures/{code}
         [HttpPut("{code}")]

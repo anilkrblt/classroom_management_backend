@@ -33,6 +33,8 @@ namespace Entities.Models
         public ICollection<LectureSession> LectureSessions { get; set; }
         public ICollection<InstructorPreference> InstructorPreferences { get; set; }
         public ICollection<LectureReservation> LectureReservations { get; set; }
+        public ICollection<LectureInstructor> LectureInstructors { get; set; }
+
 
     }
 }
