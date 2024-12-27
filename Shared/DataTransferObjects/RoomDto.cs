@@ -2,9 +2,6 @@
 namespace Shared.DataTransferObjects
 {
 
-    //    
-    //  o günkü olan derslerin adı ve ders saati bilgisi hocası ve bölümüyle birlikte...
-
     public record RoomDto
     {
         public int RoomId { get; set; }
@@ -31,11 +28,16 @@ namespace Shared.DataTransferObjects
 
     }
 
-    public record RoomCreationForBuildingDto(string? Type,
-                                             string? Content,
-                                             string? Status,
-                                             DateTime CreatedAt,
-                                             DateTime UpdatedAt,
-                                             int StudentId);
+    public record RoomCreationForBuildingDto
+    {
+        public string? Name { get; set; }
+        public int Capacity { get; set; }
+        public int ExamCapacity { get; set; }
+        public bool IsProjectorWorking { get; set; }
+        public bool IsActive { get; set; }
+        public int RoomType { get; set; }
+        public string DepartmentName { get; set; }
+        public string BuildingName { get; set; }
+    }
 
 }

@@ -21,6 +21,8 @@
         IRequestRepository Request { get; }
         IReservationRepository Reservation { get; }
         IRoomRepository Room { get; }
+        ILectureReservationRepository LectureReservation { get; }
+        IClubReservationRepository ClubReservation { get; }
         Task SaveAsync();
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Entities.Models
 {
-   [Table("ClubMembership")]
+    [Table("ClubMembership")]
     public class ClubMembership
     {
         [Key]
@@ -21,5 +21,10 @@ namespace Entities.Models
 
         public Student Student { get; set; }
         public Club Club { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+
+
     }
 }

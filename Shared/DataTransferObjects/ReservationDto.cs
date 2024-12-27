@@ -20,4 +20,48 @@ namespace Shared.DataTransferObjects
         public int RoomId { get; set; }
 
     }
+
+
+    public record ClubReservationGetDto
+    {
+
+        public string ClubName { get; set; }
+        public string ClubLogo { get; set; }
+        public string ClubRoomName { get; set; }
+        public string EventDate { get; set; }
+        public string EventTime { get; set; } 
+        public string Title { get; set; }
+        public string Details { get; set; }
+        public string KatilimLinki { get; set; }
+        public string Banner { get; set; }
+        public string FullName { get; set; }
+        public int StudentNo { get; set; }
+        public string Status { get; set; }
+
+    }
+
+
+    public record ClubReservationPostDto
+    {
+
+        public int StudentId { get; set; }
+        public string ClubName { get; set; }
+        public string ClubRoom { get; set; }
+        public string EventDate { get; set; }
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
+        public DateTime EventTime { get; set; } 
+        public string Title { get; set; }
+        public string Details { get; set; }
+        public string KatilimLinki { get; set; }
+        public string Banner { get; set; }
+
+    }
+
+
+
+
+
+
+
 }

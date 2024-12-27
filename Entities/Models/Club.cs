@@ -14,15 +14,12 @@ namespace Entities.Models
         public int ClubId { get; set; }
 
         [Required, StringLength(100)]
-        public string Name { get; set; }
+        public string Name { get; set; }    
+        public string NameShortcut { get; set; } 
+        public string ClubLogoPath { get; set; } 
 
-        [ForeignKey("Student")]
-        public int PresidentId { get; set; }
+        public ICollection<ClubMembership> ClubMemberships { get; set; } 
+        public ICollection<ClubReservation> ClubReservations { get; set; }
 
-        public Byte[] ImageData { get; set; }
-
-        public Student President { get; set; }
-        public ICollection<Reservation> ClubReservations { get; set; }
-        public ICollection<ClubMembership> ClubMemberships { get; set; }
     }
 }

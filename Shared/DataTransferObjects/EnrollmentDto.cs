@@ -7,10 +7,9 @@ namespace Shared.DataTransferObjects
 {
     public record EnrollmentDto
     {
-        public int EnrollmentId { get; set; }
 
-        public int StudentId { get; set; }
+        public int StudentName { get; set; }
 
-        public string Code { get; set; }
+        public string LectureCode { get; set; }
     }
 }

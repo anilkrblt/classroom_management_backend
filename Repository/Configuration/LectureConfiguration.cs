@@ -18,62 +18,11 @@ namespace Repository.Configuration
                 {
                     Code = "MATH101",
                     Name = "Mathematics I",
+                    Grade = 3,
+                    Term = "Güz",
                     DepartmentId = 1
-                },
-                new Lecture
-                {
-                    Code = "PHYS201",
-                    Name = "Physics I",
-                    DepartmentId = 2
-                },
-                new Lecture
-                {
-                    Code = "CHEM301",
-                    Name = "Chemistry",
-                    DepartmentId = 3
-                },
-                new Lecture
-                {
-                    Code = "BIOL102",
-                    Name = "Biology",
-                    DepartmentId = 1
-                },
-                new Lecture
-                {
-                    Code = "CS202",
-                    Name = "Computer Science",
-                    DepartmentId = 1
-                },
-                new Lecture
-                {
-                    Code = "ENG103",
-                    Name = "English Language",
-                    DepartmentId = 2
-                },
-                new Lecture
-                {
-                    Code = "HIST205",
-                    Name = "History",
-                    DepartmentId = 1
-                },
-                new Lecture
-                {
-                    Code = "ENGM202",
-                    Name = "Engineering Mechanics",
-                    DepartmentId = 2
-                },
-                new Lecture
-                {
-                    Code = "ECON301",
-                    Name = "Economics",
-                    DepartmentId = 3
-                },
-                new Lecture
-                {
-                    Code = "PHIL101",
-                    Name = "Philosophy",
-                    DepartmentId = 2
                 }
+               
             );
         }
     }

@@ -2,13 +2,16 @@ namespace Shared.DataTransferObjects
 {
     public record LectureSessionDto
     {
-        
+
         public int LectureSessionId { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
-        public string LectureCode { get; set; } = null!;
-        public int InstructorId { get; set; }
-        public int RoomId {  get; set; }
+        public string Day { get; set; }
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
+        public string LectureCode { get; set; }
+        public string LectureName { get; set; }
+        public string InstructorName { get; set; }
+        public string RoomName { get; set; }
         
+
     }
 }

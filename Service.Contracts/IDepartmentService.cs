@@ -22,10 +22,10 @@ namespace Service.Contracts
         Task<IEnumerable<StudentDto>> GetDepartmentStudentsAsync(int departmentId, bool trackChanges);
 
         // Create a new department
-        Task CreateDepartmentAsync(DepartmentDto departmentDto);
+        Task CreateDepartmentAsync(DepartmentForCreateDto departmenForCreatetDto);
 
         // Update an existing department
-        Task UpdateDepartmentAsync(int departmentId, DepartmentDto departmentDto);
+        Task UpdateDepartmentAsync(int departmentId, DepartmentForUpdateDto departmentForUpdateDto);
 
         // Delete a department
         Task DeleteDepartmentAsync(int departmentId);

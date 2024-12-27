@@ -81,22 +81,22 @@ namespace Service
         }
 
         // Create a new department
-        public async Task CreateDepartmentAsync(DepartmentDto departmentDto)
+        public async Task CreateDepartmentAsync(DepartmentForCreateDto departmentForCreateDto)
         {
-            var department = _mapper.Map<Department>(departmentDto);
+            var department = _mapper.Map<Department>(departmentForCreateDto);
             _repositoryManager.Department.CreateDepartment(department);
             await _repositoryManager.SaveAsync();
         }
 
         // Update an existing department
-        public async Task UpdateDepartmentAsync(int departmentId, DepartmentDto departmentDto)
+        public async Task UpdateDepartmentAsync(int departmentId, DepartmentForUpdateDto departmentForUpdateDto)
         {
             var department = await _repositoryManager.Department.GetDepartmentAsync(departmentId, true);
 
             if (department == null)
                 throw new KeyNotFoundException($"Department with ID {departmentId} not found.");
 
-            _mapper.Map(departmentDto, department);
+            _mapper.Map(departmentForUpdateDto, department);
             await _repositoryManager.SaveAsync();
         }
 

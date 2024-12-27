@@ -38,7 +38,6 @@ namespace Repository
             if (existingClub != null)
             {
                 existingClub.Name = club.Name;
-                existingClub.PresidentId = club.PresidentId;
 
                 Update(existingClub);
             }

@@ -31,7 +31,7 @@ namespace Repository
         // Get reservations by user ID (teacher or club president)
         public async Task<IEnumerable<Reservation>> GetReservationsByUserId(int userId, bool trackChanges)
         {
-            return await FindByCondition(r => r.CreatedBy == userId, trackChanges)
+            return await FindByCondition( r => r.RoomId == userId,trackChanges)
                 .OrderBy(r => r.EventDate) // Reservations sorted by event date
                 .ToListAsync();
         }
@@ -51,15 +51,12 @@ namespace Repository
                 existingReservation.EventDate = reservation.EventDate;
                 existingReservation.StartTime = reservation.StartTime;
                 existingReservation.EndTime = reservation.EndTime;
-                existingReservation.ReservationType = reservation.ReservationType;
-                existingReservation.LectureCode = reservation.LectureCode;
                 existingReservation.RoomId = reservation.RoomId;
 
                 Update(existingReservation);
             }
         }
 
-        // Delete a reservation
         public async Task DeleteReservationAsync(Reservation reservation)
         {
             var existingReservation = await GetReservationAsync(reservation.ReservationId, true);

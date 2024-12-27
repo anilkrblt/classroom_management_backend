@@ -9,6 +9,11 @@ namespace Service.Contracts
         // Get all clubs
         Task<IEnumerable<ClubDto>> GetAllClubsAsync(bool trackChanges);
 
+        //Task<IEnumerable<ClubReservationGetDto>> GetAllClubReservations(bool trackChanges);
+
+        //Task<IEnumerable<LectureReservationGetDto>> GetAllLectureReservations(bool trackChanges);
+
+
         // Get a specific club by ID
         Task<ClubDto> GetClubByIdAsync(int clubId, bool trackChanges);
 

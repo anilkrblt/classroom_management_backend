@@ -17,73 +17,11 @@ namespace Repository.Configuration
                 new Club
                 {
                     ClubId = 1,
-                    Name = "Mathematics Club",
-                    PresidentId = 1,
-                    ImageData = new byte[] {},
-                },
-                new Club
-                {
-                    ClubId = 2,
-                    Name = "Physics Club",
-                    PresidentId = 2,
-                    ImageData = new byte[] {},
-                },
-                new Club
-                {
-                    ClubId = 3,
-                    Name = "Chemistry Society",
-                    PresidentId = 3,
-                    ImageData = new byte[] {},
-                },
-                new Club
-                {
-                    ClubId = 4,
-                    Name = "Biology Club",
-                    PresidentId = 4,
-                    ImageData = new byte[] {},
-                },
-                new Club
-                {
-                    ClubId = 5,
-                    Name = "Computer Science Club",
-                    PresidentId = 5,
-                    ImageData = new byte[] {},
-                },
-                new Club
-                {
-                    ClubId = 6,
-                    Name = "Engineering Club",
-                    PresidentId = 6,
-                    ImageData = new byte[] {},
-                },
-                new Club
-                {
-                    ClubId = 7,
-                    Name = "Economics Club",
-                    PresidentId = 7,
-                    ImageData = new byte[] {},
-                },
-                new Club
-                {
-                    ClubId = 8,
-                    Name = "History Society",
-                    PresidentId = 8,
-                    ImageData = new byte[] {},
-                },
-                new Club
-                {
-                    ClubId = 9,
-                    Name = "Philosophy Club",
-                    PresidentId = 9,
-                    ImageData = new byte[] {},
-                },
-                new Club
-                {
-                    ClubId = 10,
-                    Name = "Art and Design Club",
-                    PresidentId = 10,
-                    ImageData = new byte[] {},
+                    Name = "Fight Club",
+                    NameShortcut = "FC",
+                    ClubLogoPath = "www.example.com"
                 }
+
             );
         }
     }

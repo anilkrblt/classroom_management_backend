@@ -24,9 +24,10 @@ namespace CompanyEmployees.AutoMap
             CreateMap<Employee, EmployeeDto>();
 
             CreateMap<Lecture, LectureDto>()
-            .ForMember(dest => dest.DepartmentName, 
+            .ForMember(dest => dest.DepartmentName,
                       opt => opt.MapFrom(src => src.Department != null ? src.Department.Name : "No Department"))
-            .ForMember(dest => dest.InstructorName, opt=> opt.MapFrom(src =>src.LectureSessions));
+            .ForMember(dest => dest.InstructorName,
+                      opt => opt.MapFrom(src => src.LectureSessions.Select(ls => ls.Instructor.Name)));
 
 
 
@@ -56,13 +57,64 @@ namespace CompanyEmployees.AutoMap
                 .ForMember(dest => dest.DayOfWeek, opt => opt.MapFrom(src => src.DayOfWeek));
 
             CreateMap<Student, StudentDto>();
-            CreateMap<Request, RequestDto>();
+
+
+
+
+            CreateMap<Request, RequestDto>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
+                .ForMember(dest => dest.RoomName, opt => opt.MapFrom(src => src.Room.Name))
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
+                .ForMember(dest => dest.Photos, opt => opt.MapFrom(src => src.ImagePaths));
+
+
+
+
+
+            CreateMap<ClubReservation, ClubReservationGetDto>()
+             .ForMember(dest => dest.ClubName,
+                        opt => opt.MapFrom(src => src.Club.Name))
+             .ForMember(dest => dest.ClubLogo,
+                        opt => opt.MapFrom(src => src.Club.ClubLogoPath))
+             .ForMember(dest => dest.ClubRoomName,
+                        opt => opt.MapFrom(src => src.Reservation.Room.Name))
+             .ForMember(dest => dest.EventDate,
+                        opt => opt.MapFrom(src =>
+                            src.Reservation.EventDate.ToString("dd/MM/yyyy")))
+             .ForMember(dest => dest.EventTime,
+                        opt => opt.MapFrom(src =>
+                            $"{src.Reservation.StartTime} - {src.Reservation.EndTime}"))
+             .ForMember(dest => dest.Title,
+                        opt => opt.MapFrom(src => src.Title))
+             .ForMember(dest => dest.Details,
+                        opt => opt.MapFrom(src => src.Details))
+             .ForMember(dest => dest.KatilimLinki,
+                        opt => opt.MapFrom(src => src.EventRegisterLink))
+             .ForMember(dest => dest.Banner,
+                        opt => opt.MapFrom(src => src.Banner))
+             .ForMember(dest => dest.FullName,
+                        opt => opt.MapFrom(src => src.Student.FullName))
+             .ForMember(dest => dest.StudentNo,
+                        opt => opt.MapFrom(src => src.Student.StudentId))
+             .ForMember(dest => dest.Status,
+                        opt => opt.MapFrom(src => src.Status
+                        ));
+
+
+
             CreateMap<LectureSession, LectureSessionDto>();
             CreateMap<Instructor, InstructorDto>();
             CreateMap<Exam, ExamDto>();
             CreateMap<Lecture, LectureDto>();
             CreateMap<Enrollment, EnrollmentDto>();
+
+
             CreateMap<Department, DepartmentDto>();
+            CreateMap<Department, DepartmentForCreateDto>();
+            CreateMap<Department, DepartmentForUpdateDto>();
+
+
+
             CreateMap<Club, ClubDto>();
 
 

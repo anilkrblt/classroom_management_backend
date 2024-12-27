@@ -13,4 +13,20 @@ namespace Shared.DataTransferObjects
 
 
     }
+
+    public record DepartmentForCreateDto
+    {
+
+        public string? Name { get; set; }
+
+
+    }
+
+    public record DepartmentForUpdateDto
+    {
+
+        public string? Name { get; set; }
+
+
+    }
 }

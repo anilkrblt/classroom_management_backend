@@ -17,7 +17,7 @@ namespace Repository
         public async Task<IEnumerable<Student>> GetAllStudentsAsync(bool trackChanges)
         {
             return await FindAll(trackChanges)
-                .OrderBy(s => s.Name) // Students are sorted by name
+                .OrderBy(s => s.FullName) // Students are sorted by name
                 .ToListAsync();
         }
 
@@ -32,7 +32,7 @@ namespace Repository
         public async Task<IEnumerable<Student>> GetStudentsByDepartmentId(int departmentId, bool trackChanges)
         {
             return await FindByCondition(s => s.DepartmentId == departmentId, trackChanges)
-                .OrderBy(s => s.Name) // Students are sorted by name
+                .OrderBy(s => s.FullName) // Students are sorted by name
                 .ToListAsync();
         }
 
@@ -48,7 +48,7 @@ namespace Repository
             var existingStudent = await GetStudentAsync(student.StudentId, true);
             if (existingStudent != null)
             {
-                existingStudent.Name = student.Name;
+                existingStudent.FullName = student.FullName;
                 existingStudent.Email = student.Email;
                 existingStudent.Password = student.Password;
                 existingStudent.GradeLevel = student.GradeLevel;

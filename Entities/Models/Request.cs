@@ -12,22 +12,24 @@ namespace Entities.Models
         [Required, StringLength(50)]
         public string Type { get; set; }
 
+        public string? Title { get; set; }
+
         [Required]
         public string Content { get; set; }
 
         [Required, StringLength(50)]
         public string Status { get; set; }
-
-        public Byte[] PhotoPath { get; set; }
+        public string SolveDescription { get; set; }
+        public string ImagePaths { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
+        public string UserName { get; set; }
+        public int UserId { get; set; }
+
         [ForeignKey("Room")]
         public int RoomId { get; set; }
-
-        public int SubmittedBy { get; set; }
-
         public Room Room { get; set; }
     }
 }

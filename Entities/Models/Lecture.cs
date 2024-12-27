@@ -17,15 +17,18 @@ namespace Entities.Models
         [Required, StringLength(100)]
         public string Name { get; set; }
 
-       // public int LectureGrade { get; set; }
+        public int Grade { get; set; }
+
+        public string Term { get; set; }
 
         [ForeignKey("Department")]
         public int DepartmentId { get; set; }
 
         public Department Department { get; set; }
         public ICollection<LectureSession> LectureSessions { get; set; }
-        public ICollection<Notification> Notifications { get; set; }
         public ICollection<Exam> Exams { get; set; }
         public ICollection<InstructorPreference> InstructorPreferences { get; set; }
+        public ICollection<LectureReservation> LectureReservations { get; set; }
+
     }
 }

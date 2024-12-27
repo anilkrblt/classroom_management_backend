@@ -5,6 +5,8 @@ using AutoMapper;
 using Entities.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Entities.Exceptions;
 
 namespace Service
 {
@@ -12,7 +14,7 @@ namespace Service
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
-        
+
 
         public ClubService(IRepositoryManager repositoryManager, IMapper mapper)
         {
@@ -67,7 +69,6 @@ namespace Service
             if (student == null)
                 throw new KeyNotFoundException($"Student with ID {studentId} not found.");
 
-            club.PresidentId = studentId;
             await _repositoryManager.SaveAsync();
         }
 
@@ -101,6 +102,11 @@ namespace Service
 
             await _repositoryManager.Club.DeleteClubAsync(club);
             await _repositoryManager.SaveAsync();
+        }
+
+        public Task<IEnumerable<ClubReservationGetDto>> GetAllClubReservations(bool trackChanges)
+        {
+            throw new NotImplementedException();
         }
     }
 }

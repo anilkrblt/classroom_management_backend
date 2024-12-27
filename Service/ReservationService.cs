@@ -27,6 +27,17 @@ namespace Service
             return _mapper.Map<IEnumerable<ReservationDto>>(reservations);
         }
 
+        public async Task<IEnumerable<ClubReservationGetDto>> GetAllClubReservations(bool trackChanges)
+        {
+            var ClubReservations = await _repositoryManager.ClubReservation.GetAllClubReservationsAsync(trackChanges);
+            if (ClubReservations is null)
+                throw new KeyNotFoundException($"club reservation not found.");
+
+            var reservationDtos = _mapper.Map<IEnumerable<ClubReservationGetDto>>(ClubReservations);
+            return reservationDtos;
+
+        }
+
         // Get a specific reservation by ID
         public async Task<ReservationDto> GetReservationByIdAsync(int reservationId, bool trackChanges)
         {

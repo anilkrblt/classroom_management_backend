@@ -18,7 +18,7 @@ namespace Entities.Models
 
         [Required]
         public TimeSpan StartTime { get; set; }
-        // ek ders mi değil mi
+        public int LectureTimes { get; set; }
 
         [Required]
         public TimeSpan EndTime { get; set; }
@@ -31,6 +31,8 @@ namespace Entities.Models
 
         [ForeignKey("Instructor")]
         public int InstructorId { get; set; }
+
+        public int IsExtraLesson { get; set; } 
 
         public Lecture Lecture { get; set; }
         public Room Room { get; set; }

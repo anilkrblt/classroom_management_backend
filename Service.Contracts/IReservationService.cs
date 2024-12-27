@@ -9,6 +9,9 @@ namespace Service.Contracts
         // Get all reservations
         Task<IEnumerable<ReservationDto>> GetAllReservationsAsync(bool trackChanges);
 
+       Task<IEnumerable<ClubReservationGetDto>> GetAllClubReservations(bool trackChanges);
+
+
         // Get a specific reservation by ID
         Task<ReservationDto> GetReservationByIdAsync(int reservationId, bool trackChanges);
 

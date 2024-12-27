@@ -36,6 +36,13 @@ namespace ClassroomManagementPresentation.Controllers
 
             return Ok(reservation);
         }
+        [HttpGet("clubreservations")]
+        public async Task<IEnumerable<ClubReservationGetDto>> GetAllClubReservationsAsync()
+        {
+            return await _serviceManager.ReservationService.GetAllClubReservations(false);
+
+
+        }
 
         // GET: api/Reservations/ByUser/{userId}
         [HttpGet("ByUser/{userId}")]

@@ -9,10 +9,12 @@ namespace Shared.DataTransferObjects
     {
         public int ClubId { get; set; }
 
-        public string? Name { get; set; }
+        public string? ClubName { get; set; }
+
+        public string ClubShorcut { get; set; }
+        public string ClubLogo { get; set; }
 
 
-        public int StudentId { get; set; }
     }
 
 }

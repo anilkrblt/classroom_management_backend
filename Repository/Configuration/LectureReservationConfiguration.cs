@@ -8,19 +8,20 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Repository.Configuration
 {
-    public class EnrollmentConfiguration : IEntityTypeConfiguration<Enrollment>
+    public class LectureReservationConfiguration : IEntityTypeConfiguration<LectureReservation>
     {
-        public void Configure(EntityTypeBuilder<Enrollment> builder)
+        public void Configure(EntityTypeBuilder<LectureReservation> builder)
         {
             builder.HasData
             (
-                new Enrollment
+                new LectureReservation
                 {
-                    EnrollmentId = 1,
-                    StudentId = 1,
-                    LectureCode = "MATH101"
-
+                    Id = 1,
+                    Code = "MATH101",
+                    ReservationId = 1,
+                    IsLecturePostpone = true
                 }
+
             );
         }
     }

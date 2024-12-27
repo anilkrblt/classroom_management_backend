@@ -7,7 +7,7 @@ namespace Shared.DataTransferObjects
 {
     public record ExamDto
     {
-        
+
         public int ExamId { get; set; }
         public DateTime ExamDate { get; set; }
 
@@ -17,8 +17,10 @@ namespace Shared.DataTransferObjects
 
         public string Code { get; set; }
 
+        public string Name { get; set; }
 
 
-        
+
+
     }
 }

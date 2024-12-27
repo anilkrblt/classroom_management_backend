@@ -27,10 +27,12 @@ namespace Entities.Models
 
         [ForeignKey("Department")]
         public int DepartmentId { get; set; }
-        public bool IsAdmin { get; set; } // Indicates if the instructor has admin privileges
+        public bool IsAdmin { get; set; }
 
         public Department Department { get; set; }
         public ICollection<LectureSession> LectureSessions { get; set; }
         public ICollection<InstructorPreference> InstructorPreferences { get; set; }
+        public ICollection<LectureReservation> LectureReservations { get; set; }
+
     }
 }

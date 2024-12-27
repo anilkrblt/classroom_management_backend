@@ -7,18 +7,37 @@ namespace Repository
 {
     public class RepositoryContext : DbContext
     {
-        // Constructor
         public RepositoryContext(DbContextOptions options) : base(options)
         {
         }
 
         // Default veriler için OnModelCreating override edilebilir.
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {   
-            
+        {
+/*
             base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());          
+            modelBuilder.ApplyConfiguration(new BuildingConfiguration());
+            modelBuilder.ApplyConfiguration(new ClubConfiguration());
+            modelBuilder.ApplyConfiguration(new ClubMembershipConfiguration());
+            modelBuilder.ApplyConfiguration(new ClubReservationConfiguration());
+            modelBuilder.ApplyConfiguration(new DepartmentConfiguration());
+            modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+            modelBuilder.ApplyConfiguration(new EnrollmentConfiguration());
+            modelBuilder.ApplyConfiguration(new ExamConfiguration());
+            modelBuilder.ApplyConfiguration(new ExamSessionConfiguration());
+            modelBuilder.ApplyConfiguration(new InstructorConfiguration());
+            modelBuilder.ApplyConfiguration(new InstructorPreferenceConfiguration());
+            modelBuilder.ApplyConfiguration(new LectureConfiguration());
+            modelBuilder.ApplyConfiguration(new LectureSessionConfiguration());
+            modelBuilder.ApplyConfiguration(new NotificationConfiguration());
+            modelBuilder.ApplyConfiguration(new NotificationRecipientConfiguration());
+            modelBuilder.ApplyConfiguration(new RequestConfiguration());
+            modelBuilder.ApplyConfiguration(new ReservationConfiguration());
+            modelBuilder.ApplyConfiguration(new RoomConfiguration());
+            modelBuilder.ApplyConfiguration(new StudentConfiguration());
+*/
         }
+
 
 
         public DbSet<Building>? Buildings { get; set; }
@@ -39,5 +58,7 @@ namespace Repository
         public DbSet<NotificationRecipient>? NotificationRecipients { get; set; }
         public DbSet<Notification>? Notifications { get; set; }
         public DbSet<ExamSession>? ExamSessions { get; set; }
+        public DbSet<LectureReservation>? LectureReservations { get; set; }
+        public DbSet<ClubReservation>? ClubReservations { get; set; }
     }
 }

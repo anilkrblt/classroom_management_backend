@@ -75,18 +75,18 @@ namespace ClassroomManagementPresentation.Controllers
 
         // POST: api/Departments
         [HttpPost]
-        public async Task<ActionResult> CreateDepartment([FromBody] DepartmentDto departmentDto)
+        public async Task<ActionResult> CreateDepartment([FromBody] DepartmentForCreateDto departmentDto)
         {
             if (departmentDto == null)
                 return BadRequest("DepartmentDto object is null.");
 
             await _serviceManager.DepartmentService.CreateDepartmentAsync(departmentDto);
-            return CreatedAtAction(nameof(GetDepartment), new { id = departmentDto.DepartmentId }, departmentDto);
+            return Created();
         }
 
         // PUT: api/Departments/{id}
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateDepartment(int id, [FromBody] DepartmentDto departmentDto)
+        public async Task<ActionResult> UpdateDepartment(int id, [FromBody] DepartmentForUpdateDto departmentDto)
         {
             if (departmentDto == null)
                 return BadRequest("DepartmentDto object is null.");

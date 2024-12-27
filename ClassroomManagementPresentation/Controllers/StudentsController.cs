@@ -85,7 +85,7 @@ namespace ClassroomManagementPresentation.Controllers
 
             return Ok(students);
         }
-
+/*
         // POST: api/Students
         [HttpPost]
         public async Task<ActionResult> CreateStudent([FromBody] StudentDto studentDto)
@@ -95,9 +95,9 @@ namespace ClassroomManagementPresentation.Controllers
 
             await _serviceManager.StudentService.CreateStudentAsync(studentDto);
             return CreatedAtAction(nameof(GetStudent), new { id = studentDto.StudentId }, studentDto);
-        }
+        }*/
 
-        // PUT: api/Students/{id}
+/*        // PUT: api/Students/{id}
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateStudent(int id, [FromBody] StudentDto studentDto)
         {
@@ -107,13 +107,13 @@ namespace ClassroomManagementPresentation.Controllers
             await _serviceManager.StudentService.UpdateStudentAsync(id, studentDto);
             return NoContent();
         }
-
+*/
         // DELETE: api/Students/{id}
-        [HttpDelete("{id}")]
+  /*      [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteStudent(int id)
         {
             await _serviceManager.StudentService.DeleteStudentAsync(id);
             return NoContent();
-        }
+        }*/
     }
 }

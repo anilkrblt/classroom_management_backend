@@ -17,27 +17,27 @@ namespace Repository.Configuration
                 new Department
                 {
                     DepartmentId = 1,
-                    Name = "Computer Engineering",
+                    Name = "Bilgisayar Mühendisliği",
                 },
                 new Department
                 {
                     DepartmentId = 2,
-                    Name = "Machine Engineering",
+                    Name = "Makine Mühendisliği",
                 },
                 new Department
                 {
                     DepartmentId = 3,
-                    Name = "Electric Electronic Engineering",
+                    Name = "Elektrik Elektronik Mühendisliği",
                 },
                 new Department
                 {
                     DepartmentId = 4,
-                    Name = "BioEngineering",
+                    Name = "Biyo Mühendislik",
                 },
                 new Department
                 {
                     DepartmentId = 5,
-                    Name = "Food Engineering",
+                    Name = "Gıda Mühendisliği",
                 }
             );
         }

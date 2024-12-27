@@ -24,6 +24,9 @@ namespace Repository
         private readonly Lazy<IDepartmentRepository> _departmentRepository;
         private readonly Lazy<IClubRepository> _clubRepository;
         private readonly Lazy<IBuildingRepository> _buildingRepository;
+        private readonly Lazy<ILectureReservationRepository> _lectureReservationRepository;
+        private readonly Lazy<IClubReservationRepository> _clubReservationRepository;
+
 
 
 
@@ -48,7 +51,8 @@ namespace Repository
             _notificationRecipientRepository = new Lazy<INotificationRecipientRepository>(() => new NotificationRecipientRepository(repositoryContext));
             _notificationRepository = new Lazy<INotificationRepository>(() => new NotificationRepository(repositoryContext));
             _instructorPreferenceRepository = new Lazy<IInstructorPreferenceRepository>(() => new InstructorPreferenceRepository(repositoryContext));
-
+            _lectureReservationRepository = new Lazy<ILectureReservationRepository>(() => new LectureReservationRepository(repositoryContext));
+            _clubReservationRepository = new Lazy<IClubReservationRepository>(() => new ClubReservationRepository(repositoryContext));
 
         }
         public IStudentRepository Student => _studentRepository.Value;
@@ -69,6 +73,8 @@ namespace Repository
         public IInstructorPreferenceRepository InstructorPreference => _instructorPreferenceRepository.Value;
         public INotificationRecipientRepository NotificationRecipient => _notificationRecipientRepository.Value;
         public INotificationRepository Notification => _notificationRepository.Value;
+        public ILectureReservationRepository LectureReservation => _lectureReservationRepository.Value;
+        public IClubReservationRepository ClubReservation => _clubReservationRepository.Value;
 
         public async Task SaveAsync() => await _repositoryContext.SaveChangesAsync();
 
