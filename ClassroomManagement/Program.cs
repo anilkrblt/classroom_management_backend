@@ -47,7 +47,11 @@ builder.Services.AddControllers(config =>
   .AddApplicationPart(typeof(ClassroomManagementPresentation.AssemblyReference).Assembly);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    // ...
+   // c.OperationFilter<FormFileOperationFilter>();
+});
 
 var app = builder.Build();
 

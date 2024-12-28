@@ -61,25 +61,46 @@ namespace Service
         }
 
         // Create a new room
-        public async Task CreateRoomAsync(RoomDto roomDto)
+        public async Task<RoomDto> CreateRoomAsync(RoomCreationForBuildingDto creationDto)
         {
-            var room = _mapper.Map<Room>(roomDto);
+            // 1) Map DTO -> Room entity
+            var roomEntity = _mapper.Map<Room>(creationDto);
 
-            _repositoryManager.Room.CreateRoom(room);
+            // 2) Kaydet
+            _repositoryManager.Room.CreateRoom(roomEntity);
             await _repositoryManager.SaveAsync();
+
+            // 3) Geriye dönmek için (CreatedAtAction) => RoomDto
+            var createdRoomDto = _mapper.Map<RoomDto>(roomEntity);
+            return createdRoomDto;
         }
 
-        // Update an existing room
-        public async Task UpdateRoomAsync(int roomId, RoomDto roomDto)
-        {
-            var room = await _repositoryManager.Room.GetRoomAsync(roomId, trackChanges: true);
 
+        // Update an existing room
+        public async Task UpdateRoomAsync(int roomId, RoomUpdateForBuildingDto updateDto)
+        {
+            // 1) Mevcut kaydı bul
+            var room = await _repositoryManager.Room.GetRoomAsync(roomId, trackChanges: true);
             if (room == null)
                 throw new KeyNotFoundException($"Room with ID {roomId} not found.");
 
-            _mapper.Map(roomDto, room);
+            // 2) DTO -> Entity
+            //    Burada basit alanları AutoMapper ile map’leyebilirsiniz. 
+            //    (room.Name, room.Capacity, vb.)
+            _mapper.Map(updateDto, room);
+
+            // 3) Eğer "Equipment" null geldiyse, tablo NOT NULL constraint yüzünden 
+            //    set etmezsek hata alırız. Aşağıda gösterilen AutoMapper profilindeki
+            //    ".ForMember(... => Equipment, src => src.Equipment ?? string.Empty)" 
+            //    satırı varsa burada ekstra kod yazmaya gerek yoktur.
+            //    Alternatif olarak:
+            if (room.Equipment == null)
+                room.Equipment = string.Empty;
+
+            // 4) Kaydet
             await _repositoryManager.SaveAsync();
         }
+
 
         // Delete a room
         public async Task DeleteRoomAsync(int roomId)

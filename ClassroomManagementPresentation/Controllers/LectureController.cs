@@ -41,21 +41,43 @@ namespace ClassroomManagementPresentation.Controllers
         [HttpPost]
         public IActionResult CreateLecture([FromBody] LectureCreateDto lectureCreateDto)
         {
-            var createdLecture =  _serviceManager.LectureService.CreateLectureAsync(lectureCreateDto);
+            var createdLecture = _serviceManager.LectureService.CreateLectureAsync(lectureCreateDto);
             // HTTP 201 Created + body
             return Ok(createdLecture);
         }
 
-        
+
 
         // PUT: api/Lectures/{code}
         [HttpPut("{code}")]
-        public async Task<ActionResult> UpdateLecture(string code, [FromBody] LectureDto lectureDto)
+        public async Task<ActionResult> UpdateLecture(string code, [FromBody] LectureUpdateDto lectureDto)
         {
             if (lectureDto == null)
                 return BadRequest("LectureDto object is null.");
 
             await _serviceManager.LectureService.UpdateLectureAsync(code, lectureDto);
+            return NoContent();
+        }
+
+
+        [HttpPost]
+        [Route("api/lecture/assign")]
+        // Örn: POST /api/LectureInstructor/assign?instructorId=5&lectureCode=BM401
+        public async Task<IActionResult> AssignInstructorToLecture([FromQuery] int instructorId, [FromQuery] string lectureCode)
+        {
+            await _serviceManager.LectureService.CreateLectureInstructorAsync(instructorId, lectureCode);
+            return Ok("Instructor assigned to lecture successfully.");
+        }
+
+
+        [HttpDelete]
+        [Route("api/[controller]/unassign")]
+        public async Task<ActionResult> DeleteLectureInstructor([FromRoute] int InstructorId, [FromBody] string lectureCode)
+        {
+            if (lectureCode == null)
+                return BadRequest("Ders kodu null olamaz!");
+
+            await _serviceManager.LectureService.DeleteLectureInstructorAsync(InstructorId, lectureCode);
             return NoContent();
         }
 

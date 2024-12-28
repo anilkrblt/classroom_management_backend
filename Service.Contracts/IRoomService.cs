@@ -19,10 +19,10 @@ namespace Service.Contracts
         Task<IEnumerable<RoomDto>> GetRoomsByDepartmentIdAsync(int departmentId, bool trackChanges);
 
         // Create a new room
-        Task CreateRoomAsync(RoomDto roomDto);
+        Task<RoomDto> CreateRoomAsync(RoomCreationForBuildingDto creationDto);
 
         // Update an existing room
-        Task UpdateRoomAsync(int roomId, RoomDto roomDto);
+        Task UpdateRoomAsync(int roomId, RoomUpdateForBuildingDto updateDto);
 
         // Delete a room
         Task DeleteRoomAsync(int roomId);

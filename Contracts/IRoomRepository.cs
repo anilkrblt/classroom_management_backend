@@ -8,6 +8,8 @@ namespace Contracts
     {
         Task<IEnumerable<Room>> GetAllRoomsAsync(bool trackChanges);
         Task<Room> GetRoomAsync(int roomId, bool trackChanges);
+        Task<Room> GetRoomByNameAsync(string roomName, bool trackChanges);
+
         Task<IEnumerable<Room>> GetRoomsByDepartmentId(int departmentId, bool trackChanges);
         Task<IEnumerable<Room>> GetRoomsByBuildingId(int buildingId, bool trackChanges);
         void CreateRoom(Room room);

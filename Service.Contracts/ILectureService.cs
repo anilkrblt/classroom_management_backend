@@ -1,3 +1,4 @@
+using Entities.Models;
 using Shared.DataTransferObjects;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,9 +15,12 @@ namespace Service.Contracts
 
         // Create a new lecture
         Task<LectureDto> CreateLectureAsync(LectureCreateDto lectureCreateDto);
+        Task CreateLectureInstructorAsync(int instructorId, string lectureCode);
+        Task DeleteLectureInstructorAsync(int InstructorId, string lectureCode);
+
 
         // Update an existing lecture
-        Task UpdateLectureAsync(string code, LectureDto lectureDto);
+        Task UpdateLectureAsync(string code, LectureUpdateDto lectureDto);
 
         // Delete a lecture
         Task DeleteLectureAsync(string code);

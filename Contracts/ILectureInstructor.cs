@@ -11,6 +11,9 @@ namespace Contracts
         Task<IEnumerable<LectureInstructor>> GetAllInstructorLecturesAsync(bool trackChanges);
         Task<IEnumerable<LectureInstructor>> GetInstructorLecturesAsync(int instructorId, bool trackChanges);
 
+        Task<LectureInstructor> GetLectureInstructorAsync(int instructorId, string lectureCode, bool trackChanges);
+
+
         void CreateInstructorLecture(LectureInstructor LectureInstructor);
 
         Task UpdateInstructorLectureAsync(LectureInstructor LectureInstructor);

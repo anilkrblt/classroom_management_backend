@@ -10,6 +10,8 @@ namespace Entities.Models
     [Table("Lecture")]
     public class Lecture
     {
+        //[Key]
+        //public int LectureId { get; set; }
         [Key]
         [Required, StringLength(20)]
         public string Code { get; set; }
@@ -30,6 +32,8 @@ namespace Entities.Models
         public ICollection<InstructorPreference> InstructorPreferences { get; set; }
         public ICollection<LectureReservation> LectureReservations { get; set; }
         public ICollection<LectureInstructor> LectureInstructors { get; set; }
+        public ICollection<Enrollment> Enrollments { get; set; }
+
 
 
     }

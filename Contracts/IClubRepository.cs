@@ -8,6 +8,8 @@ namespace Contracts
     {
         Task<IEnumerable<Club>> GetAllClubsAsync(bool trackChanges);
         Task<Club> GetClubAsync(int clubId, bool trackChanges);
+        Task<Club> GetClubByNameAsync(string clubName, bool trackChanges);
+
         void CreateClub(Club club);
         Task UpdateClubAsync(Club club);
         Task DeleteClubAsync(Club club);

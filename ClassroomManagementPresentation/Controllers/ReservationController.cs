@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using Microsoft.AspNetCore.Http;
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -56,16 +58,64 @@ namespace ClassroomManagementPresentation.Controllers
             return Ok(reservations);
         }
 
-        // POST: api/Reservations
-        [HttpPost]
-        public async Task<ActionResult> CreateReservation([FromBody] ReservationDto reservationDto)
+    /*    // POST: api/Reservations
+        [Consumes("multipart/form-data")]
+        [HttpPost("create-reservation")]
+        public async Task<ActionResult> CreateReservation([FromForm] ClubReservationPostDto dto)
         {
-            if (reservationDto == null)
-                return BadRequest("ReservationDto object is null.");
+            // 1) Null kontrolü
+            if (dto == null)
+                return BadRequest("Dto is null.");
 
-            await _serviceManager.ReservationService.CreateReservationAsync(reservationDto);
-            return CreatedAtAction(nameof(GetReservation), new { id = reservationDto.ReservationId }, reservationDto);
+            // 2) Dosya kaydetme işlemi (isteğe bağlı “banner missing” kontrolü)
+            string fileName = null;
+            if (dto.BannerFile != null && dto.BannerFile.Length > 0)
+            {
+                // "mainProjectPath" -> Ana proje klasörüne çıkmak için:
+                var mainProjectPath = Path.GetFullPath(
+                    Path.Combine(Directory.GetCurrentDirectory(), "..", "ClassroomManagement")
+                );
+                var bannerFolder = Path.Combine(mainProjectPath, "wwwroot", "images", "clubs", "banners");
+                if (!Directory.Exists(bannerFolder))
+                    Directory.CreateDirectory(bannerFolder);
+
+                fileName = Path.GetFileName(dto.BannerFile.FileName);
+                var savePath = Path.Combine(bannerFolder, fileName);
+
+                using (var stream = new FileStream(savePath, FileMode.Create))
+                {
+                    await dto.BannerFile.CopyToAsync(stream);
+                }
+            }
+
+            // 3) DTO Dönüştürme: ClubReservationPostDto -> ClubReservationDto
+            // Elle map’leme örneği (AutoMapper da kullanabilirsiniz):
+            var reservationDto = new ClubReservationDto
+            {
+                StudentId = dto.StudentId,
+                ClubName = dto.ClubName,
+                RoomName = dto.RoomName,
+                StartTime = dto.StartTime,
+                EndTime = dto.EndTime,
+                EventTime = dto.EventTime,
+                Title = dto.Title,
+                Details = dto.Details,
+                Link = dto.Link,
+                Status = dto.Status,
+                BannerPath = fileName == null
+                    ? "none"
+                    : Path.Combine("images", "clubs", "banners", fileName)
+            };
+
+            // 4) Service katmanına iletme
+            var createdReservation = await _serviceManager.ReservationService.CreateClubReservationAsync(reservationDto);
+
+            // 5) Geriye 201 Created vs. dön
+            // createdReservation, veritabanına eklenmiş kaydın geri dönen DTO’su olabilir
+            return Ok(createdReservation);
         }
+
+*/
 
         // PUT: api/Reservations/{id}
         [HttpPut("{id}")]

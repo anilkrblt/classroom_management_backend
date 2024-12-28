@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+
 
 namespace Shared.DataTransferObjects
 {
@@ -29,7 +31,7 @@ namespace Shared.DataTransferObjects
         public string ClubLogo { get; set; }
         public string ClubRoomName { get; set; }
         public string EventDate { get; set; }
-        public string EventTime { get; set; } 
+        public string EventTime { get; set; }
         public string Title { get; set; }
         public string Details { get; set; }
         public string KatilimLinki { get; set; }
@@ -43,20 +45,37 @@ namespace Shared.DataTransferObjects
 
     public record ClubReservationPostDto
     {
-
         public int StudentId { get; set; }
         public string ClubName { get; set; }
-        public string ClubRoom { get; set; }
-        public string EventDate { get; set; }
+        public string RoomName { get; set; }
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
-        public DateTime EventTime { get; set; } 
+        public DateTime EventTime { get; set; }
         public string Title { get; set; }
         public string Details { get; set; }
-        public string KatilimLinki { get; set; }
-        public string Banner { get; set; }
+        public string Link { get; set; }
+        public string Status { get; set; }
 
+
+        // Banner artık doğrudan dosya (resim) gelecek
+        public IFormFile BannerFile { get; set; }
     }
+
+   public record ClubReservationDto
+    {
+        public int StudentId { get; set; }
+        public string ClubName { get; set; }
+        public string RoomName { get; set; }
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
+        public DateTime EventTime { get; set; }
+        public string Title { get; set; }
+        public string Details { get; set; }
+        public string Link { get; set; }
+        public string Status { get; set; }
+        public string BannerPath { get; set; }
+    }
+
 
 
 

@@ -7,24 +7,57 @@ using Entities.Models;
 using Microsoft.AspNetCore.SignalR;
 using Shared.DataTransferObjects;
 
-namespace CompanyEmployees.AutoMap
+namespace ClassroomManagement.MapperProfiles
 {
     public class MappingProfile : Profile
     {
         public MappingProfile()
         {
-            /*
-            // xml üzerinden düzgün response almak için
-            CreateMap<Company, CompanyDto>().ForMember(c => c.FullAddress,
-                            opt => opt.MapFrom(x => string.Join(' ', x.Address, x.Country)));
-            /*
-            CreateMap<Company, CompanyDto>()
-                    .ForCtorParam("FullAddress", opt => opt.MapFrom(x => string.Join(' ', x.Address, x.Country))); */
 
+
+            // ReservationDto -> Reservation
+            CreateMap<ClubReservationDto, Reservation>()
+                .ForMember(dest => dest.EventDate,
+                           opt => opt.MapFrom(src => src.EventTime.Date))
+                .ForMember(dest => dest.RoomId, opt => opt.Ignore());
+            // RoomId manuel set edilecek
+
+            // Dto -> ClubReservation
+            CreateMap<ClubReservationDto, ClubReservation>()
+                .ForMember(dest => dest.EventRegisterLink, opt => opt.MapFrom(src => src.Link))
+                .ForMember(dest => dest.EventName, opt => opt.MapFrom(src => src.Title))
+                .ForMember(dest => dest.Banner, opt => opt.MapFrom(src => src.BannerPath))
+                .ForMember(dest => dest.Reservation, opt => opt.Ignore())
+                .ForMember(dest => dest.ReservationId, opt => opt.Ignore())
+                .ForMember(dest => dest.ClubId, opt => opt.Ignore());
+                
             CreateMap<Employee, EmployeeDto>();
 
 
 
+            // PUT için RoomUpdateForBuildingDto -> Room
+            CreateMap<RoomUpdateForBuildingDto, Room>()
+                // RoomType int -> Enum
+                .ForMember(dest => dest.RoomType,
+                           opt => opt.MapFrom(src => (RoomType)src.RoomType))
+                // Equipment null gelirse "" (empty) atayalım:
+                .ForMember(dest => dest.Equipment,
+                           opt => opt.MapFrom(src => src.Equipment ?? string.Empty));
+
+
+            // CREATE: RoomCreationForBuildingDto -> Room
+            CreateMap<RoomCreationForBuildingDto, Room>()
+                .ForMember(dest => dest.BuildingId,
+                    opt => opt.MapFrom(src => src.BuildingId))
+                .ForMember(dest => dest.DepartmentId,
+                    opt => opt.MapFrom(src => src.DepartmentId))
+                .ForMember(dest => dest.RoomType,
+                    opt => opt.MapFrom(src => (RoomType)src.RoomType))
+                .ForMember(dest => dest.Equipment, opt => opt.MapFrom(src => src.Equipment));
+
+
+
+            CreateMap<LectureUpdateDto, Lecture>();
 
             // CREATE DTO -> ENTITY
             CreateMap<LectureCreateDto, Lecture>()

@@ -13,11 +13,11 @@ namespace Repository
         {
         }
 
-       
+
         public async Task<IEnumerable<Club>> GetAllClubsAsync(bool trackChanges)
         {
             return await FindAll(trackChanges)
-                .OrderBy(c => c.Name) 
+                .OrderBy(c => c.Name)
                 .ToListAsync();
         }
 
@@ -51,5 +51,12 @@ namespace Repository
                 Delete(existingClub);
             }
         }
+
+        public async Task<Club> GetClubByNameAsync(string clubName, bool trackChanges)
+        {
+            return await FindByCondition(c => c.Name == clubName, trackChanges).SingleOrDefaultAsync();
+        }
+
+   
     }
 }

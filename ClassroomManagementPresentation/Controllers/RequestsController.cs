@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
@@ -60,7 +61,7 @@ namespace ClassroomManagementPresentation.Controllers
 
             return Ok(requests);
         }
-
+/*
         // POST: api/Requests
         [HttpPost]
         public async Task<ActionResult> CreateRequest([FromBody] RequestDto requestDto)
@@ -71,6 +72,51 @@ namespace ClassroomManagementPresentation.Controllers
             await _serviceManager.RequestService.CreateRequestAsync(requestDto);
             return CreatedAtAction(nameof(GetRequest), new { id = requestDto.RequestId }, requestDto);
         }
+        [HttpPost("upload")]
+        public async Task<IActionResult> UploadPhoto(
+    [FromForm] IFormFile photo,
+    [FromForm] string title,
+    [FromForm] string description)
+        {
+            if (photo == null || photo.Length == 0)
+                return BadRequest("Fotoğraf yüklenmedi.");
+
+            // 1) Dosya adı / path
+            var fileName = Path.GetFileName(photo.FileName);
+            // Örneğin: "resim.jpg"
+
+            // 2) Hedef klasör
+            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+            if (!Directory.Exists(uploadPath))
+                Directory.CreateDirectory(uploadPath);
+
+            // 3) Tam yol
+            var filePath = Path.Combine(uploadPath, fileName);
+
+            // 4) Dosyayı kaydet
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await photo.CopyToAsync(stream);
+            }
+
+            // 5) Veritabanına (dosya adı / yol + diğer alanlar) kaydedebilirsiniz
+            //    Örnek bir tablo: Photos (Id, FileName, Title, Description, CreatedAt ...)
+            // photo kaydedildiyse, DB'ye fileName, title, description vs. eklenebilir
+            // Aşağıda basit bir örnek akış:
+            // 
+            // var entity = new PhotoEntity 
+            // {
+            //     FileName = fileName,
+            //     Title = title,
+            //     Description = description,
+            //     CreatedAt = DateTime.Now
+            // };
+            // _context.Photos.Add(entity);
+            // await _context.SaveChangesAsync();
+
+            return Ok(new { Message = "Fotoğraf yüklendi.", FileName = fileName, Title = title, Description = description });
+        }
+*/
 
         // PUT: api/Requests/{id}
         [HttpPut("{id}")]

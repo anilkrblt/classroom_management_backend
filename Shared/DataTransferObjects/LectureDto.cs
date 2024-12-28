@@ -32,4 +32,14 @@ namespace Shared.DataTransferObjects
         public string Term { get; init; }
         public List<InstructorForLectureDto> Instructors { get; init; }
     }
+
+    public record LectureUpdateDto
+    {
+        public string Name { get; init; }
+        public int DepartmentId { get; init; }
+        public int Grade { get; init; }
+        public string Term { get; init; }
+
+
+    }
 }

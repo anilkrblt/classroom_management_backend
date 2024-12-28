@@ -13,16 +13,16 @@ namespace Repository
         {
         }
 
-     
+
         public async Task<IEnumerable<LectureInstructor>> GetAllInstructorLecturesAsync(bool trackChanges)
         {
             return await FindAll(trackChanges)
-                .Include(li => li.Lecture)       
-                .Include(li => li.Instructor)    
+                .Include(li => li.Lecture)
+                .Include(li => li.Instructor)
                 .ToListAsync();
         }
 
-      
+
         public async Task<IEnumerable<LectureInstructor>> GetInstructorLecturesAsync(int instructorId, bool trackChanges)
         {
             return await FindByCondition(li => li.InstructorId == instructorId, trackChanges)
@@ -30,6 +30,16 @@ namespace Repository
                 .Include(li => li.Instructor)
                 .ToListAsync();
         }
+
+        public async Task<LectureInstructor> GetLectureInstructorAsync(int instructorId, string lectureCode, bool trackChanges)
+        {
+            return await FindByCondition(li => li.InstructorId == instructorId
+                                            && li.LectureCode == lectureCode, trackChanges)
+                                        .Include(li => li.Lecture)
+                                        .Include(li => li.Instructor)
+                                        .SingleOrDefaultAsync();
+        }
+
 
 
         public void CreateInstructorLecture(LectureInstructor lectureInstructor) => Create(lectureInstructor);

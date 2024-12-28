@@ -69,6 +69,85 @@ namespace Service
             await _repositoryManager.SaveAsync();
         }
 
+
+
+        public async Task<ClubReservationDto> CreateClubReservationAsync(ClubReservationDto reservationDto)
+        {
+            
+            // 1) İlgili club var mı?
+            var club = await _repositoryManager.Club
+                .GetClubByNameAsync(reservationDto.ClubName, trackChanges: false);
+            if (club == null)
+                throw new KeyNotFoundException($"Club '{reservationDto.ClubName}' not found.");
+            // Eğer yoksa create edecekseniz, ek kod yazıp kaydedebilirsiniz.
+
+            // 2) Room bulma / oluşturma (opsiyonel).
+            //    "reservationDto.RoomName" verisine göre "Room" tablosu aranabilir.
+            var room = await _repositoryManager.Room
+                .GetRoomByNameAsync(reservationDto.RoomName, trackChanges: false);
+            if (room == null)
+                throw new KeyNotFoundException($"Room '{reservationDto.RoomName}' not found.");
+            // Veya "CreateRoom" diyebilirsiniz.
+
+            // 3) Reservation nesnesi oluştur
+            //    StartTime, EndTime, EventDate gibi alanlar set ediliyor.
+            var newReservation = new Reservation
+            {
+                StartTime = reservationDto.StartTime,
+                EndTime = reservationDto.EndTime,
+                EventDate = reservationDto.EventTime.Date,
+                // Örn. EventTime'ın sadece tarihi
+                RoomId = room.RoomId
+            };
+            _repositoryManager.Reservation.CreateReservation(newReservation);
+
+            // 4) ClubReservation nesnesi oluştur
+            var clubReservation = new ClubReservation
+            {
+                // Key alanlar
+                ClubId = club.ClubId,    // FK
+                StudentId = reservationDto.StudentId,  // Student tablosuna FK
+                Reservation = newReservation, // Bağlantı (ReservationId set edilecek)
+
+                // Diğer alanlar
+                EventRegisterLink = reservationDto.Link,
+                Title = reservationDto.Title,
+                Details = reservationDto.Details,
+                Status = reservationDto.Status,
+                Banner = reservationDto.BannerPath,
+
+                // İsterseniz "EventName" -> reservationDto.Title ya da benzeri
+                EventName = reservationDto.Title
+            };
+            _repositoryManager.ClubReservation.CreateClubReservation(clubReservation);
+
+            // 5) Tüm eklemeler DB'ye
+            await _repositoryManager.SaveAsync();
+
+            // 6) Geriye Dönüş
+            // Kaydedilen veriden "Id" vb. de dahil edip, isterseniz geri DTO'yu zenginleştirebilirsiniz.
+            var returnDto = new ClubReservationDto
+            {
+                StudentId = clubReservation.StudentId,
+                ClubName = club.Name,
+                RoomName = room.Name,
+                StartTime = newReservation.StartTime,
+                EndTime = newReservation.EndTime,
+                EventTime = newReservation.EventDate, // Sadece günü tuttuk, 
+                                                      // dilerseniz EndTime + StartTime'dan hesap
+                Title = clubReservation.Title,
+                Details = clubReservation.Details,
+                Link = clubReservation.EventRegisterLink,
+                Status = clubReservation.Status,
+                BannerPath = clubReservation.Banner
+            };
+
+            return returnDto;
+        }
+
+
+
+
         // Update an existing reservation
         public async Task UpdateReservationAsync(int reservationId, ReservationDto reservationDto)
         {

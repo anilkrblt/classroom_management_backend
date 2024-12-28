@@ -63,25 +63,32 @@ namespace ClassroomManagementPresentation.Controllers
 
         // POST: api/Rooms
         [HttpPost]
-        public async Task<ActionResult> CreateRoom([FromBody] RoomDto roomDto)
+        public async Task<IActionResult> CreateRoom([FromBody] RoomCreationForBuildingDto creationDto)
         {
-            if (roomDto == null)
-                return BadRequest("RoomDto object is null.");
+            if (creationDto == null)
+                return BadRequest("RoomCreationForBuildingDto is null.");
 
-            await _serviceManager.RoomService.CreateRoomAsync(roomDto);
-            return CreatedAtAction(nameof(GetRoom), new { id = roomDto.RoomId }, roomDto);
+            // 1) Servis çağrısı
+            var createdRoomDto = await _serviceManager.RoomService.CreateRoomAsync(creationDto);
+
+            // 2) 201 Created dönmek istersek => 
+            //    route parametresi vs. nameOf(GetRoom) ekleyebilirsiniz:
+            return CreatedAtAction(nameof(GetRoom),
+                new { id = createdRoomDto.RoomId }, createdRoomDto);
         }
+
 
         // PUT: api/Rooms/{id}
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateRoom(int id, [FromBody] RoomDto roomDto)
+        public async Task<ActionResult> UpdateRoom(int id, [FromBody] RoomUpdateForBuildingDto updateDto)
         {
-            if (roomDto == null)
-                return BadRequest("RoomDto object is null.");
+            if (updateDto == null)
+                return BadRequest("RoomUpdateForBuildingDto is null.");
 
-            await _serviceManager.RoomService.UpdateRoomAsync(id, roomDto);
+            await _serviceManager.RoomService.UpdateRoomAsync(id, updateDto);
             return NoContent();
         }
+
 
         // DELETE: api/Rooms/{id}
         [HttpDelete("{id}")]

@@ -9,7 +9,7 @@ namespace Service.Contracts
         // Get all reservations
         Task<IEnumerable<ReservationDto>> GetAllReservationsAsync(bool trackChanges);
 
-       Task<IEnumerable<ClubReservationGetDto>> GetAllClubReservations(bool trackChanges);
+        Task<IEnumerable<ClubReservationGetDto>> GetAllClubReservations(bool trackChanges);
 
 
         // Get a specific reservation by ID
@@ -17,6 +17,9 @@ namespace Service.Contracts
 
         // Get reservations by user ID
         Task<IEnumerable<ReservationDto>> GetUserReservationsAsync(int userId, bool trackChanges);
+
+        Task<ClubReservationDto> CreateClubReservationAsync(ClubReservationDto reservationDto);
+
 
         // Create a new reservation
         Task CreateReservationAsync(ReservationDto reservationDto);

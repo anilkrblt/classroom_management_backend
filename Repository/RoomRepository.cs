@@ -105,5 +105,10 @@ namespace Repository
                 Delete(existingRoom);
             }
         }
+
+        public async Task<Room> GetRoomByNameAsync(string roomName, bool trackChanges)
+        {
+            return await FindByCondition(r => r.Name == roomName, trackChanges).SingleOrDefaultAsync();
+        }
     }
 }
