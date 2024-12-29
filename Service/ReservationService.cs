@@ -73,7 +73,7 @@ namespace Service
 
         public async Task<ClubReservationDto> CreateClubReservationAsync(ClubReservationDto reservationDto)
         {
-            
+
             // 1) İlgili club var mı?
             var club = await _repositoryManager.Club
                 .GetClubByNameAsync(reservationDto.ClubName, trackChanges: false);
@@ -157,6 +157,16 @@ namespace Service
                 throw new KeyNotFoundException($"Reservation with ID {reservationId} not found.");
 
             _mapper.Map(reservationDto, reservation);
+            await _repositoryManager.SaveAsync();
+        }
+
+        public async Task UpdateClubReservationStatusAsync(int reservationId, string status, bool trackChanges)
+        {
+            var reservations = await _repositoryManager.ClubReservation.GetAllClubReservationsAsync(trackChanges);
+            var reservation = reservations.Where(cr =>cr.ReservationId == reservationId).FirstOrDefault();
+            if (reservation is null)
+                throw new ArgumentException("reservation cant be null");
+            reservation.Status = status;
             await _repositoryManager.SaveAsync();
         }
 

@@ -133,7 +133,17 @@ namespace ClassroomManagementPresentation.Controllers
 
 
 
-        // PUT: api/Reservations/{id}
+        [HttpPut("clubreservation/updatestatus/{id}")]
+        public async Task<ActionResult> UpdateClubReservationStatus(int id, [FromBody] string status)
+        {
+            if (status == null)
+                return BadRequest("status is null.");
+
+            await _serviceManager.ReservationService.UpdateClubReservationStatusAsync(id, status, true);
+            return NoContent();
+        } 
+
+/*
         [HttpPut("clubreservation/{id}")]
         public async Task<ActionResult> UpdateClubReservation(int id, [FromBody] ReservationDto reservationDto)
         {
@@ -142,7 +152,7 @@ namespace ClassroomManagementPresentation.Controllers
 
             await _serviceManager.ReservationService.UpdateReservationAsync(id, reservationDto);
             return NoContent();
-        }
+        }*/
 
         // DELETE: api/Reservations/{id}
         [HttpDelete("clubreservation/{ReservationId}")]
@@ -150,6 +160,6 @@ namespace ClassroomManagementPresentation.Controllers
         {
             await _serviceManager.ReservationService.DeleteReservationAsync(ReservationId);
             return NoContent();
-        }
+        } 
     }
 }
