@@ -18,7 +18,7 @@ namespace ClassroomManagementPresentation.Controllers
         {
             _serviceManager = serviceManager;
         }
-
+        /*
         // GET: api/Reservations
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ReservationDto>>> GetReservations()
@@ -38,13 +38,7 @@ namespace ClassroomManagementPresentation.Controllers
 
             return Ok(reservation);
         }
-        [HttpGet("clubreservations")]
-        public async Task<IEnumerable<ClubReservationGetDto>> GetAllClubReservationsAsync()
-        {
-            return await _serviceManager.ReservationService.GetAllClubReservations(false);
-
-
-        }
+       
 
         // GET: api/Reservations/ByUser/{userId}
         [HttpGet("ByUser/{userId}")]
@@ -58,10 +52,21 @@ namespace ClassroomManagementPresentation.Controllers
             return Ok(reservations);
         }
 
-    /*    // POST: api/Reservations
+
+ */
+        [HttpGet("clubreservations")]
+        public async Task<IEnumerable<ClubReservationGetDto>> GetAllClubReservationsAsync()
+        {
+            var clubReservations = await _serviceManager.ReservationService.GetAllClubReservations(false);
+
+            return clubReservations;
+        }
+
+
+        // POST: api/Reservations
         [Consumes("multipart/form-data")]
-        [HttpPost("create-reservation")]
-        public async Task<ActionResult> CreateReservation([FromForm] ClubReservationPostDto dto)
+        [HttpPost("clubreservation")]
+        public async Task<ActionResult> CreateClubReservation([FromForm] ClubReservationPostDto dto)
         {
             // 1) Null kontrolü
             if (dto == null)
@@ -71,22 +76,33 @@ namespace ClassroomManagementPresentation.Controllers
             string fileName = null;
             if (dto.BannerFile != null && dto.BannerFile.Length > 0)
             {
-                // "mainProjectPath" -> Ana proje klasörüne çıkmak için:
+                // Ana proje yolunu oluştur
                 var mainProjectPath = Path.GetFullPath(
                     Path.Combine(Directory.GetCurrentDirectory(), "..", "ClassroomManagement")
                 );
+
+                // Banner dosyalarının saklanacağı klasör yolu
                 var bannerFolder = Path.Combine(mainProjectPath, "wwwroot", "images", "clubs", "banners");
                 if (!Directory.Exists(bannerFolder))
                     Directory.CreateDirectory(bannerFolder);
 
-                fileName = Path.GetFileName(dto.BannerFile.FileName);
+                // Orijinal dosya adı ve uzantıyı alın
+                var originalFileName = Path.GetFileNameWithoutExtension(dto.BannerFile.FileName);
+                var fileExtension = Path.GetExtension(dto.BannerFile.FileName);
+
+                // Benzersiz bir dosya adı oluştur (Zaman Damgası + Orijinal Ad)
+                fileName = $"{originalFileName}_{DateTime.UtcNow:yyyyMMddHHmmssfff}{fileExtension}";
+
+                // Dosya yolunu birleştir
                 var savePath = Path.Combine(bannerFolder, fileName);
 
+                // Dosyayı kaydet
                 using (var stream = new FileStream(savePath, FileMode.Create))
                 {
                     await dto.BannerFile.CopyToAsync(stream);
                 }
             }
+
 
             // 3) DTO Dönüştürme: ClubReservationPostDto -> ClubReservationDto
             // Elle map’leme örneği (AutoMapper da kullanabilirsiniz):
@@ -104,7 +120,7 @@ namespace ClassroomManagementPresentation.Controllers
                 Status = dto.Status,
                 BannerPath = fileName == null
                     ? "none"
-                    : Path.Combine("images", "clubs", "banners", fileName)
+                    : Path.Combine("images", "clubs", "banners", fileName).Replace("\\", "/").Replace("//", "/").Replace(":/", "://")
             };
 
             // 4) Service katmanına iletme
@@ -115,11 +131,11 @@ namespace ClassroomManagementPresentation.Controllers
             return Ok(createdReservation);
         }
 
-*/
+
 
         // PUT: api/Reservations/{id}
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateReservation(int id, [FromBody] ReservationDto reservationDto)
+        [HttpPut("clubreservation/{id}")]
+        public async Task<ActionResult> UpdateClubReservation(int id, [FromBody] ReservationDto reservationDto)
         {
             if (reservationDto == null)
                 return BadRequest("ReservationDto object is null.");
@@ -129,10 +145,10 @@ namespace ClassroomManagementPresentation.Controllers
         }
 
         // DELETE: api/Reservations/{id}
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteReservation(int id)
+        [HttpDelete("clubreservation/{ReservationId}")]
+        public async Task<ActionResult> DeleteClubReservation(int ReservationId)
         {
-            await _serviceManager.ReservationService.DeleteReservationAsync(id);
+            await _serviceManager.ReservationService.DeleteReservationAsync(ReservationId);
             return NoContent();
         }
     }

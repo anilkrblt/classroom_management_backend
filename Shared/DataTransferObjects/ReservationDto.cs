@@ -27,6 +27,7 @@ namespace Shared.DataTransferObjects
     public record ClubReservationGetDto
     {
 
+        public int ReservationId { get; set; }
         public string ClubName { get; set; }
         public string ClubLogo { get; set; }
         public string ClubRoomName { get; set; }
@@ -61,7 +62,7 @@ namespace Shared.DataTransferObjects
         public IFormFile BannerFile { get; set; }
     }
 
-   public record ClubReservationDto
+    public record ClubReservationDto
     {
         public int StudentId { get; set; }
         public string ClubName { get; set; }

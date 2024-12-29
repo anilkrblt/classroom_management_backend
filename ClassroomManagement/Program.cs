@@ -42,15 +42,18 @@ builder.Services.AddControllers(config =>
 {
     config.RespectBrowserAcceptHeader = false;
     config.ReturnHttpNotAcceptable = true;
-    config.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
-})//.AddXmlDataContractSerializerFormatters()
-  .AddApplicationPart(typeof(ClassroomManagementPresentation.AssemblyReference).Assembly);
+    config.InputFormatters.RemoveType<TextInputFormatter>(); // text/plain'i devre dışı bırak
+    config.OutputFormatters.RemoveType<TextOutputFormatter>();
+    config.OutputFormatters.RemoveType<XmlDataContractSerializerOutputFormatter>();
+}).AddApplicationPart(typeof(ClassroomManagementPresentation.AssemblyReference).Assembly);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
+    c.OperationFilter<DefaultResponseContentTypeFilter>();
+
     // ...
-   // c.OperationFilter<FormFileOperationFilter>();
+    // c.OperationFilter<FormFileOperationFilter>();
 });
 
 var app = builder.Build();
@@ -58,7 +61,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1");
+        c.DefaultModelRendering(Swashbuckle.AspNetCore.SwaggerUI.ModelRendering.Model);
+    });
 }
 
 if (app.Environment.IsProduction())

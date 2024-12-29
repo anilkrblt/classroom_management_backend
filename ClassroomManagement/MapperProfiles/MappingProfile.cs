@@ -30,7 +30,7 @@ namespace ClassroomManagement.MapperProfiles
                 .ForMember(dest => dest.Reservation, opt => opt.Ignore())
                 .ForMember(dest => dest.ReservationId, opt => opt.Ignore())
                 .ForMember(dest => dest.ClubId, opt => opt.Ignore());
-                
+
             CreateMap<Employee, EmployeeDto>();
 
 
@@ -165,10 +165,15 @@ namespace ClassroomManagement.MapperProfiles
                 .ForMember(dest => dest.Photos, opt => opt.MapFrom(src => src.ImagePaths));
 
 
+            CreateMap<Instructor, InstructorDto>()
+                .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.Name))
+                .ForMember(dest => dest.InstructorName, opt => opt.MapFrom(src => src.Name));
 
 
 
             CreateMap<ClubReservation, ClubReservationGetDto>()
+             .ForMember(dest => dest.ReservationId, 
+                                opt => opt.MapFrom(src => src.ReservationId))
              .ForMember(dest => dest.ClubName,
                         opt => opt.MapFrom(src => src.Club.Name))
              .ForMember(dest => dest.ClubLogo,
@@ -199,8 +204,17 @@ namespace ClassroomManagement.MapperProfiles
 
 
 
+
+
+
+
+
+
             CreateMap<LectureSession, LectureSessionDto>();
-            CreateMap<Instructor, InstructorDto>();
+
+
+
+
             CreateMap<Exam, ExamDto>();
             CreateMap<Enrollment, EnrollmentDto>();
 
@@ -224,6 +238,10 @@ namespace ClassroomManagement.MapperProfiles
 
 
             CreateMap<Notification, NotificationDto>();
+
+
+
+
             CreateMap<Reservation, ReservationDto>();
 
         }

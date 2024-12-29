@@ -17,7 +17,7 @@ namespace Repository
 
         public void CreateClubReservation(ClubReservation ClubReservation)
         {
-            throw new NotImplementedException();
+            Create(ClubReservation);
         }
 
         public void DeleteClubReservation(ClubReservation ClubReservation)
