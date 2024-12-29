@@ -12,7 +12,8 @@ namespace Contracts
 
         Task<IEnumerable<Room>> GetRoomsByDepartmentId(int departmentId, bool trackChanges);
         Task<IEnumerable<Room>> GetRoomsByBuildingId(int buildingId, bool trackChanges);
-        void CreateRoom(Room room);
+        //void CreateRoom(Room room);
+        Task<Room> CreateRoomAsync(Room room);
         Task UpdateRoomAsync(Room room);
         Task DeleteRoomAsync(Room room);
     }

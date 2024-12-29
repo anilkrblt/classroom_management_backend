@@ -67,11 +67,11 @@ namespace Service
             var roomEntity = _mapper.Map<Room>(creationDto);
 
             // 2) Kaydet
-            _repositoryManager.Room.CreateRoom(roomEntity);
+            var room = await _repositoryManager.Room.CreateRoomAsync(roomEntity);
             await _repositoryManager.SaveAsync();
 
             // 3) Geriye dönmek için (CreatedAtAction) => RoomDto
-            var createdRoomDto = _mapper.Map<RoomDto>(roomEntity);
+            var createdRoomDto = _mapper.Map<RoomDto>(room);
             return createdRoomDto;
         }
 

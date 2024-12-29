@@ -52,7 +52,7 @@ namespace Repository
                                                     .ThenInclude(l => l.Department)
                                             .Include(r => r.LectureSessions)
                                                 .ThenInclude(ls => ls.Instructor)
-                                            .OrderBy(r => r.Name) 
+                                            .OrderBy(r => r.Name)
                                             .ToListAsync();
         }
 
@@ -67,16 +67,35 @@ namespace Repository
                                                     .ThenInclude(l => l.Department)
                                             .Include(r => r.LectureSessions)
                                                 .ThenInclude(ls => ls.Instructor)
-                                            .OrderBy(r => r.Name) 
+                                            .OrderBy(r => r.Name)
                                             .ToListAsync();
         }
 
-        // Create a new room
-        public void CreateRoom(Room room)
+        /*    // Create a new room
+            public void CreateRoom(Room room)
+            {
+                Create(room);
+            }
+    */
+        public async Task<Room> CreateRoomAsync(Room room)
         {
+            // Room nesnesini oluştur
             Create(room);
-        }
 
+            // Veritabanına değişiklikleri kaydet
+            await RepositoryContext.SaveChangesAsync();
+
+            // Oluşturulan Room nesnesini geri döndür
+            return await FindByCondition(r => r.RoomId == room.RoomId, false)
+                                    .Include(r => r.Building)
+                                    .Include(r => r.Department)
+                                    .Include(r => r.LectureSessions)
+                                        .ThenInclude(ls => ls.Lecture)
+                                            .ThenInclude(l => l.Department)
+                                    .Include(r => r.LectureSessions)
+                                        .ThenInclude(ls => ls.Instructor).SingleOrDefaultAsync();
+                                 
+        }
         // Update an existing room
         public async Task UpdateRoomAsync(Room room)
         {
