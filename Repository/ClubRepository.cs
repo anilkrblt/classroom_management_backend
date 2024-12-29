@@ -17,9 +17,12 @@ namespace Repository
         public async Task<IEnumerable<Club>> GetAllClubsAsync(bool trackChanges)
         {
             return await FindAll(trackChanges)
+                .Include(c => c.ClubMemberships)
+                .ThenInclude(m => m.Student) // Öğrenci bilgilerini dahil etmek için
                 .OrderBy(c => c.Name)
                 .ToListAsync();
         }
+
 
         public async Task<Club> GetClubAsync(int clubId, bool trackChanges)
         {
@@ -57,6 +60,6 @@ namespace Repository
             return await FindByCondition(c => c.Name == clubName, trackChanges).SingleOrDefaultAsync();
         }
 
-   
+
     }
 }

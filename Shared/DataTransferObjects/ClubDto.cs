@@ -14,6 +14,13 @@ namespace Shared.DataTransferObjects
         public string ClubShorcut { get; set; }
         public string ClubLogo { get; set; }
 
+        public string ClubManager { get; set; }
+
+        public int? ClubManagerId { get; set; }
+
+
+
+
 
     }
 

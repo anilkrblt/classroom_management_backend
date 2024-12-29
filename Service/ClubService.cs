@@ -26,8 +26,26 @@ namespace Service
         public async Task<IEnumerable<ClubDto>> GetAllClubsAsync(bool trackChanges)
         {
             var clubs = await _repositoryManager.Club.GetAllClubsAsync(trackChanges);
-            return _mapper.Map<IEnumerable<ClubDto>>(clubs);
+
+            var clubDtos = clubs.Select(club =>
+            {
+                var managerMembership = club.ClubMemberships.FirstOrDefault(m => m.Student.IsClubManager);
+                
+                return new ClubDto
+                {
+                    ClubId = club.ClubId,
+                    ClubLogo = club.ClubLogoPath,
+                    ClubShorcut = club.NameShortcut,
+                    ClubName = club.Name,
+                    ClubManager = managerMembership?.Student.FullName ?? "N/A", // Null kontrolü
+                    ClubManagerId = managerMembership?.Student.StudentId // Nullable olduğu için doğrudan atanabilir
+                };
+            });
+
+            return clubDtos;
         }
+
+
 
         // Get a specific club by ID
         public async Task<ClubDto> GetClubByIdAsync(int clubId, bool trackChanges)

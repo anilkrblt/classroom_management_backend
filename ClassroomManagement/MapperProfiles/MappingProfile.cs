@@ -11,8 +11,21 @@ namespace ClassroomManagement.MapperProfiles
 {
     public class MappingProfile : Profile
     {
+        private static string GetClubManagerFullName(IEnumerable<ClubMembership> memberships)
+        {
+            var manager = memberships.FirstOrDefault(m => m.Student.IsClubManager);
+            return manager?.Student.FullName ?? string.Empty; // Null kontrolü
+        }
+
+        private static int? GetClubManagerId(IEnumerable<ClubMembership> memberships)
+        {
+            var manager = memberships.FirstOrDefault(m => m.Student.IsClubManager);
+            return manager?.Student.StudentId; // Null kontrolü
+        }
+
         public MappingProfile()
         {
+
 
 
             // ReservationDto -> Reservation
@@ -173,9 +186,11 @@ namespace ClassroomManagement.MapperProfiles
 
 
             CreateMap<Club, ClubDto>()
-                .ForMember(dest => dest.ClubName, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.ClubLogo, opt => opt.MapFrom(src => src.ClubLogoPath))
-                .ForMember(dest => dest.ClubShorcut, opt => opt.MapFrom(src => src.NameShortcut));
+      .ForMember(dest => dest.ClubName, opt => opt.MapFrom(src => src.Name))
+      .ForMember(dest => dest.ClubLogo, opt => opt.MapFrom(src => src.ClubLogoPath))
+      .ForMember(dest => dest.ClubShorcut, opt => opt.MapFrom(src => src.NameShortcut))
+      .ForMember(dest => dest.ClubManager, opt => opt.MapFrom(src => GetClubManagerFullName(src.ClubMemberships)))
+      .ForMember(dest => dest.ClubManagerId, opt => opt.MapFrom(src => GetClubManagerId(src.ClubMemberships)));
 
 
 
