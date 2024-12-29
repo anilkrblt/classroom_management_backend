@@ -67,5 +67,13 @@ namespace Repository
                 Delete(existingStudent);
             }
         }
+
+        public Student AuthenticateStudent(string email, string password)
+        {
+            var student = FindByCondition(s => s.Email == email && s.Password == password, false).SingleOrDefault();
+            if (student is null)
+                return null;
+            return student;
+        }
     }
 }

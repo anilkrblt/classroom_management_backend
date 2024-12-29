@@ -46,7 +46,11 @@ namespace ClassroomManagement.Extensions
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
         {
             var jwtSettings = configuration.GetSection("JwtSettings");
-            var secretKey = jwtSettings["SecretKey"];
+            var secretKey = jwtSettings["Key"];
+            if (string.IsNullOrWhiteSpace(secretKey))
+            {
+                throw new ArgumentNullException(nameof(secretKey), "JWT secret key cannot be null or empty");
+            }
 
             services.AddAuthentication(options =>
             {
@@ -65,6 +69,23 @@ namespace ClassroomManagement.Extensions
                     ValidAudience = jwtSettings["Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
                 };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnAuthenticationFailed = context =>
+                    {
+                        Console.WriteLine($"Authentication failed: {context.Exception.Message}");
+                        return Task.CompletedTask;
+                    },
+                    OnTokenValidated = context =>
+                    {
+                        Console.WriteLine("Token validated successfully.");
+                        return Task.CompletedTask;
+                    }
+                };
+
+
+
             });
         }
         public static void ConfigureTokenService(this IServiceCollection services) =>

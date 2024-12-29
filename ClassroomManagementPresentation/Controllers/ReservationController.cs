@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Http;
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace ClassroomManagementPresentation.Controllers
 {
@@ -132,27 +134,30 @@ namespace ClassroomManagementPresentation.Controllers
         }
 
 
-
+        [Authorize(Roles = "Admin")]
         [HttpPut("clubreservation/updatestatus/{id}")]
         public async Task<ActionResult> UpdateClubReservationStatus(int id, [FromBody] string status)
         {
+            var role = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+            Console.WriteLine($"Role: {role}");
+
             if (status == null)
                 return BadRequest("status is null.");
 
             await _serviceManager.ReservationService.UpdateClubReservationStatusAsync(id, status, true);
             return NoContent();
-        } 
+        }
 
-/*
-        [HttpPut("clubreservation/{id}")]
-        public async Task<ActionResult> UpdateClubReservation(int id, [FromBody] ReservationDto reservationDto)
-        {
-            if (reservationDto == null)
-                return BadRequest("ReservationDto object is null.");
+        /*
+                [HttpPut("clubreservation/{id}")]
+                public async Task<ActionResult> UpdateClubReservation(int id, [FromBody] ReservationDto reservationDto)
+                {
+                    if (reservationDto == null)
+                        return BadRequest("ReservationDto object is null.");
 
-            await _serviceManager.ReservationService.UpdateReservationAsync(id, reservationDto);
-            return NoContent();
-        }*/
+                    await _serviceManager.ReservationService.UpdateReservationAsync(id, reservationDto);
+                    return NoContent();
+                }*/
 
         // DELETE: api/Reservations/{id}
         [HttpDelete("clubreservation/{ReservationId}")]
@@ -160,6 +165,6 @@ namespace ClassroomManagementPresentation.Controllers
         {
             await _serviceManager.ReservationService.DeleteReservationAsync(ReservationId);
             return NoContent();
-        } 
+        }
     }
 }

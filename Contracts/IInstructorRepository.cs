@@ -10,6 +10,11 @@ namespace Contracts
         Task<Instructor> GetInstructorAsync(int instructorId, bool trackChanges);
 
         void CreateInstructor(Instructor instructor);
+        
+
+
+        Instructor AuthenticateInstructor(string email, string password);
+
 
         Task UpdateInstructorAsync(Instructor instructor);
         Task DeleteInstructorAsync(Instructor instructor);

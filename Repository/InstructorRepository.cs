@@ -29,6 +29,14 @@ namespace Repository
         {
             Create(instructor);
         }
+        public Instructor AuthenticateInstructor(string email, string password)
+        {
+            var instructor = FindByCondition(i => i.Email == email && i.Password == password, false).SingleOrDefault();
+            if (instructor is null)
+                return null;
+            return instructor;
+
+        }
 
         public async Task UpdateInstructorAsync(Instructor instructor)
         {

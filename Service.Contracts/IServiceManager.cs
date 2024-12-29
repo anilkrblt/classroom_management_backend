@@ -18,6 +18,7 @@ namespace Service.Contracts
         IRoomService RoomService { get; }
         IReservationService ReservationService { get; }
         IRequestService RequestService { get; }
+        IAuthService AuthService { get; }
 
     }
 

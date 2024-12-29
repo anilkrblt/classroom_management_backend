@@ -11,29 +11,44 @@ namespace ClassroomManagementPresentation.Controllers
     public class AuthController : ControllerBase
     {
         private readonly ITokenService _tokenService;
+        private readonly IServiceManager _serviceManager;
 
-        public AuthController(ITokenService tokenService)
+        public AuthController(ITokenService tokenService, IServiceManager serviceManager)
         {
             _tokenService = tokenService;
+            _serviceManager = serviceManager;
         }
 
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginDto loginDto)
         {
-            if (loginDto.Username == "test" && loginDto.Password == "password")
+            try
             {
+                // Kullanıcıyı doğrula
+                var user = _serviceManager.AuthService.AuthenticateUser(loginDto.Email, loginDto.Password);
+
+                // Token oluştur
                 var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, loginDto.Username),
-                new Claim(ClaimTypes.Role, "Admin")
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role.ToLowerInvariant()),
             };
 
-                var token = _tokenService.CreateToken(loginDto.Username, claims);
-                return Ok(new { Token = token });
-            }
+                var token = _tokenService.CreateToken(user.Email, claims);
 
-            return Unauthorized("Invalid username or password.");
+                return Ok(new
+                {
+                    Token = token,
+                    Role = user.Role,
+                    IsAdmin = user.IsAdmin
+                });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
         }
     }
+
 
 }

@@ -25,6 +25,7 @@ namespace Service
         private readonly Lazy<IReservationService> _reservationService;
         private readonly Lazy<IRequestService> _requestService;
         private readonly Lazy<INotificationService> _notificationService;
+        private readonly Lazy<IAuthService> _authService;
 
 
         public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper)
@@ -67,6 +68,8 @@ namespace Service
 
             _notificationService = new Lazy<INotificationService>(() =>
                 new NotificationService(repositoryManager, mapper));
+            _authService = new Lazy<IAuthService>(() =>
+                new AuthService(repositoryManager));
 
         }
 
@@ -83,5 +86,6 @@ namespace Service
         public IReservationService ReservationService => _reservationService.Value;
         public IRequestService RequestService => _requestService.Value;
         public INotificationService NotificationService => _notificationService.Value;
+        public IAuthService AuthService => _authService.Value;
     }
 }

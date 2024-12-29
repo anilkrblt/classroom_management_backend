@@ -16,7 +16,7 @@ namespace Repository
         public async Task<IEnumerable<Employee>> GetAllEmployeesAsync(bool trackChanges)
         {
             return await FindAll(trackChanges)
-                .OrderBy(e => e.Name) 
+                .OrderBy(e => e.Name)
                 .ToListAsync();
         }
 
@@ -51,6 +51,14 @@ namespace Repository
             {
                 Delete(existingEmployee);
             }
+        }
+
+        public Employee AuthenticateEmployee(string email, string password)
+        {
+            var employee = FindByCondition(e => e.Email == email && e.Password == password, false).SingleOrDefault();
+            if (employee is null)
+                return null;
+            return employee;
         }
     }
 }

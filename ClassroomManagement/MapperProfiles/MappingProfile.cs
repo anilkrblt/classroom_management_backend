@@ -158,6 +158,8 @@ namespace ClassroomManagement.MapperProfiles
 
 
 
+
+
             CreateMap<Request, RequestDto>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
                 .ForMember(dest => dest.RoomName, opt => opt.MapFrom(src => src.Room.Name))
@@ -170,9 +172,15 @@ namespace ClassroomManagement.MapperProfiles
                 .ForMember(dest => dest.InstructorName, opt => opt.MapFrom(src => src.Name));
 
 
+            CreateMap<Club, ClubDto>()
+                .ForMember(dest => dest.ClubName, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.ClubLogo, opt => opt.MapFrom(src => src.ClubLogoPath))
+                .ForMember(dest => dest.ClubShorcut, opt => opt.MapFrom(src => src.NameShortcut));
+
+
 
             CreateMap<ClubReservation, ClubReservationGetDto>()
-             .ForMember(dest => dest.ReservationId, 
+             .ForMember(dest => dest.ReservationId,
                                 opt => opt.MapFrom(src => src.ReservationId))
              .ForMember(dest => dest.ClubName,
                         opt => opt.MapFrom(src => src.Club.Name))
@@ -225,7 +233,7 @@ namespace ClassroomManagement.MapperProfiles
 
 
 
-            CreateMap<Club, ClubDto>();
+
 
 
             CreateMap<Building, BuildingDto>();
