@@ -59,6 +59,51 @@ namespace ClassroomManagement.Extensions
             })
             .AddJwtBearer(options =>
             {
+
+
+                var jwtSettings = configuration.GetSection("JwtSettings");
+                var secretKey = jwtSettings["Key"];
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        // Authorization header'ın ham halini yazalım.
+                        var rawHeader = context.Request.Headers["Authorization"].ToString();
+                        Console.WriteLine("RAW AUTH HEADER: " + rawHeader);
+
+                        // "Bearer " ile başlıyorsa substring alalım.
+                        if (!string.IsNullOrEmpty(rawHeader) && rawHeader.StartsWith("Bearer "))
+                        {
+                            context.Token = rawHeader.Substring("Bearer ".Length).Trim();
+                            Console.WriteLine("SET context.Token: " + context.Token);
+                        }
+
+                        return Task.CompletedTask;
+                    },
+
+                    OnAuthenticationFailed = context =>
+                    {
+                        Console.WriteLine("Authentication failed: " + context.Exception.Message);
+
+                        // Hata anında Authorization header’ını tekrar okuyabilirsiniz:
+                        var rawHeader = context.Request.Headers["Authorization"].ToString();
+                        Console.WriteLine("At fail time, rawHeader = " + rawHeader);
+
+                        // İsterseniz "Bearer " kısmını ayıklayabilirsiniz:
+                        if (!string.IsNullOrEmpty(rawHeader) && rawHeader.StartsWith("Bearer "))
+                        {
+                            var token = rawHeader.Substring("Bearer ".Length).Trim();
+                            Console.WriteLine("At fail time, token = " + token);
+                        }
+
+                        return Task.CompletedTask;
+                    }
+
+                };
+
+
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -69,23 +114,6 @@ namespace ClassroomManagement.Extensions
                     ValidAudience = jwtSettings["Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
                 };
-
-                options.Events = new JwtBearerEvents
-                {
-                    OnAuthenticationFailed = context =>
-                    {
-                        Console.WriteLine($"Authentication failed: {context.Exception.Message}");
-                        return Task.CompletedTask;
-                    },
-                    OnTokenValidated = context =>
-                    {
-                        Console.WriteLine("Token validated successfully.");
-                        return Task.CompletedTask;
-                    }
-                };
-
-
-
             });
         }
         public static void ConfigureTokenService(this IServiceCollection services) =>

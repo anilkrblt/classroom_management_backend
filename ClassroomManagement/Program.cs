@@ -1,11 +1,10 @@
 
 using ClassroomManagement.Extensions;
-using Contracts;
 using Microsoft.AspNetCore.HttpOverrides;
-using NLog;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,13 +47,45 @@ builder.Services.AddControllers(config =>
 }).AddApplicationPart(typeof(ClassroomManagementPresentation.AssemblyReference).Assembly);
 
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.OperationFilter<DefaultResponseContentTypeFilter>();
 
-    // ...
-    // c.OperationFilter<FormFileOperationFilter>();
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Classroom Management API",
+        Version = "v1",
+        Description = "API documentation with JWT Bearer Authentication"
+    });
+
+    // JWT Authentication
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter 'Bearer' [space] and then your token in the text input below.\n\nExample: 'Bearer eyJhbGciOiJIUzI1NiIs...'"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
 });
+
 
 var app = builder.Build();
 

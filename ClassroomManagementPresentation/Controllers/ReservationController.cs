@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Http;
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ClassroomManagementPresentation.Controllers
 {
@@ -134,7 +134,7 @@ namespace ClassroomManagementPresentation.Controllers
         }
 
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpPut("clubreservation/updatestatus/{id}")]
         public async Task<ActionResult> UpdateClubReservationStatus(int id, [FromBody] string status)
         {

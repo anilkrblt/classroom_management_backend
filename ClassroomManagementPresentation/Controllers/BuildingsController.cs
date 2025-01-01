@@ -3,6 +3,7 @@ using Shared.DataTransferObjects;
 using Service.Contracts;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ClassroomManagementPresentation.Controllers
 {
@@ -19,6 +20,7 @@ namespace ClassroomManagementPresentation.Controllers
 
         // GET: api/Buildings
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<BuildingDto>>> GetBuildings()
         {
             var buildings = await _serviceManager.BuildingService.GetAllBuildingsAsync(trackChanges: false);

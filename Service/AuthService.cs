@@ -30,7 +30,7 @@ namespace Service
                     return new UserDto
                     {
                         Email = instructor.Email,
-                        Role = "Admin",
+                        Role = "admin",
                         IsAdmin = instructor.IsAdmin
                     };
                 }
@@ -39,7 +39,7 @@ namespace Service
                     return new UserDto
                     {
                         Email = instructor.Email,
-                        Role = "Instructor",
+                        Role = "instructor",
                         IsAdmin = instructor.IsAdmin
                     };
                 }
@@ -56,7 +56,7 @@ namespace Service
                     return new UserDto
                     {
                         Email = employee.Email,
-                        Role = "Admin",
+                        Role = "admin",
                         IsAdmin = employee.IsAdmin
                     };
                 }
@@ -65,7 +65,7 @@ namespace Service
                     return new UserDto
                     {
                         Email = employee.Email,
-                        Role = "Employee",
+                        Role = "employee",
                         IsAdmin = employee.IsAdmin
                     };
                 }
@@ -82,7 +82,7 @@ namespace Service
                     return new UserDto
                     {
                         Email = student.Email,
-                        Role = "ClubManagerStudent",
+                        Role = "clubManagerStudent",
                         IsAdmin = false
                     };
                 }
@@ -91,7 +91,7 @@ namespace Service
                     return new UserDto
                     {
                         Email = student.Email,
-                        Role = "Student",
+                        Role = "student",
                         IsAdmin = false
                     };
                 }
