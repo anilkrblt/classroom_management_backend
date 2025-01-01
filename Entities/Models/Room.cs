@@ -10,7 +10,9 @@ namespace Entities.Models
         PcLab,
         GenLab,
         GidaLab,
-        Amfi
+        Amfi,
+        MachLab
+
     }
 
     [Table("Room")]
