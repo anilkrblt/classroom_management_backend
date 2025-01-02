@@ -20,6 +20,8 @@ RUN dotnet restore "classroom_management_backend.sln"
 # Tüm dosyaları kopyala ve yayınla
 COPY . .
 WORKDIR "/src/ClassroomManagement"
+COPY ["ClassroomManagement/ClassroomManagement.db", "./"]
+
 RUN dotnet publish "ClassroomManagement.csproj" -c Release -o /app/publish
 
 # 2. Aşama: Çalıştırma imajı için resmi .NET Runtime imajını kullan
