@@ -12,7 +12,7 @@ COPY ["LoggerService/LoggerService.csproj", "LoggerService/"]
 COPY ["Entities/Entities.csproj", "Entities/"]
 COPY ["Contracts/Contracts.csproj", "Contracts/"]
 COPY ["ClassroomManagementPresentation/ClassroomManagementPresentation.csproj", "ClassroomManagementPresentation/"]
-COPY ["ClassroomManagement/WebAPI/ClassroomManagement.csproj", "ClassroomManagement/"]
+COPY ["ClassroomManagement/ClassroomManagement.csproj", "ClassroomManagement/"]
 
 # Bağımlılıkları geri yükle
 RUN dotnet restore "classroom_management_backend.sln"
