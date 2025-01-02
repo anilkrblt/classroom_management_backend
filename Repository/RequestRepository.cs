@@ -26,6 +26,7 @@ namespace Repository
         public async Task<Request> GetRequestAsync(int requestId, bool trackChanges)
         {
             return await FindByCondition(r => r.RequestId == requestId, trackChanges)
+                .Include(req=> req.Room)
                 .SingleOrDefaultAsync();
         }
 
@@ -33,7 +34,8 @@ namespace Repository
         public async Task<IEnumerable<Request>> GetRequestsByRoomIdAsync(int roomId, bool trackChanges)
         {
             return await FindByCondition(r => r.RoomId == roomId, trackChanges)
-                .OrderBy(r => r.CreatedAt) // Requests sorted by creation date
+                .Include(req=> req.Room)
+                .OrderBy(r => r.CreatedAt) 
                 .ToListAsync();
         }
 
@@ -41,7 +43,8 @@ namespace Repository
         public async Task<IEnumerable<Request>> GetRequestsByUserIdAsync(int userId, bool trackChanges)
         {
             return await FindByCondition(r => r.UserId == userId, trackChanges)
-                .OrderBy(r => r.CreatedAt) // Requests sorted by creation date
+                .Include(req=> req.Room)
+                .OrderBy(r => r.CreatedAt) 
                 .ToListAsync();
         }
 

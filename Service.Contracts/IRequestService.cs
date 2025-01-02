@@ -19,7 +19,7 @@ namespace Service.Contracts
         Task<IEnumerable<RequestDto>> GetRequestsByUserIdAsync(int userId, bool trackChanges);
 
         // Create a new request
-        Task CreateRequestAsync(RequestDto requestDto);
+        Task CreateRequestAsync(string fileName, RequestCreationDto requestCreationDto);
 
         // Update an existing request
         Task UpdateRequestAsync(int requestId, RequestDto requestDto);

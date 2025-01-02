@@ -61,11 +61,25 @@ namespace Service
         }
 
         // Create a new request
-        public async Task CreateRequestAsync(RequestDto requestDto)
+        public async Task CreateRequestAsync(string fileName, RequestCreationDto dto)
         {
-            var request = _mapper.Map<Request>(requestDto);
 
-            _repositoryManager.Request.CreateRequest(request);
+            var requestEntity = new Request
+            {
+                Type = dto.Type,
+                Content = dto.Content,
+                Title = dto.Title,
+                Status = "pending", 
+                UserName = dto.UserName,
+                UserId = dto.UserId,
+                RoomId = dto.RoomId,
+                SolveDescription = "",
+                ImagePaths = fileName,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            _repositoryManager.Request.CreateRequest(requestEntity);
             await _repositoryManager.SaveAsync();
         }
 

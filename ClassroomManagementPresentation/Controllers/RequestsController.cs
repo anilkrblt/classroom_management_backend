@@ -61,62 +61,82 @@ namespace ClassroomManagementPresentation.Controllers
 
             return Ok(requests);
         }
-/*
-        // POST: api/Requests
-        [HttpPost]
-        public async Task<ActionResult> CreateRequest([FromBody] RequestDto requestDto)
+
+        [HttpPost()]
+        [Consumes("multipart/form-data")]
+        public async Task<ActionResult> CreateRequest([FromForm] RequestCreationDto dto)
         {
-            if (requestDto == null)
-                return BadRequest("RequestDto object is null.");
+            if (dto == null)
+                return BadRequest("Request DTO is null.");
 
-            await _serviceManager.RequestService.CreateRequestAsync(requestDto);
-            return CreatedAtAction(nameof(GetRequest), new { id = requestDto.RequestId }, requestDto);
-        }
-        [HttpPost("upload")]
-        public async Task<IActionResult> UploadPhoto(
-    [FromForm] IFormFile photo,
-    [FromForm] string title,
-    [FromForm] string description)
-        {
-            if (photo == null || photo.Length == 0)
-                return BadRequest("Fotoğraf yüklenmedi.");
-
-            // 1) Dosya adı / path
-            var fileName = Path.GetFileName(photo.FileName);
-            // Örneğin: "resim.jpg"
-
-            // 2) Hedef klasör
-            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
-            if (!Directory.Exists(uploadPath))
-                Directory.CreateDirectory(uploadPath);
-
-            // 3) Tam yol
-            var filePath = Path.Combine(uploadPath, fileName);
-
-            // 4) Dosyayı kaydet
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            if (dto.PhotoFiles != null && dto.PhotoFiles.Count > 3)
             {
-                await photo.CopyToAsync(stream);
+                return BadRequest("En fazla 3 fotoğraf yükleyebilirsiniz.");
             }
 
-            // 5) Veritabanına (dosya adı / yol + diğer alanlar) kaydedebilirsiniz
-            //    Örnek bir tablo: Photos (Id, FileName, Title, Description, CreatedAt ...)
-            // photo kaydedildiyse, DB'ye fileName, title, description vs. eklenebilir
-            // Aşağıda basit bir örnek akış:
-            // 
-            // var entity = new PhotoEntity 
-            // {
-            //     FileName = fileName,
-            //     Title = title,
-            //     Description = description,
-            //     CreatedAt = DateTime.Now
-            // };
-            // _context.Photos.Add(entity);
-            // await _context.SaveChangesAsync();
+            string imagePaths = "none"; 
+            if (dto.PhotoFiles != null && dto.PhotoFiles.Count > 0)
+            {
+                // wwwroot/images/request klasör yolunu oluşturuyoruz.
+                // -> Örnek olarak: {ProjeDizin}/wwwroot/images/request
+                var mainProjectPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", "ClassroomManagement"));
 
-            return Ok(new { Message = "Fotoğraf yüklendi.", FileName = fileName, Title = title, Description = description });
+                var requestImagesFolder = Path.Combine(mainProjectPath, "wwwroot", "images", "request");
+                if (!Directory.Exists(requestImagesFolder))
+                    Directory.CreateDirectory(requestImagesFolder);
+
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" }; // İstenilen dosya uzantıları
+                var maxFileSize = 5 * 1024 * 1024; // 5 MB
+                var savedFilePaths = new List<string>();
+
+                foreach (var photo in dto.PhotoFiles.Take(3)) // Maksimum 3 fotoğraf
+                {
+                    if (photo.Length > 0)
+                    {
+                        // İmaj formatını kontrol etme
+                        var fileExtension = Path.GetExtension(photo.FileName).ToLower();
+                        if (!allowedExtensions.Contains(fileExtension))
+                        {
+                            return BadRequest($"Geçersiz dosya formatı: {fileExtension}. Sadece .jpg, .jpeg, .png ve .gif dosyalarına izin verilmektedir.");
+                        }
+
+                        if (photo.Length > maxFileSize)
+                        {
+                            return BadRequest($"Dosya boyutu 5 MB'ı aşıyor: {photo.FileName}");
+                        }
+
+                        var originalFileName = Path.GetFileNameWithoutExtension(photo.FileName);
+                        originalFileName = originalFileName.Replace(" ", "_").Replace("-", "_");
+
+                        var uniqueFileName = $"{originalFileName}_{DateTime.UtcNow:yyyyMMddHHmmssfff}{fileExtension}";
+
+                        var savePath = Path.Combine(requestImagesFolder, uniqueFileName);
+
+                        try
+                        {
+                            using (var stream = new FileStream(savePath, FileMode.Create))
+                            {
+                                await photo.CopyToAsync(stream);
+                            }
+
+                            var filePath = Path.Combine("images", "request", uniqueFileName).Replace("\\", "/");
+                            savedFilePaths.Add(filePath);
+                        }
+                        catch (Exception ex)
+                        {
+                            return StatusCode(500, $"Fotoğraf kaydedilirken bir hata oluştu: {ex.Message}");
+                        }
+                    }
+                }
+                imagePaths = string.Join(",", savedFilePaths);
+            }
+
+            await _serviceManager.RequestService.CreateRequestAsync(imagePaths, dto);
+
+            return Created();
         }
-*/
+
+
 
         // PUT: api/Requests/{id}
         [HttpPut("{id}")]
