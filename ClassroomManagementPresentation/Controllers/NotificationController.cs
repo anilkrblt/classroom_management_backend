@@ -35,18 +35,7 @@ namespace ClassroomManagementPresentation.Controllers
                 return NotFound($"Notification with ID {id} not found.");
 
             return Ok(notification);
-        }
-
-        // POST: api/Notifications
-        [HttpPost]
-        public async Task<ActionResult> CreateNotification([FromBody] NotificationDto notificationDto)
-        {
-            if (notificationDto == null)
-                return BadRequest("NotificationDto object is null.");
-
-            await _serviceManager.NotificationService.CreateNotificationAsync(notificationDto);
-            return CreatedAtAction(nameof(GetNotification), new { id = notificationDto.NotificationId }, notificationDto);
-        }
+        } 
 
         // PUT: api/Notifications/{id}
         [HttpPut("{id}")]
@@ -56,14 +45,6 @@ namespace ClassroomManagementPresentation.Controllers
                 return BadRequest("NotificationDto object is null.");
 
             await _serviceManager.NotificationService.UpdateNotificationAsync(id, notificationDto);
-            return NoContent();
-        }
-
-        // DELETE: api/Notifications/{id}
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteNotification(int id)
-        {
-            await _serviceManager.NotificationService.DeleteNotificationAsync(id);
             return NoContent();
         }
     }

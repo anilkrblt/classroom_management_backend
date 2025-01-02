@@ -24,7 +24,11 @@ namespace Service
         public async Task<IEnumerable<RoomDto>> GetAllRoomsAsync(bool trackChanges)
         {
             var rooms = await _repositoryManager.Room.GetAllRoomsAsync(trackChanges);
-            return _mapper.Map<IEnumerable<RoomDto>>(rooms);
+            var roomDto = _mapper.Map<IEnumerable<RoomDto>>(rooms);
+            
+            return roomDto;
+
+
         }
 
         // Get a specific room by ID

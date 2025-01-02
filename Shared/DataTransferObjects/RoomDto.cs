@@ -1,4 +1,6 @@
 
+using System.Dynamic;
+
 namespace Shared.DataTransferObjects
 {
 
@@ -15,6 +17,21 @@ namespace Shared.DataTransferObjects
         public string DepartmentName { get; set; }
         public string BuildingName { get; set; }
         public List<LectureInfoDto> Lectures { get; set; }
+        public List<ClubEventDto> ClubEvents { get; set; }
+    }
+    public record ClubEventDto
+    {
+        public int ReservationId { get; set; }
+        public string ClubShortcut { get; set; }
+        public string ClubName { get; set; }
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
+        public DateTime? EventDate { get; set; }
+        public string Title { get; set; }
+        public string Banner { get; set; }
+        public string ClubLogo { get; set; }
+        public string Details { get; set; }
+        public string Link { get; set; }
     }
 
     public record LectureInfoDto
@@ -25,6 +42,7 @@ namespace Shared.DataTransferObjects
         public TimeSpan EndTime { get; set; }
         public string DepartmentName { get; set; }
         public string? DayOfWeek { get; set; }
+        public int IsExtraLesson { get; set; }
 
     }
 

@@ -21,8 +21,12 @@ namespace Repository
                                               .Include(r => r.LectureSessions)
                                                 .ThenInclude(ls => ls.Lecture)
                                                 .ThenInclude(l => l.Department)
-                                            .Include(r => r.LectureSessions)
+                                              .Include(r => r.LectureSessions)
                                                 .ThenInclude(ls => ls.Instructor)
+                                              .Include(r => r.Reservations)
+                                                .ThenInclude(r => r.ClubReservations
+                                                    .Where(cr => cr.Status == "approved"))
+                                                    .ThenInclude(cr => cr.Club)
                                               .OrderBy(r => r.Name)
                                               .ToListAsync();
         }
@@ -67,6 +71,8 @@ namespace Repository
                                                     .ThenInclude(l => l.Department)
                                             .Include(r => r.LectureSessions)
                                                 .ThenInclude(ls => ls.Instructor)
+                                            .Include(r => r.Reservations)
+                                                .ThenInclude(r => r.ClubReservations)
                                             .OrderBy(r => r.Name)
                                             .ToListAsync();
         }
@@ -94,7 +100,7 @@ namespace Repository
                                             .ThenInclude(l => l.Department)
                                     .Include(r => r.LectureSessions)
                                         .ThenInclude(ls => ls.Instructor).SingleOrDefaultAsync();
-                                 
+
         }
         // Update an existing room
         public async Task UpdateRoomAsync(Room room)

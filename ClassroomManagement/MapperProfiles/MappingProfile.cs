@@ -126,8 +126,6 @@ namespace ClassroomManagement.MapperProfiles
                         opt => opt.MapFrom(src => src.Grade))
              .ForMember(dest => dest.Term,
                         opt => opt.MapFrom(src => src.Term))
-
-             // Instructors alanını LectureInstructors üzerinden dolduruyoruz
              .ForMember(dest => dest.Instructors,
                         opt => opt.MapFrom(src => src.LectureInstructors
                             .Select(li => li.Instructor)
@@ -147,6 +145,22 @@ namespace ClassroomManagement.MapperProfiles
                    opt => opt.MapFrom(src => src.Department != null ? src.Department.Name : "No Department"))
         .ForMember(dest => dest.BuildingName,
                    opt => opt.MapFrom(src => src.Building.Name))
+        .ForMember(dest => dest.ClubEvents,
+                    opt => opt.MapFrom(src => src.Reservations.SelectMany(r => r.ClubReservations
+                    .Select(cr => new ClubEventDto
+                    {
+                        ReservationId = cr.ReservationId,
+                        Banner = cr.Banner,
+                        ClubLogo = cr.Club.ClubLogoPath,
+                        ClubName = cr.Club.Name,
+                        ClubShortcut = cr.Club.NameShortcut,
+                        Details = cr.Details,
+                        StartTime = r.StartTime,
+                        EndTime = r.EndTime,
+                        EventDate = r.EventDate,
+                        Title = cr.Title,
+                        Link = cr.EventRegisterLink
+                    }))))
         .ForMember(dest => dest.Lectures,
                    opt => opt.MapFrom(src => src.LectureSessions.Select(ls => new LectureInfoDto
                    {
@@ -155,7 +169,8 @@ namespace ClassroomManagement.MapperProfiles
                        StartTime = ls.StartTime,
                        EndTime = ls.EndTime,
                        DepartmentName = ls.Lecture.Department.Name,
-                       DayOfWeek = ls.DayOfWeek
+                       DayOfWeek = ls.DayOfWeek,
+                       IsExtraLesson = ls.IsExtraLesson
                    }).ToList()));
 
             CreateMap<LectureSession, LectureInfoDto>()
@@ -166,7 +181,21 @@ namespace ClassroomManagement.MapperProfiles
                 .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Lecture.Department.Name))
                 .ForMember(dest => dest.DayOfWeek, opt => opt.MapFrom(src => src.DayOfWeek));
 
-            CreateMap<Student, StudentDto>();
+
+
+            CreateMap<LectureSession, UserLecturesDto>()
+                .ForMember(dest => dest.LectureCode, opt => opt.MapFrom(src => src.LectureCode))
+                .ForMember(dest => dest.LectureName, opt => opt.MapFrom(src => src.Lecture.Name))
+                .ForMember(dest => dest.RoomName, opt => opt.MapFrom(src => src.Room.Name))
+                .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.StartTime))
+                .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.EndTime))
+                .ForMember(dest => dest.DayOfWeek, opt => opt.MapFrom(src => src.DayOfWeek));
+
+
+            CreateMap<Student, StudentDto>()
+                .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.Name))
+                .ForMember(dest => dest.Schedule, opt => opt.MapFrom(src =>
+                    src.Enrollments.SelectMany(e => e.Lecture.LectureSessions)));
 
 
 
@@ -182,7 +211,9 @@ namespace ClassroomManagement.MapperProfiles
 
             CreateMap<Instructor, InstructorDto>()
                 .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.Name))
-                .ForMember(dest => dest.InstructorName, opt => opt.MapFrom(src => src.Name));
+                .ForMember(dest => dest.InstructorName, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Schedule, opt => opt.MapFrom(src =>
+                    src.LectureInstructors.SelectMany(e => e.Lecture.LectureSessions)));
 
 
             CreateMap<Club, ClubDto>()

@@ -13,11 +13,15 @@ namespace Repository
         {
         }
 
-        // Get all students
         public async Task<IEnumerable<Student>> GetAllStudentsAsync(bool trackChanges)
         {
             return await FindAll(trackChanges)
-                .OrderBy(s => s.FullName) // Students are sorted by name
+                .Include(s => s.Enrollments)
+                    .ThenInclude(e => e.Lecture)
+                        .ThenInclude(l => l.LectureSessions)
+                            .ThenInclude(ls => ls.Room)
+                .Include(s => s.Department)
+                .OrderBy(s => s.FullName)
                 .ToListAsync();
         }
 
@@ -25,6 +29,11 @@ namespace Repository
         public async Task<Student> GetStudentAsync(int studentId, bool trackChanges)
         {
             return await FindByCondition(s => s.StudentId == studentId, trackChanges)
+             .Include(s => s.Enrollments)
+                    .ThenInclude(e => e.Lecture)
+                        .ThenInclude(l => l.LectureSessions)
+                            .ThenInclude(ls => ls.Room)
+                .Include(s => s.Department)
                 .SingleOrDefaultAsync();
         }
 
@@ -32,7 +41,12 @@ namespace Repository
         public async Task<IEnumerable<Student>> GetStudentsByDepartmentId(int departmentId, bool trackChanges)
         {
             return await FindByCondition(s => s.DepartmentId == departmentId, trackChanges)
-                .OrderBy(s => s.FullName) // Students are sorted by name
+             .Include(s => s.Enrollments)
+                    .ThenInclude(e => e.Lecture)
+                        .ThenInclude(l => l.LectureSessions)
+                            .ThenInclude(ls => ls.Room)
+                .Include(s => s.Department)
+                .OrderBy(s => s.FullName) 
                 .ToListAsync();
         }
 

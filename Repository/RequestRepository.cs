@@ -71,13 +71,6 @@ namespace Repository
         }
 
         // Delete a request
-        public async Task DeleteRequestAsync(Request request)
-        {
-            var existingRequest = await GetRequestAsync(request.RequestId, true);
-            if (existingRequest != null)
-            {
-                Delete(existingRequest);
-            }
-        }
+        public async Task DeleteRequestAsync(Request request) => Delete(request);
     }
 }

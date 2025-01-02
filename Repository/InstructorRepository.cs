@@ -15,14 +15,25 @@ namespace Repository
 
         public async Task<IEnumerable<Instructor>> GetAllInstructorsAsync(bool trackChanges)
         {
-            return await FindAll(trackChanges).Include(i => i.Department)
+            return await FindAll(trackChanges)
+                .Include(i => i.Department)
+                .Include(i => i.LectureInstructors)
+                    .ThenInclude(li => li.Lecture)
+                        .ThenInclude(l => l.LectureSessions)
+                            .ThenInclude(ls => ls.Room)
                 .OrderBy(i => i.Name)
                 .ToListAsync();
         }
 
         public async Task<Instructor> GetInstructorAsync(int instructorId, bool trackChanges)
         {
-            return await FindByCondition(i => i.InstructorId == instructorId, trackChanges).Include(i => i.Department).SingleOrDefaultAsync();
+            return await FindByCondition(i => i.InstructorId == instructorId, trackChanges)
+                   .Include(i => i.Department)
+                   .Include(i => i.LectureInstructors)
+                    .ThenInclude(li => li.Lecture)
+                        .ThenInclude(l => l.LectureSessions)
+                            .ThenInclude(ls => ls.Room)
+                   .SingleOrDefaultAsync();
         }
 
         public void CreateInstructor(Instructor instructor)
