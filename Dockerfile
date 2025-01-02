@@ -17,17 +17,30 @@ COPY ["ClassroomManagement/ClassroomManagement.csproj", "ClassroomManagement/"]
 # Bağımlılıkları geri yükle
 RUN dotnet restore "classroom_management_backend.sln"
 
-# Tüm dosyaları kopyala ve yayınla
+# Tüm dosyaları kopyala
 COPY . .
+
+# Web API projesinin bulunduğu dizine geçiş yap
 WORKDIR "/src/ClassroomManagement"
+
+# SQLite veritabanı dosyasını publish dizinine kopyala
 COPY ["ClassroomManagement/ClassroomManagement.db", "./"]
 
+# Yayınlama işlemi
 RUN dotnet publish "ClassroomManagement.csproj" -c Release -o /app/publish
 
 # 2. Aşama: Çalıştırma imajı için resmi .NET Runtime imajını kullan
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
+
+# Publish edilmiş dosyaları kopyala
 COPY --from=build /app/publish .
+
+# Portu belirt (Render genellikle 10000 ve üstü portları kullanır, burada 8080 örnek)
+EXPOSE 8080
+
+# ASP.NET Core uygulamasının hangi portu dinleyeceğini belirt
+ENV ASPNETCORE_URLS=http://+:8080
 
 # Uygulamayı çalıştır
 ENTRYPOINT ["dotnet", "ClassroomManagement.dll"]
