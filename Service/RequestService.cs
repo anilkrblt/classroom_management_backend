@@ -60,7 +60,8 @@ namespace Service
             return _mapper.Map<IEnumerable<RequestDto>>(requests);
         }
 
-        // Create a new request
+
+
         public async Task CreateRequestAsync(string fileName, RequestCreationDto dto)
         {
 
@@ -69,7 +70,7 @@ namespace Service
                 Type = dto.Type,
                 Content = dto.Content,
                 Title = dto.Title,
-                Status = "pending", 
+                Status = "pending",
                 UserName = dto.UserName,
                 UserId = dto.UserId,
                 RoomId = dto.RoomId,
@@ -83,7 +84,6 @@ namespace Service
             await _repositoryManager.SaveAsync();
         }
 
-        // Update an existing request
         public async Task UpdateRequestAsync(int requestId, RequestDto requestDto)
         {
             var request = await _repositoryManager.Request.GetRequestAsync(requestId, true);
@@ -95,7 +95,20 @@ namespace Service
             await _repositoryManager.SaveAsync();
         }
 
-        // Delete a request
+
+
+        public async Task UpdateRequestStatusAsync(int requestId, RequestStatusDto requestDto)
+        {
+            var request = await _repositoryManager.Request.GetRequestAsync(requestId, true);
+
+            if (request == null)
+                throw new KeyNotFoundException($"Request with ID {requestId} not found.");
+            request.Status = requestDto.Status;
+            request.SolveDescription = requestDto.SolveDescription;
+
+            await _repositoryManager.SaveAsync();
+        }
+
         public async Task DeleteRequestAsync(int requestId)
         {
             var request = await _repositoryManager.Request.GetRequestAsync(requestId, true);

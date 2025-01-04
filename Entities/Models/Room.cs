@@ -11,7 +11,12 @@ namespace Entities.Models
         GenLab,
         GidaLab,
         Amfi,
-        MachLab
+        MachLab,
+        Library,
+        Refectory,
+        Cantin,
+        Toilet,
+        
 
     }
 

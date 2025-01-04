@@ -17,12 +17,17 @@ builder.Services.ConfigureISSIntegration();
 // builder.Services.ConfigureLoggerService();
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
+
 builder.Services.ConfigureTokenService();
 builder.Services.ConfigureSqlContext(builder.Configuration);
+
+builder.Services.AddAuthentication();
+builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT(builder.Configuration);
+
 builder.Services.AddAutoMapper(typeof(Program));
 
-// Configure custom responses
+
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = true;

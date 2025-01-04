@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
@@ -18,6 +19,7 @@ namespace ClassroomManagementPresentation.Controllers
         }
 
         // GET: api/Departments
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DepartmentDto>>> GetDepartments()
         {

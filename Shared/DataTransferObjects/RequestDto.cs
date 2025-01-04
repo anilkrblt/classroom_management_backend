@@ -21,6 +21,14 @@ namespace Shared.DataTransferObjects
         public string Photos { get; set; }
         public string SolveDescription { get; set; }
     }
+    public record RequestStatusDto
+    {
+
+        public string SolveDescription { get; set; }
+        public string Status { get; set; }
+
+
+    }
 
 
 

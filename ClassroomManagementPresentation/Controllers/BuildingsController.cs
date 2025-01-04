@@ -20,7 +20,7 @@ namespace ClassroomManagementPresentation.Controllers
 
         // GET: api/Buildings
         [HttpGet]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<BuildingDto>>> GetBuildings()
         {
             var buildings = await _serviceManager.BuildingService.GetAllBuildingsAsync(trackChanges: false);

@@ -24,6 +24,8 @@ namespace Service.Contracts
         // Update an existing request
         Task UpdateRequestAsync(int requestId, RequestDto requestDto);
 
+        Task UpdateRequestStatusAsync(int requestId, RequestStatusDto requestDto);
+
         // Delete a request
         Task DeleteRequestAsync(int requestId);
     }

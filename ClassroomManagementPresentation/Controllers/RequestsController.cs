@@ -74,7 +74,7 @@ namespace ClassroomManagementPresentation.Controllers
                 return BadRequest("En fazla 3 fotoğraf yükleyebilirsiniz.");
             }
 
-            string imagePaths = "none"; 
+            string imagePaths = "none";
             if (dto.PhotoFiles != null && dto.PhotoFiles.Count > 0)
             {
                 // wwwroot/images/request klasör yolunu oluşturuyoruz.
@@ -146,6 +146,18 @@ namespace ClassroomManagementPresentation.Controllers
                 return BadRequest("RequestDto object is null.");
 
             await _serviceManager.RequestService.UpdateRequestAsync(id, requestDto);
+            return NoContent();
+        }
+
+
+
+        [HttpPut("{id}/update-status")]
+        public async Task<ActionResult> UpdateStatus(int id, [FromBody] RequestStatusDto requestDto)
+        {
+            if (requestDto == null)
+                return BadRequest("RequestDto object is null.");
+
+            await _serviceManager.RequestService.UpdateRequestStatusAsync(id, requestDto);
             return NoContent();
         }
 

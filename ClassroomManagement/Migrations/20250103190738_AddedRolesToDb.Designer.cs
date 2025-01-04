@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository;
 
@@ -10,9 +11,11 @@ using Repository;
 namespace ClassroomManagement.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20250103190738_AddedRolesToDb")]
+    partial class AddedRolesToDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
@@ -745,21 +748,15 @@ namespace ClassroomManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "73a3d52c-b632-4426-99f0-c3d38da012e8",
-                            Name = "Student",
-                            NormalizedName = "STUDENT"
+                            Id = "f321330a-04c7-4d82-9014-04cf5df124bc",
+                            Name = "Manager",
+                            NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "0ea49c81-ad3a-47f0-a285-786cedf3d9fd",
+                            Id = "934d80d6-644f-4da7-b89c-8d4dc1f7befe",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
-                        },
-                        new
-                        {
-                            Id = "e04582f8-a3c5-40cd-9bb6-c1e85c6c5275",
-                            Name = "Instructor",
-                            NormalizedName = "INSTRUCTOR"
                         });
                 });
 

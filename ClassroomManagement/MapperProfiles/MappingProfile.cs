@@ -215,13 +215,14 @@ namespace ClassroomManagement.MapperProfiles
                 .ForMember(dest => dest.Schedule, opt => opt.MapFrom(src =>
                     src.LectureInstructors.SelectMany(e => e.Lecture.LectureSessions)));
 
+            CreateMap<UserForRegistrationDto, User>();
 
             CreateMap<Club, ClubDto>()
-      .ForMember(dest => dest.ClubName, opt => opt.MapFrom(src => src.Name))
-      .ForMember(dest => dest.ClubLogo, opt => opt.MapFrom(src => src.ClubLogoPath))
-      .ForMember(dest => dest.ClubShorcut, opt => opt.MapFrom(src => src.NameShortcut))
-      .ForMember(dest => dest.ClubManager, opt => opt.MapFrom(src => GetClubManagerFullName(src.ClubMemberships)))
-      .ForMember(dest => dest.ClubManagerId, opt => opt.MapFrom(src => GetClubManagerId(src.ClubMemberships)));
+                .ForMember(dest => dest.ClubName, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.ClubLogo, opt => opt.MapFrom(src => src.ClubLogoPath))
+                .ForMember(dest => dest.ClubShorcut, opt => opt.MapFrom(src => src.NameShortcut))
+                .ForMember(dest => dest.ClubManager, opt => opt.MapFrom(src => GetClubManagerFullName(src.ClubMemberships)))
+                .ForMember(dest => dest.ClubManagerId, opt => opt.MapFrom(src => GetClubManagerId(src.ClubMemberships)));
 
 
 

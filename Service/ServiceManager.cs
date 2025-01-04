@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Contracts;
 using Entities.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using NLog;
 using Service;
 using Service.Contracts;
@@ -28,7 +30,8 @@ namespace Service
         private readonly Lazy<IAuthService> _authService;
 
 
-        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper)
+        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper,
+                              UserManager<User> userManager, IConfiguration configuration)
         {
             _studentService = new Lazy<IStudentService>(() =>
                 new StudentService(repositoryManager, mapper));
@@ -69,7 +72,7 @@ namespace Service
             _notificationService = new Lazy<INotificationService>(() =>
                 new NotificationService(repositoryManager, mapper));
             _authService = new Lazy<IAuthService>(() =>
-                new AuthService(repositoryManager));
+                new AuthService(userManager,configuration, repositoryManager, mapper));
 
         }
 

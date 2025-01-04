@@ -1,7 +1,9 @@
 using System.Text;
 using Contracts;
+using Entities.Models;
 using LoggerService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Repository;
@@ -19,8 +21,7 @@ namespace ClassroomManagement.Extensions
                 options.AddPolicy("CorsPolicy", builder =>
                     builder.AllowAnyOrigin()
                             .AllowAnyMethod()
-                            .AllowAnyHeader()
-                            .WithExposedHeaders("X-Pagination"));
+                            .AllowAnyHeader());
             });
 
         public static void ConfigureISSIntegration(this IServiceCollection services) =>
@@ -43,14 +44,33 @@ namespace ClassroomManagement.Extensions
                                                              opts.UseSqlite(configuration.GetConnectionString("sqliteConnection")));
 
 
+
+        public static void ConfigureIdentity(this IServiceCollection services)
+        {
+            var builder = services.AddIdentity<User, IdentityRole>(o =>
+            {
+                o.Password.RequireDigit = true;
+                o.Password.RequireLowercase = false;
+                o.Password.RequireUppercase = false;
+                o.Password.RequireNonAlphanumeric = false;
+                o.Password.RequiredLength = 10;
+                o.User.RequireUniqueEmail = true;
+            })
+            .AddEntityFrameworkStores<RepositoryContext>()
+            .AddDefaultTokenProviders();
+        }
+
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
         {
             var jwtSettings = configuration.GetSection("JwtSettings");
-            var secretKey = jwtSettings["Key"];
-            if (string.IsNullOrWhiteSpace(secretKey))
+            var secretKey = Environment.GetEnvironmentVariable("SECRET");
+            if (string.IsNullOrEmpty(secretKey))
             {
-                throw new ArgumentNullException(nameof(secretKey), "JWT secret key cannot be null or empty");
+                Console.WriteLine("Secret key is null or empty.");
             }
+            Console.WriteLine($"ValidIssuer: {jwtSettings["validIssuer"]}");
+            Console.WriteLine($"ValidAudience: {jwtSettings["validAudience"]}");
+
 
             services.AddAuthentication(options =>
             {
@@ -59,65 +79,35 @@ namespace ClassroomManagement.Extensions
             })
             .AddJwtBearer(options =>
             {
-
-
-                var jwtSettings = configuration.GetSection("JwtSettings");
-                var secretKey = jwtSettings["Key"];
-
-                options.Events = new JwtBearerEvents
-                {
-                    OnMessageReceived = context =>
-                    {
-                        // Authorization header'ın ham halini yazalım.
-                        var rawHeader = context.Request.Headers["Authorization"].ToString();
-                        Console.WriteLine("RAW AUTH HEADER: " + rawHeader);
-
-                        // "Bearer " ile başlıyorsa substring alalım.
-                        if (!string.IsNullOrEmpty(rawHeader) && rawHeader.StartsWith("Bearer "))
-                        {
-                            context.Token = rawHeader.Substring("Bearer ".Length).Trim();
-                            Console.WriteLine("SET context.Token: " + context.Token);
-                        }
-
-                        return Task.CompletedTask;
-                    },
-
-                    OnAuthenticationFailed = context =>
-                    {
-                        Console.WriteLine("Authentication failed: " + context.Exception.Message);
-
-                        // Hata anında Authorization header’ını tekrar okuyabilirsiniz:
-                        var rawHeader = context.Request.Headers["Authorization"].ToString();
-                        Console.WriteLine("At fail time, rawHeader = " + rawHeader);
-
-                        // İsterseniz "Bearer " kısmını ayıklayabilirsiniz:
-                        if (!string.IsNullOrEmpty(rawHeader) && rawHeader.StartsWith("Bearer "))
-                        {
-                            var token = rawHeader.Substring("Bearer ".Length).Trim();
-                            Console.WriteLine("At fail time, token = " + token);
-                        }
-
-                        return Task.CompletedTask;
-                    }
-
-                };
-
-
-
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtSettings["Issuer"],
-                    ValidAudience = jwtSettings["Audience"],
+
+                    ValidIssuer = jwtSettings["validIssuer"],
+                    ValidAudience = jwtSettings["validAudience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    OnAuthenticationFailed = context =>
+                    {
+                        Console.WriteLine("Authentication failed: " + context.Exception.Message);
+                        return Task.CompletedTask;
+                    },
+                    OnTokenValidated = context =>
+                    {
+                        Console.WriteLine("Token validated for: " + context.Principal.Identity.Name);
+                        return Task.CompletedTask;
+                    }
                 };
             });
         }
         public static void ConfigureTokenService(this IServiceCollection services) =>
             services.AddScoped<ITokenService, TokenService>();
+
 
     }
 }
