@@ -105,8 +105,9 @@ namespace ClassroomManagement.Extensions
                 };
             });
         }
-        public static void ConfigureTokenService(this IServiceCollection services) =>
-            services.AddScoped<ITokenService, TokenService>();
+
+/*        public static void ConfigureTokenService(this IServiceCollection services) =>
+            services.AddScoped<ITokenService, TokenService>();*/
 
 
     }

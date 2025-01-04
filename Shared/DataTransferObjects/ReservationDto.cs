@@ -42,6 +42,16 @@ namespace Shared.DataTransferObjects
         public string Status { get; set; }
 
     }
+    
+    public record LectureReservationCreateDto
+    {
+        public int InstructorId { get; set; }
+        public string LectureCode { get; set; }
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
+        public DateTime EventDate { get; set; }
+        public string RoomName { get; set; }
+    }
 
 
     public record ClubReservationPostDto

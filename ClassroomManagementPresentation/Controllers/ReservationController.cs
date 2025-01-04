@@ -134,7 +134,6 @@ namespace ClassroomManagementPresentation.Controllers
         }
 
 
-        [Authorize(Roles = "admin")]
         [HttpPut("clubreservation/updatestatus/{id}")]
         public async Task<ActionResult> UpdateClubReservationStatus(int id, [FromBody] string status)
         {
@@ -148,16 +147,13 @@ namespace ClassroomManagementPresentation.Controllers
             return NoContent();
         }
 
-        /*
-                [HttpPut("clubreservation/{id}")]
-                public async Task<ActionResult> UpdateClubReservation(int id, [FromBody] ReservationDto reservationDto)
-                {
-                    if (reservationDto == null)
-                        return BadRequest("ReservationDto object is null.");
+        [HttpPost("lecturereservation")]
+        public async Task<ActionResult> CreateLectureReservation(LectureReservationCreateDto dto)
+        {
+            await _serviceManager.ReservationService.CreateLectureReservationAsync(dto);
+            return NoContent();
 
-                    await _serviceManager.ReservationService.UpdateReservationAsync(id, reservationDto);
-                    return NoContent();
-                }*/
+        }
 
         // DELETE: api/Reservations/{id}
         [HttpDelete("clubreservation/{ReservationId}")]

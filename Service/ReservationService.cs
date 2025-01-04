@@ -60,7 +60,6 @@ namespace Service
             return _mapper.Map<IEnumerable<ReservationDto>>(reservations);
         }
 
-        // Create a new reservation
         public async Task CreateReservationAsync(ReservationDto reservationDto)
         {
             var reservation = _mapper.Map<Reservation>(reservationDto);
@@ -83,8 +82,7 @@ namespace Service
 
             // 2) Room bulma / oluşturma (opsiyonel).
             //    "reservationDto.RoomName" verisine göre "Room" tablosu aranabilir.
-            var room = await _repositoryManager.Room
-                .GetRoomByNameAsync(reservationDto.RoomName, trackChanges: false);
+            var room = await _repositoryManager.Room.GetRoomByNameAsync(reservationDto.RoomName, trackChanges: false);
             if (room == null)
                 throw new KeyNotFoundException($"Room '{reservationDto.RoomName}' not found.");
             // Veya "CreateRoom" diyebilirsiniz.
@@ -145,10 +143,6 @@ namespace Service
             return returnDto;
         }
 
-
-
-
-        // Update an existing reservation
         public async Task UpdateReservationAsync(int reservationId, ReservationDto reservationDto)
         {
             var reservation = await _repositoryManager.Reservation.GetReservationAsync(reservationId, trackChanges: true);
@@ -163,14 +157,13 @@ namespace Service
         public async Task UpdateClubReservationStatusAsync(int reservationId, string status, bool trackChanges)
         {
             var reservations = await _repositoryManager.ClubReservation.GetAllClubReservationsAsync(trackChanges);
-            var reservation = reservations.Where(cr =>cr.ReservationId == reservationId).FirstOrDefault();
+            var reservation = reservations.Where(cr => cr.ReservationId == reservationId).FirstOrDefault();
             if (reservation is null)
                 throw new ArgumentException("reservation cant be null");
             reservation.Status = status;
             await _repositoryManager.SaveAsync();
         }
 
-        // Delete a reservation
         public async Task DeleteReservationAsync(int reservationId)
         {
             var reservation = await _repositoryManager.Reservation.GetReservationAsync(reservationId, trackChanges: true);
@@ -180,6 +173,34 @@ namespace Service
 
             await _repositoryManager.Reservation.DeleteReservationAsync(reservation);
             await _repositoryManager.SaveAsync();
+        }
+
+        public async Task CreateLectureReservationAsync(LectureReservationCreateDto lectureReservationCreateDto)
+        {
+            var room = await _repositoryManager.Room.GetRoomByNameAsync(lectureReservationCreateDto.RoomName, trackChanges: false);
+            if (room == null)
+                throw new KeyNotFoundException($"Room '{lectureReservationCreateDto.RoomName}' not found.");
+
+            var newReservation = new Reservation
+            {
+                StartTime = lectureReservationCreateDto.StartTime,
+                EndTime = lectureReservationCreateDto.EndTime,
+                EventDate = lectureReservationCreateDto.EventDate,
+                RoomId = room.RoomId
+            };
+            _repositoryManager.Reservation.CreateReservation(newReservation);
+            await _repositoryManager.SaveAsync();
+            Console.WriteLine("reservation id: ", newReservation.ReservationId);
+            var lectureReservation = new LectureReservation
+            {
+                InstructorId = lectureReservationCreateDto.InstructorId,
+                ReservationId = newReservation.ReservationId,
+                IsLecturePostpone = false,
+                Code = lectureReservationCreateDto.LectureCode
+            };
+            _repositoryManager.LectureReservation.CreateLectureReservation(lectureReservation);
+            await _repositoryManager.SaveAsync();
+
         }
     }
 }

@@ -18,7 +18,7 @@ builder.Services.ConfigureISSIntegration();
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 
-builder.Services.ConfigureTokenService();
+//builder.Services.ConfigureTokenService();
 builder.Services.ConfigureSqlContext(builder.Configuration);
 
 builder.Services.AddAuthentication();
@@ -33,14 +33,6 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true;
 });
 
-NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter() =>
-    new ServiceCollection()
-        .AddLogging()
-        .AddMvc()
-        .AddNewtonsoftJson()
-        .Services.BuildServiceProvider()
-        .GetRequiredService<IOptions<MvcOptions>>().Value.InputFormatters
-        .OfType<NewtonsoftJsonPatchInputFormatter>().First();
 
 builder.Services.AddControllers(config =>
 {
