@@ -35,6 +35,12 @@ namespace ClassroomManagementPresentation.Controllers
 
             return Ok(exam);
         }
+       /* [HttpPost("examsessions")]
+        public async Task<ExamSessionDto> CreateExamSessions(ExamSessionCreateDto dto){
+
+
+
+        }*/
 
         // POST: api/Exams
         [HttpPost]

@@ -1,0 +1,240 @@
+
+-- Tüm rolleri silmek (test ortamında!)
+DELETE FROM AspNetRoles;
+DELETE FROM AspNetUsers;
+DELETE FROM Building;
+DELETE FROM Department;
+DELETE FROM Club;
+DELETE FROM ClubMembership;
+DELETE FROM Enrollment;
+DELETE FROM ExamSession;
+DELETE FROM Request;
+
+
+-- Sonra tekrar eklemek
+INSERT INTO AspNetRoles (Id, Name, NormalizedName)
+VALUES
+    (1, 'Instructor', 'INSTRUCTOR'),
+    (2, 'Student',    'STUDENT'),
+    (3, 'Admin',      'ADMIN');
+
+	
+INSERT INTO AspNetUsers
+(
+    Id,
+    FirstName,
+    LastName,
+    UserName,
+    NormalizedUserName,
+    Email,
+    NormalizedEmail,
+    EmailConfirmed,
+    PasswordHash,
+    PhoneNumber,
+    PhoneNumberConfirmed,
+    TwoFactorEnabled,
+    LockoutEnabled,
+    AccessFailedCount,
+    SecurityStamp,
+    ConcurrencyStamp
+)
+VALUES
+(
+    100,
+    'Ali',
+    'Demir',
+    'ali.demir',
+    'ALI.DEMIR',
+    'ali.demir@test.com',
+    'ALI.DEMIR@TEST.COM',
+    1,                    -- EmailConfirmed
+    'HASHLI_SIFRE',
+    '',                   -- PhoneNumber
+    0,                    -- PhoneNumberConfirmed
+    0,                    -- TwoFactorEnabled
+    1,                    -- LockoutEnabled (genelde true)
+    0,                    -- AccessFailedCount
+    'b06d435c-9fac-4321-bc60-a4b519bf9f25', -- SecurityStamp (GUID)
+    '945e2a7c-9c62-4831-9066-654c8cbe6df7'  -- ConcurrencyStamp (GUID)
+),
+(
+    101,
+    'Ayşe',
+    'Yılmaz',
+    'ayse.yilmaz',
+    'AYSE.YILMAZ',
+    'ayse.yilmaz@test.com',
+    'AYSE.YILMAZ@TEST.COM',
+    1,
+    'HASHLI_SIFRE',
+    '',
+    0,
+    0,
+    1,
+    0,
+    'af02cd9a-7078-4d59-8f19-d9b1a30934b3',
+    '7beffec0-6a47-43d6-84d6-6c68a69bcb97'
+),
+(
+    102,
+    'Mehmet',
+    'Kaya',
+    'mehmet.kaya',
+    'MEHMET.KAYA',
+    'mehmet.kaya@test.com',
+    'MEHMET.KAYA@TEST.COM',
+    1,
+    'HASHLI_SIFRE',
+    '',
+    0,
+    0,
+    1,
+    0,
+    '218e3bc7-98ea-450d-b8ff-2b857ba4473e',
+    '49feefb9-930b-4a07-b051-ddf7c23a12b2'
+);
+
+INSERT INTO Building (BuildingId, Name)
+VALUES
+    (1, 'A blok'),
+    (2, 'B blok');
+
+	
+INSERT INTO AspNetUserRoles (UserId, RoleId)
+VALUES
+    (100, 3),  -- Ali --> Admin (RoleId=3)
+    (101, 1),  -- Ayşe --> Instructor (RoleId=1)
+    (102, 2);  -- Mehmet --> Student (RoleId=2)
+-- 3) SINIFLARI (ROOM) EKLEME
+INSERT INTO Department (DepartmentId, Name)
+VALUES
+    (1, 'Computer Engineering'),
+    (2, 'Mechanical Engineering'),
+    (3, 'Food Engineering'),
+    (4, 'Genetic & Bioengineering'),
+    (5, 'Electrical & Electronics Engineering');
+
+
+
+INSERT INTO Room
+    (RoomId, Name, Capacity, ExamCapacity, IsActive, RoomType, IsProjectorWorking, Equipment, BuildingId, DepartmentId)
+VALUES
+    (1, 'D102', 26, 78, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 1, 1),
+    (2, 'D103', 26, 78, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 1, 1),
+    (3, 'D201', 25, 75, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 1, 1),
+    (4, 'D205', 25, 40, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 1, 1),
+    (5, 'D206', 25, 40, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 1, 1),
+    (6, 'D104', 26, 78, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 1, 1),
+    (7, 'D105', 26, 78, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 1, 1),
+    (8, 'D106', 26, 78, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 1, 1),
+    (9, 'D203', 26, 78, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 1, 1),
+    (10, 'D204', 26, 78, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 1, 1),
+    (11, 'L206', 40, 40, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 1, 1),
+    (12, 'L302', 40, 40, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 1, 1),
+    (13, 'L306', 40, 40, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 1, 1),
+    (14, 'L304', 44, 44, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 1, 1),
+    (15, 'L305', 44, 44, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 1, 1),
+    (16, 'L104', 45, 45, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 1, 1),
+    (17, 'L208', 40, 40, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 1, 1),
+    (18, 'L205', 30, 30, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 1, 1),
+    (19, 'L207', 40, 40, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 1, 1),
+    (20, 'S1',   27, 27, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 2, 1),
+    (21, 'S2',   27, 27, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 2, 1),
+    (22, 'S3',   27, 27, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 2, 1),
+    (23, 'A1',   58, 58, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 2, 1),
+    (24, 'A2',   58, 58, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 2, 1),
+    (25, 'A3',   58, 58, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 2, 1),
+    (26, 'A4',   58, 58, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 2, 1),
+    (27, 'A5',   58, 58, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 2, 1),
+	(28, 'D202', 26, 78, 1, 'Classroom', 1, 'Projeksiyon, Tahta, Masa', 2, 1),
+	(29, 'L104', 45, 100, 1, 'Amfi', 1, 'Projeksiyon, Tahta, Masa', 2, 1);
+
+	
+
+
+INSERT INTO Student (StudentId, FullName, Email, Password, GradeLevel, DepartmentId, UserId)
+VALUES
+    (1, 'Mehmet Kaya',  'mehmet.kaya@test.com', 'HASHLI_SIFRE', 3, 1, 101),
+    (2, 'Fatma Demir',  'fatma.demir@test.com', 'HASHLI_SIFRE', 2, 5, 102);
+
+
+INSERT INTO Instructor (InstructorId, Name, Email, Password, Title, DepartmentId, IsAdmin, UserId)
+VALUES
+    (1, 'Ayşe Yılmaz', 'ayse.yilmaz@test.com', 'HASHLI_SIFRE', 'Dr.', 1, 0, 101);
+
+
+INSERT INTO Employee (EmployeeId, Name, Email, Password, IsAdmin, UserId)
+VALUES
+    (1, 'Ali Demir', 'ali.demir@test.com', 'HASHLI_SIFRE', 1, 100);
+
+
+INSERT INTO Club (ClubId, Name, NameShortcut, ClubLogoPath)
+VALUES
+    (1, 'Software Club', 'SWC', '/images/clubs/swc_logo.png'),
+    (2, 'Robotics Club', 'RBC', '/images/clubs/rbc_logo.png');
+
+
+INSERT INTO ClubMembership (ClubMembershipId, StudentId, ClubId, CreatedAt, UpdatedAt, IsClubManager)
+VALUES
+    (1, 1, 1, date('now'), date('now'), 1),
+    (2, 1, 2, date('now'), date('now'), 0);
+
+
+INSERT INTO Reservation (ReservationId, StartTime, EndTime, EventDate, RoomId)
+VALUES
+    (1, '10:00', '11:00', '2025-01-06', 1),
+    (2, '14:00', '16:00', '2025-01-07', 2);
+
+
+INSERT INTO ClubReservation 
+    (Id, ClubId, ReservationId, EventRegisterLink, EventName, Title, Details, Status, Banner, StudentId)
+VALUES
+    (1, 1, 1, 'https://example.com/register', 'Hackathon 2025', 'SWC Hackathon', 
+     '24 saat kodlama etkinliği', 'Approved', '/images/banners/hackathon.jpg', 1);
+
+INSERT INTO Lecture (Code, Name, Grade, Term, DepartmentId)
+VALUES
+    ('LC1', 'Matematik1', 1, 'Fall', 1),
+	('LC2', 'Matematik1', 1, 'Fall', 1);
+
+
+
+INSERT INTO Enrollment (EnrollmentId, StudentId, LectureCode)
+VALUES
+    (1, 1, 'LC1'),
+    (2, 1, 'LC2');
+
+INSERT INTO Exam( ExamId, Name, Type, Duration, LectureCode)
+VALUES
+	(1, "sınav", "vize", 30, "LC1");
+
+INSERT INTO ExamSession (ExamSessionId, ExamDate, StartTime, EndTime, RoomId, ExamId)
+VALUES
+    (1, '2025-01-10', '09:00', '10:30', 1, 1);
+
+
+INSERT INTO Request (RequestId, Type, Title, Content, Status, SolveDescription, ImagePaths, CreatedAt, UpdatedAt, UserName, UserId, RoomId)
+VALUES
+    (1, 'Maintenance', 'Klima Çalışmıyor', 'D103 odasında klima bozuk.', 'Open', '', '/uploads/klima_ariza.png', date('now'), date('now'), 'Mehmet Kaya', 102, 2);
+
+
+
+
+INSERT INTO LectureInstructor (LectureCode, InstructorId)
+VALUES
+    ('LC1', 1);
+
+
+INSERT INTO LectureSession (LectureSessionId, StartTime, EndTime, LectureCode, RoomId, InstructorId, IsExtraLesson, Date)
+VALUES
+    (1, '09:00', '10:50', 'LC1', 1, 1, 0, '2025-01-08');
+
+
+INSERT INTO LectureReservation (Id, Code, ReservationId, InstructorId)
+VALUES
+    (1, 'LC1', 2, 1);
+
+
+INSERT INTO InstructorPreference (PreferenceId, InstructorId, LectureCode, PreferredTime, UnavailableTimes)
+VALUES
+    (1, 1, 'LC1', '08:00-12:00', 'Mon 13:00-17:00');

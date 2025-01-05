@@ -164,6 +164,8 @@ namespace ClassroomManagement.MapperProfiles
         .ForMember(dest => dest.Lectures,
                    opt => opt.MapFrom(src => src.LectureSessions.Select(ls => new LectureInfoDto
                    {
+                       LectureSessionId = ls.LectureSessionId,
+                       LectureCode = ls.Lecture.Code,
                        LectureName = ls.Lecture.Name,
                        TeacherName = ls.Instructor.Name,
                        StartTime = ls.StartTime,

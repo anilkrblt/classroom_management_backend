@@ -1,0 +1,24 @@
+Building -> BuildingId,Name 
+Club -> ClubId, Name, NameShortcut, ClubLogoPath
+ClubMembership -> ClubMembershipId, StudentId, ClubId, CreatedAt, UpdatedAt, IsClubManager
+ClubReservation ->Id, ClubId, ReservationId, EventRegisterLink, EventName, Title, Details, Status, Banner, StudentId
+Department -> DepartmentId, Name
+Employee -> EmployeeId, Name, Email, Password, IsAdmin, UserId
+Enrollment -> EnrollmentId, StudentId, LectureCode
+Exam -> ExamId, Name, Type, Duration, LectureCode
+ExamSession -> ExamSessionId, ExamDate, StartTime, EndTime, RoomId, ExamId
+Instructor -> InstructorId, Name, Email, Password, Title, DepartmentId, IsAdmin, UserId
+Student -> StudentId,FullName,Email,Password,GradeLevel,Department,IdUserId
+Room->     RoomId,Name,Capacity,ExamCapacity,IsActive,RoomType,IsProjectorWorking,Equipment,BuildingId,DepartmentId
+Reservation -> ReservationId,StartTime,EndTime,EventDate,RoomId
+Request -> RequestId,Type,Title,Content,Status,SolveDescription,ImagePaths,CreatedAt,UpdatedAt,UserName,UserId,RoomId
+NotificationRecipient ->Id,NotificationId,StudentId
+Notification -> NotificationId,Message,CreatedAt
+LectureSession -> LectureSessionId,StartTime,EndTime,LectureCode,RoomId,InstructorId,IsExtraLesson,Date
+LectureReservation -> Id,Code,ReservationId,InstructorId
+LectureInstructor- >LectureCode,InstructorId
+Lecture ->Code,Name,Grade,Term,DepartmentId
+InstructorPreference->PreferenceId,InstructorId,LectureCode,PreferredTime,UnavailableTimes
+AspNetUsers -> Id, FirstName, LastName, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash
+AspNetUserRoles -> UserId, RoleId
+AspNetRoles -> Id,  Name, NormalizedName

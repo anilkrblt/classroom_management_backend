@@ -36,6 +36,8 @@ namespace Shared.DataTransferObjects
 
     public record LectureInfoDto
     {
+        public int LectureSessionId { get; set; }
+        public string LectureCode { get; set; }
         public string LectureName { get; set; }
         public string TeacherName { get; set; }
         public TimeSpan StartTime { get; set; }

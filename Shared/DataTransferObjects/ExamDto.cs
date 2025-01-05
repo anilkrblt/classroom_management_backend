@@ -23,4 +23,31 @@ namespace Shared.DataTransferObjects
 
 
     }
+
+    public record ExamSessionCreateDto
+    {
+
+        public string Type { get; set; }
+
+        public DateTime StartTime { get; set; }
+
+        public DateTime EndTime { get; set; }
+
+    }
+
+    public record ExamSessionDto
+    {
+
+        public string LectureCode { get; set; }
+        public List<string> RoomNames { get; set; }
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
+
+        public DateTime Date { get; set; }
+
+    }
+
+
+
+
 }

@@ -106,6 +106,7 @@ namespace Service
         public async Task<(bool IsValidUser, List<string> Roles)> ValidateUser(UserForAuthenticationDto userForAuth)
         {
             _user = await _userManager.FindByEmailAsync(userForAuth.Email);
+           
 
             var isValid = _user != null && await _userManager.CheckPasswordAsync(_user, userForAuth.Password);
 

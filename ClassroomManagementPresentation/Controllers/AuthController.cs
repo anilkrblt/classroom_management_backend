@@ -10,15 +10,15 @@ namespace ClassroomManagementPresentation.Controllers
     [Route("api/auth")]
     public class AuthController : ControllerBase
     {
-       
+
         private readonly IServiceManager _serviceManager;
 
         public AuthController(IServiceManager serviceManager)
         {
-       
+
             _serviceManager = serviceManager;
         }
-    
+
         [HttpPost]
         public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistration)
         {
@@ -40,6 +40,8 @@ namespace ClassroomManagementPresentation.Controllers
         public async Task<IActionResult> Authenticate([FromBody] UserForAuthenticationDto userForAuth)
         {
             var result = await _serviceManager.AuthService.ValidateUser(userForAuth);
+            
+
             if (!result.IsValidUser)
             {
                 return Unauthorized();
