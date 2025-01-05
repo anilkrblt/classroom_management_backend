@@ -14,13 +14,7 @@ namespace Repository.Configuration
         {
             builder.HasData
             (
-                new Exam
-                {
-                    ExamId = 1,
-                    Name = "Mathematics Final Exam",
-                    IsFinal = false,
-                    LectureCode = "MATH101"
-                }
+             
             );
         }
     }

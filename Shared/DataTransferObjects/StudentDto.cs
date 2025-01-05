@@ -7,6 +7,7 @@
         public string Email { get; set; }
         public string Password { get; set; }
         public string DepartmentName { get; set; }
+        public int Grade { get; set; }
         public List<UserLecturesDto> Schedule { get; set; }
     }
     public record UserLecturesDto
@@ -22,12 +23,20 @@
 
     public record StudentLoginDto
     {
-        public string UserType { get; set; }
+        public int StudentId { get; set; }
         public string FullName { get; set; }
-        public int UserNo { get; set; }
         public string Email { get; set; }
-        public string Department { get; set; }
+        public string DepartmentName { get; set; }
         public int Grade { get; set; }
+        public List<StudentClubs> StudentClubs { get; set; }
+        public List<UserLecturesDto> Schedule { get; set; }
+    }
+    public record StudentClubs
+    {
+        public int ClubId { get; set; }
+        public string ClubName { get; set; }
+        public string ClubShorcut { get; set; }
+        public bool IsManager { get; set; }
     }
 
 

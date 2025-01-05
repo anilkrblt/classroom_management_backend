@@ -19,7 +19,6 @@ namespace Repository.Configuration
                     Id = 1,
                     Code = "MATH101",
                     ReservationId = 1,
-                    IsLecturePostpone = true
                 }
 
             );

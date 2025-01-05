@@ -9,11 +9,14 @@ namespace Service.Contracts
 {
     public interface IAuthService
     {
-        UserDto AuthenticateUser(string email, string password);
 
         Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistration);
+        public EmployeeLoginDto AuthenticateEmployee(string email, string password);
+        public InstructorLoginDto AuthenticateInstructor(string email, string password);
+        public StudentLoginDto AuthenticateStudent(string email, string password);
+        T AuthenticateUser<T>(string email, string password, Func<string, string, T> authenticateFunc) where T : class;
 
-        Task<bool> ValidateUser(UserForAuthenticationDto userForAuth);
+        Task<(bool IsValidUser, List<string> Roles)> ValidateUser(UserForAuthenticationDto userForAuth);
         Task<string> CreateToken();
 
     }

@@ -18,7 +18,6 @@ builder.Services.ConfigureISSIntegration();
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 
-//builder.Services.ConfigureTokenService();
 builder.Services.ConfigureSqlContext(builder.Configuration);
 
 builder.Services.AddAuthentication();

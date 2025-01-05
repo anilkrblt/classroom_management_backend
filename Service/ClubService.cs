@@ -3,10 +3,7 @@ using Service.Contracts;
 using Contracts;
 using AutoMapper;
 using Entities.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Entities.Exceptions;
+
 
 namespace Service
 {
@@ -29,7 +26,7 @@ namespace Service
 
             var clubDtos = clubs.Select(club =>
             {
-                var managerMembership = club.ClubMemberships.FirstOrDefault(m => m.Student.IsClubManager);
+                var managerMembership = club.ClubMemberships.FirstOrDefault(m => m.IsClubManager);
                 
                 return new ClubDto
                 {
@@ -37,8 +34,8 @@ namespace Service
                     ClubLogo = club.ClubLogoPath,
                     ClubShorcut = club.NameShortcut,
                     ClubName = club.Name,
-                    ClubManager = managerMembership?.Student.FullName ?? "N/A", // Null kontrolü
-                    ClubManagerId = managerMembership?.Student.StudentId // Nullable olduğu için doğrudan atanabilir
+                    ClubManager = managerMembership?.Student.FullName ?? "N/A", 
+                    ClubManagerId = managerMembership?.Student.StudentId 
                 };
             });
 
@@ -90,7 +87,6 @@ namespace Service
             await _repositoryManager.SaveAsync();
         }
 
-        // Create a new club
         public async Task CreateClubAsync(ClubDto clubDto)
         {
             var club = _mapper.Map<Club>(clubDto);

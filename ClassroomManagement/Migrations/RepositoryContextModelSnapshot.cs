@@ -69,6 +69,9 @@ namespace ClassroomManagement.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsClubManager")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("StudentId")
                         .HasColumnType("INTEGER");
 
@@ -174,7 +177,14 @@ namespace ClassroomManagement.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("EmployeeId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Employee");
                 });
@@ -207,7 +217,7 @@ namespace ClassroomManagement.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("IsFinal")
+                    b.Property<int>("Duration")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("LectureCode")
@@ -215,6 +225,10 @@ namespace ClassroomManagement.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -230,11 +244,6 @@ namespace ClassroomManagement.Migrations
                     b.Property<int>("ExamSessionId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("DayOfWeek")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("TEXT");
 
                     b.Property<TimeSpan>("EndTime")
                         .HasColumnType("TEXT");
@@ -292,9 +301,16 @@ namespace ClassroomManagement.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("InstructorId");
 
                     b.HasIndex("DepartmentId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Instructor");
                 });
@@ -385,9 +401,6 @@ namespace ClassroomManagement.Migrations
                     b.Property<int>("InstructorId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("IsLecturePostpone")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("ReservationId")
                         .HasColumnType("INTEGER");
 
@@ -408,9 +421,7 @@ namespace ClassroomManagement.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("DayOfWeek")
-                        .IsRequired()
-                        .HasMaxLength(20)
+                    b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
                     b.Property<TimeSpan>("EndTime")
@@ -424,9 +435,6 @@ namespace ClassroomManagement.Migrations
 
                     b.Property<string>("LectureCode")
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("LectureTimes")
-                        .HasColumnType("INTEGER");
 
                     b.Property<int>("RoomId")
                         .HasColumnType("INTEGER");
@@ -630,17 +638,21 @@ namespace ClassroomManagement.Migrations
                     b.Property<int>("GradeLevel")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("IsClubManager")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("StudentId");
 
                     b.HasIndex("DepartmentId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Student");
                 });
@@ -741,26 +753,6 @@ namespace ClassroomManagement.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "73a3d52c-b632-4426-99f0-c3d38da012e8",
-                            Name = "Student",
-                            NormalizedName = "STUDENT"
-                        },
-                        new
-                        {
-                            Id = "0ea49c81-ad3a-47f0-a285-786cedf3d9fd",
-                            Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
-                        },
-                        new
-                        {
-                            Id = "e04582f8-a3c5-40cd-9bb6-c1e85c6c5275",
-                            Name = "Instructor",
-                            NormalizedName = "INSTRUCTOR"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -911,6 +903,17 @@ namespace ClassroomManagement.Migrations
                     b.Navigation("Student");
                 });
 
+            modelBuilder.Entity("Entities.Models.Employee", b =>
+                {
+                    b.HasOne("Entities.Models.User", "User")
+                        .WithOne()
+                        .HasForeignKey("Entities.Models.Employee", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Entities.Models.Enrollment", b =>
                 {
                     b.HasOne("Entities.Models.Lecture", "Lecture")
@@ -968,7 +971,15 @@ namespace ClassroomManagement.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Entities.Models.User", "User")
+                        .WithOne()
+                        .HasForeignKey("Entities.Models.Instructor", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Department");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Entities.Models.InstructorPreference", b =>
@@ -1138,7 +1149,15 @@ namespace ClassroomManagement.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Entities.Models.User", "User")
+                        .WithOne()
+                        .HasForeignKey("Entities.Models.Student", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Department");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

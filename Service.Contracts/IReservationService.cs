@@ -12,6 +12,8 @@ namespace Service.Contracts
         Task<IEnumerable<ReservationDto>> GetUserReservationsAsync(int userId, bool trackChanges);
         Task<ClubReservationDto> CreateClubReservationAsync(ClubReservationDto reservationDto);
         Task CreateLectureReservationAsync(LectureReservationCreateDto lectureReservationCreateDto);
+        Task UpdateLectureReservationAsync(int reservationId, LectureReservationUpdateDto lectureReservationUpdateDto);
+
         Task UpdateClubReservationStatusAsync(int reservationId, string status, bool trackChanges);
 
         Task CreateReservationAsync(ReservationDto reservationDto);

@@ -10,8 +10,6 @@ namespace Entities.Models
     [Table("Lecture")]
     public class Lecture
     {
-        //[Key]
-        //public int LectureId { get; set; }
         [Key]
         [Required, StringLength(20)]
         public string Code { get; set; }

@@ -13,13 +13,13 @@ namespace ClassroomManagement.MapperProfiles
     {
         private static string GetClubManagerFullName(IEnumerable<ClubMembership> memberships)
         {
-            var manager = memberships.FirstOrDefault(m => m.Student.IsClubManager);
+            var manager = memberships.FirstOrDefault(m => m.IsClubManager);
             return manager?.Student.FullName ?? string.Empty; // Null kontrolü
         }
 
         private static int? GetClubManagerId(IEnumerable<ClubMembership> memberships)
         {
-            var manager = memberships.FirstOrDefault(m => m.Student.IsClubManager);
+            var manager = memberships.FirstOrDefault(m => m.IsClubManager);
             return manager?.Student.StudentId; // Null kontrolü
         }
 
@@ -169,7 +169,7 @@ namespace ClassroomManagement.MapperProfiles
                        StartTime = ls.StartTime,
                        EndTime = ls.EndTime,
                        DepartmentName = ls.Lecture.Department.Name,
-                       DayOfWeek = ls.DayOfWeek,
+                       Date = ls.Date,
                        IsExtraLesson = ls.IsExtraLesson
                    }).ToList()));
 
@@ -179,7 +179,7 @@ namespace ClassroomManagement.MapperProfiles
                 .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.StartTime))
                 .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.EndTime))
                 .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Lecture.Department.Name))
-                .ForMember(dest => dest.DayOfWeek, opt => opt.MapFrom(src => src.DayOfWeek));
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date));
 
 
 
@@ -189,7 +189,7 @@ namespace ClassroomManagement.MapperProfiles
                 .ForMember(dest => dest.RoomName, opt => opt.MapFrom(src => src.Room.Name))
                 .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.StartTime))
                 .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.EndTime))
-                .ForMember(dest => dest.DayOfWeek, opt => opt.MapFrom(src => src.DayOfWeek));
+                .ForMember(dest => dest.DayOfWeek, opt => opt.MapFrom(src => src.Date.DayOfWeek));
 
 
             CreateMap<Student, StudentDto>()
@@ -293,11 +293,21 @@ namespace ClassroomManagement.MapperProfiles
 
 
             CreateMap<Notification, NotificationDto>();
-
-
-
-
             CreateMap<Reservation, ReservationDto>();
+
+
+            // Student -> StudentLoginDto Mapleme
+            CreateMap<Student, StudentLoginDto>()
+                .ForMember(dest => dest.Grade, opt => opt.MapFrom(src => src.GradeLevel))
+                .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.Name))
+                .ForMember(dest => dest.StudentClubs, opt => opt.MapFrom(src => src.ClubMemberships.Select(cm => new StudentClubs
+                {
+                    ClubId = cm.ClubId,
+                    ClubName = cm.Club.Name,
+                    ClubShorcut = cm.Club.NameShortcut,
+                    IsManager = cm.IsClubManager
+                })))
+                    .ForMember(dest => dest.Schedule, opt => opt.MapFrom(src => src.Enrollments.Select(e => e.Lecture.LectureSessions)));
 
         }
     }

@@ -17,7 +17,6 @@ namespace Repository
         {
 
             base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfiguration(new RoleConfiguration()); 
 
 
             // LectureInstructor Many-to-Many ilişkisinin tanımlanması
@@ -33,6 +32,38 @@ namespace Repository
                 .HasOne(li => li.Instructor)
                 .WithMany(i => i.LectureInstructors)
                 .HasForeignKey(li => li.InstructorId);
+
+            // Employee - User ilişki
+            modelBuilder.Entity<Employee>()
+                .HasOne(e => e.User)
+                .WithOne()
+                .HasForeignKey<Employee>(e => e.UserId);
+
+            // Student - User ilişki
+            modelBuilder.Entity<Student>()
+                .HasOne(s => s.User)
+                .WithOne()
+                .HasForeignKey<Student>(s => s.UserId);
+
+            // Instructor - User ilişki
+            modelBuilder.Entity<Instructor>()
+                .HasOne(i => i.User)
+                .WithOne()
+                .HasForeignKey<Instructor>(i => i.UserId);
+
+            // Reservation -> ClubReservation ilişkisi
+            modelBuilder.Entity<ClubReservation>()
+                .HasOne(cr => cr.Reservation)
+                .WithMany(r => r.ClubReservations)
+                .HasForeignKey(cr => cr.ReservationId)
+                .OnDelete(DeleteBehavior.Cascade); 
+
+            // Reservation -> LectureReservation ilişkisi
+            modelBuilder.Entity<LectureReservation>()
+                .HasOne(lr => lr.Reservation)
+                .WithMany(r => r.LectureReservations)
+                .HasForeignKey(lr => lr.ReservationId)
+                .OnDelete(DeleteBehavior.Cascade); 
 
 
 

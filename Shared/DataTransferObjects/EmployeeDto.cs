@@ -15,4 +15,14 @@ namespace Shared.DataTransferObjects
 
         public string Password { get; set; }
     }
+
+    public record EmployeeLoginDto
+    {
+        public int EmployeeId { get; set; }
+
+        public string Name { get; set; }
+
+        public string Email { get; set; }
+
+    }
 }

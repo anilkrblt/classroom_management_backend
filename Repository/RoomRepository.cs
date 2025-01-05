@@ -31,7 +31,6 @@ namespace Repository
                                               .ToListAsync();
         }
 
-        // Get a specific room by ID
         public async Task<Room> GetRoomAsync(int roomId, bool trackChanges)
         {
             return await FindByCondition(r => r.RoomId == roomId, trackChanges)

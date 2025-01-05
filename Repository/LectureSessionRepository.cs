@@ -17,7 +17,7 @@ namespace Repository
         public async Task<IEnumerable<LectureSession>> GetAllLectureSessionsAsync(bool trackChanges)
         {
             return await FindAll(trackChanges)
-                .OrderBy(ls => ls.DayOfWeek) // Lecture sessions sorted by day of week
+                .OrderBy(ls => ls.Date) // Lecture sessions sorted by day of week
                 .ToListAsync();
         }
 
@@ -32,7 +32,7 @@ namespace Repository
         public async Task<IEnumerable<LectureSession>> GetLectureSessionByInstructorIdAsync(int instructorId, bool trackChanges)
         {
             return await FindByCondition(ls => ls.InstructorId == instructorId, trackChanges)
-                .OrderBy(ls => ls.DayOfWeek) // Lecture sessions sorted by day of week
+                .OrderBy(ls => ls.Date) // Lecture sessions sorted by day of week
                 .ToListAsync();
         }
 
@@ -48,7 +48,7 @@ namespace Repository
             var existingSession = await GetLectureSessionAsync(lectureSession.LectureSessionId, true);
             if (existingSession != null)
             {
-                existingSession.DayOfWeek = lectureSession.DayOfWeek;
+                existingSession.Date = lectureSession.Date;
                 existingSession.StartTime = lectureSession.StartTime;
                 existingSession.EndTime = lectureSession.EndTime;
                 existingSession.LectureCode = lectureSession.LectureCode;

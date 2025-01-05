@@ -25,12 +25,16 @@ namespace Entities.Models
         [ForeignKey("Department")]
         public int DepartmentId { get; set; }
 
-        public bool IsClubManager { get; set; }
-
         public Department Department { get; set; }
         public ICollection<Enrollment> Enrollments { get; set; }
         public ICollection<ClubMembership> ClubMemberships { get; set; }
         public ICollection<ClubReservation> ClubReservations { get; set; }
+
+        [Required]
+        public string UserId { get; set; } // ForeignKey to User
+
+        [ForeignKey("UserId")]
+        public virtual User User { get; set; }
 
     }
 

@@ -17,14 +17,12 @@ namespace Repository.Configuration
                 new LectureSession
                 {
                     LectureSessionId = 1,
-                    DayOfWeek = "Monday",
                     StartTime = new TimeSpan(9, 0, 0),
                     EndTime = new TimeSpan(10, 30, 0),
                     LectureCode = "MATH101",
                     RoomId = 1,
                     InstructorId = 1,
                     IsExtraLesson = 1,
-                    LectureTimes = 12
                 }
               
             );

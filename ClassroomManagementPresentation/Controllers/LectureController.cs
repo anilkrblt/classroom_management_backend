@@ -61,7 +61,7 @@ namespace ClassroomManagementPresentation.Controllers
 
 
         [HttpPost]
-        [Route("api/lecture/assign")]
+        [Route("/assign")]
         // Örn: POST /api/LectureInstructor/assign?instructorId=5&lectureCode=BM401
         public async Task<IActionResult> AssignInstructorToLecture([FromQuery] int instructorId, [FromQuery] string lectureCode)
         {
@@ -71,7 +71,7 @@ namespace ClassroomManagementPresentation.Controllers
 
 
         [HttpDelete]
-        [Route("api/[controller]/unassign")]
+        [Route("/unassign/{id:int}")]
         public async Task<ActionResult> DeleteLectureInstructor([FromRoute] int InstructorId, [FromBody] string lectureCode)
         {
             if (lectureCode == null)

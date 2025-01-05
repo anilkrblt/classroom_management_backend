@@ -17,4 +17,15 @@ namespace Shared.DataTransferObjects
         public List<UserLecturesDto> Schedule { get; set; }
 
     }
+    public record InstructorLoginDto
+    {
+
+        public int InstructorId { get; set; }
+        public string InstructorName { get; set; }
+        public string Email { get; set; }
+        public string? Title { get; set; }
+        public string DepartmentName { get; set; }
+        public List<UserLecturesDto> Schedule { get; set; }
+
+    }
 }

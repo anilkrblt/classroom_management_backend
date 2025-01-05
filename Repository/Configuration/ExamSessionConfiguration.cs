@@ -14,16 +14,7 @@ namespace Repository.Configuration
         {
             builder.HasData
             (
-                new ExamSession
-                {
-                    ExamSessionId = 1,
-                    ExamDate = new DateTime(2024, 6, 10),
-                    DayOfWeek = "Monday",
-                    StartTime = new TimeSpan(9, 0, 0),
-                    EndTime = new TimeSpan(11, 0, 0),
-                    RoomId = 1,
-                    ExamId = 1
-                }
+               
                
             );
         }

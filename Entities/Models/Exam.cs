@@ -15,7 +15,8 @@ namespace Entities.Models
 
         [Required]
         public string Name { get; set; }
-        public bool IsFinal { get; set; }
+        public string Type { get; set; }
+        public int Duration { get; set; }
 
         [Required]
         public string LectureCode { get; set; }

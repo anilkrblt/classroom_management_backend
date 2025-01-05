@@ -37,87 +37,58 @@ namespace Service
             _configuration = configuration;
         }
 
-        public UserDto AuthenticateUser(string email, string password)
+        public InstructorLoginDto AuthenticateInstructor(string email, string password)
         {
-            // Instructor tablosunda arama
             var instructor = _repositoryManager.Instructor.AuthenticateInstructor(email, password);
 
-            if (instructor != null)
+            if (instructor == null) return null;
+            var instructorDto = _mapper.Map<InstructorDto>(instructor);
+
+
+            return new InstructorLoginDto
             {
-                if (instructor.IsAdmin)
-                {
-                    return new UserDto
-                    {
-                        Email = instructor.Email,
-                        Role = "admin",
-                        IsAdmin = instructor.IsAdmin
-                    };
-                }
-                else
-                {
-                    return new UserDto
-                    {
-                        Email = instructor.Email,
-                        Role = "instructor",
-                        IsAdmin = instructor.IsAdmin
-                    };
-                }
+                InstructorId = instructorDto.InstructorId,
+                InstructorName = instructorDto.InstructorName,
+                Email = instructorDto.Email,
+                Title = instructorDto.Title,
+                DepartmentName = instructorDto.DepartmentName,
+                Schedule = instructorDto.Schedule
+            };
+        }
 
-            }
 
-            // Employee tablosunda arama
+        public EmployeeLoginDto AuthenticateEmployee(string email, string password)
+        {
             var employee = _repositoryManager.Employee.AuthenticateEmployee(email, password);
 
-            if (employee != null)
+            if (employee == null) return null;
+
+            return new EmployeeLoginDto
             {
-                if (employee.IsAdmin)
-                {
-                    return new UserDto
-                    {
-                        Email = employee.Email,
-                        Role = "admin",
-                        IsAdmin = employee.IsAdmin
-                    };
-                }
-                else
-                {
-                    return new UserDto
-                    {
-                        Email = employee.Email,
-                        Role = "employee",
-                        IsAdmin = employee.IsAdmin
-                    };
-                }
+                EmployeeId = employee.EmployeeId,
+                Name = employee.Name,
+                Email = employee.Email,
+            };
+        }
 
-            }
 
-            // Student tablosunda arama
+        public StudentLoginDto AuthenticateStudent(string email, string password)
+        {
             var student = _repositoryManager.Student.AuthenticateStudent(email, password);
 
-            if (student != null)
-            {
-                if (student.IsClubManager)
-                {
-                    return new UserDto
-                    {
-                        Email = student.Email,
-                        Role = "clubManagerStudent",
-                        IsAdmin = false
-                    };
-                }
-                else
-                {
-                    return new UserDto
-                    {
-                        Email = student.Email,
-                        Role = "student",
-                        IsAdmin = false
-                    };
-                }
+            if (student == null) return null;
+            var studentDto = _mapper.Map<StudentLoginDto>(student);
+            return studentDto;
+        }
 
-            }
+        public T AuthenticateUser<T>(string email, string password, Func<string, string, T> authenticateFunc) where T : class
+        {
+            var user = authenticateFunc(email, password);
 
-            throw new UnauthorizedAccessException("Invalid email or password.");
+            if (user == null)
+                throw new UnauthorizedAccessException("Invalid email or password.");
+
+            return user;
         }
 
 
@@ -132,41 +103,37 @@ namespace Service
         }
 
 
-        public async Task<bool> ValidateUser(UserForAuthenticationDto userForAuth)
+        public async Task<(bool IsValidUser, List<string> Roles)> ValidateUser(UserForAuthenticationDto userForAuth)
         {
-            _user = await _userManager.FindByNameAsync(userForAuth.UserName);
+            _user = await _userManager.FindByEmailAsync(userForAuth.Email);
 
-            var result = _user != null && await _userManager.CheckPasswordAsync(_user, userForAuth.Password);
-            /*
-            if (!result)
-                _logger.LogWarn($"{nameof(ValidateUser)}: Authentication failed. Wrong user name or password."); */
-            if (!result)
-                Console.WriteLine("validate user içersinde", result);
-            return result;
+            var isValid = _user != null && await _userManager.CheckPasswordAsync(_user, userForAuth.Password);
+
+            if (!isValid)
+            {
+                Console.WriteLine("validate user içersinde", isValid);
+                return (false, null);
+            }
+
+            // Kullanıcının rollerini al
+            var roles = await _userManager.GetRolesAsync(_user);
+
+            return (true, roles.ToList());
         }
 
-        public async Task<string> CreateToken()
-        {
-            var signingCredentials = GetSigningCredentials();
-            var claims = await GetClaims();
-            var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
 
-            return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
-        }
 
-        private SigningCredentials GetSigningCredentials()
-        {
-            var key = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET"));
-            var secret = new SymmetricSecurityKey(key);
 
-            return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
-        }
+
+
 
         private async Task<List<Claim>> GetClaims()
         {
+
             var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, _user.UserName)
+                    new Claim(ClaimTypes.Name, _user.UserName),
+                    new Claim(ClaimTypes.Email, _user.Email)
                 };
 
             var roles = await _userManager.GetRolesAsync(_user);
@@ -177,6 +144,23 @@ namespace Service
 
             return claims;
         }
+
+        public async Task<string> CreateToken()
+        {
+            var signingCredentials = GetSigningCredentials();
+            var claims = await GetClaims();
+            var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
+
+            return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+        }
+        private SigningCredentials GetSigningCredentials()
+        {
+            var key = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET"));
+            var secret = new SymmetricSecurityKey(key);
+
+            return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
+        }
+
         private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");

@@ -10,46 +10,15 @@ namespace ClassroomManagementPresentation.Controllers
     [Route("api/auth")]
     public class AuthController : ControllerBase
     {
-        private readonly ITokenService _tokenService;
+       
         private readonly IServiceManager _serviceManager;
 
-        public AuthController(ITokenService tokenService, IServiceManager serviceManager)
+        public AuthController(IServiceManager serviceManager)
         {
-            _tokenService = tokenService;
+       
             _serviceManager = serviceManager;
         }
-        /*
-                [HttpPost("login")]
-                public IActionResult Login([FromBody] LoginDto loginDto)
-                {
-                    try
-                    {
-                        // Kullanıcıyı doğrula
-                        var user = _serviceManager.AuthService.AuthenticateUser(loginDto.Email, loginDto.Password);
-
-                        // Token oluştur
-                        var claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Email, user.Email),
-                        new Claim(ClaimTypes.Role, user.Role.ToLowerInvariant()),
-                    };
-
-                        var token = _tokenService.CreateToken(user.Email, claims);
-
-                        return Ok(new
-                        {
-                            Token = token,
-                            Role = user.Role,
-                            IsAdmin = user.IsAdmin
-                        });
-                    }
-                    catch (UnauthorizedAccessException ex)
-                    {
-                        return Unauthorized(ex.Message);
-                    }
-                }
-
-        */
+    
         [HttpPost]
         public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistration)
         {
@@ -68,16 +37,30 @@ namespace ClassroomManagementPresentation.Controllers
 
 
         [HttpPost("login")]
-        public async Task<IActionResult> Authenticate([FromBody] UserForAuthenticationDto user)
+        public async Task<IActionResult> Authenticate([FromBody] UserForAuthenticationDto userForAuth)
         {
-            if (!await _serviceManager.AuthService.ValidateUser(user))
+            var result = await _serviceManager.AuthService.ValidateUser(userForAuth);
+            if (!result.IsValidUser)
             {
                 return Unauthorized();
             }
-            return Ok(new
+            if (result.Roles.Contains("Instructor"))
             {
-                Token = await _serviceManager.AuthService.CreateToken()
-            });
+                var instructor = _serviceManager.AuthService.AuthenticateUser(userForAuth.Email, userForAuth.Password, _serviceManager.AuthService.AuthenticateInstructor);
+                return Ok(new { Token = await _serviceManager.AuthService.CreateToken(), User = instructor });
+            }
+            else if (result.Roles.Contains("Employee"))
+            {
+                var employee = _serviceManager.AuthService.AuthenticateUser(userForAuth.Email, userForAuth.Password, _serviceManager.AuthService.AuthenticateEmployee);
+                return Ok(new { Token = await _serviceManager.AuthService.CreateToken(), User = employee });
+            }
+            else if (result.Roles.Contains("Student"))
+            {
+                var student = _serviceManager.AuthService.AuthenticateUser(userForAuth.Email, userForAuth.Password, _serviceManager.AuthService.AuthenticateStudent);
+                return Ok(new { Token = await _serviceManager.AuthService.CreateToken(), User = student });
+            }
+
+            return Unauthorized();
         }
 
     }

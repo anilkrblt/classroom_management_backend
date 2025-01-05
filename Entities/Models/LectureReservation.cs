@@ -18,9 +18,6 @@ namespace Entities.Models
         [ForeignKey("Reservation")]
         public int ReservationId { get; set; }
         public Reservation Reservation { get; set; }
-        
-        public bool IsLecturePostpone { get; set; }
-
 
         [ForeignKey("Instructor")]
         public int InstructorId { get; set; }

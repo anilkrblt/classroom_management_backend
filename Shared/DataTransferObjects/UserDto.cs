@@ -30,11 +30,13 @@ namespace Shared.DataTransferObjects
     }
 
 
-    public record UserForAuthenticationDto
+    public class UserForAuthenticationDto
     {
-        [Required(ErrorMessage = "User name is required")]
-        public string? UserName { get; init; }
-        [Required(ErrorMessage = "Password name is required")]
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid email format")]
+        public string? Email { get; init; }
+
+        [Required(ErrorMessage = "Password is required")]
         public string? Password { get; init; }
     }
 

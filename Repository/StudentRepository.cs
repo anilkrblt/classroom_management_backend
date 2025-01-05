@@ -34,6 +34,8 @@ namespace Repository
                         .ThenInclude(l => l.LectureSessions)
                             .ThenInclude(ls => ls.Room)
                 .Include(s => s.Department)
+                .Include(s => s.ClubMemberships)
+                    .ThenInclude(cm => cm.Club)
                 .SingleOrDefaultAsync();
         }
 
@@ -46,7 +48,7 @@ namespace Repository
                         .ThenInclude(l => l.LectureSessions)
                             .ThenInclude(ls => ls.Room)
                 .Include(s => s.Department)
-                .OrderBy(s => s.FullName) 
+                .OrderBy(s => s.FullName)
                 .ToListAsync();
         }
 

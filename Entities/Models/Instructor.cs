@@ -35,6 +35,11 @@ namespace Entities.Models
         public ICollection<LectureReservation> LectureReservations { get; set; }
         public ICollection<LectureInstructor> LectureInstructors { get; set; }
 
+        [Required]
+        public string UserId { get; set; } // ForeignKey to User
+
+        [ForeignKey("UserId")]
+        public virtual User User { get; set; }
 
     }
 }

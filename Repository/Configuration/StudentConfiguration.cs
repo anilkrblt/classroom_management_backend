@@ -14,16 +14,7 @@ namespace Repository.Configuration
         {
             builder.HasData
             (
-            new Student
-            {
-                StudentId = 1,
-                FullName = "Kemal",
-                Email="kemal123@hotmail.com",
-                Password="2131233A",
-                GradeLevel=2,
-                DepartmentId=1,
-                IsClubManager = false
-            }
+       
             
             );
         }

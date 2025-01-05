@@ -154,10 +154,18 @@ namespace ClassroomManagementPresentation.Controllers
             return NoContent();
 
         }
+        [HttpPut("lecturereservation/{id:int}")]
+        public async Task<ActionResult> UpdateLectureReservation([FromRoute] int id, [FromBody] LectureReservationUpdateDto dto)
+        {
+            await _serviceManager.ReservationService.UpdateLectureReservationAsync(id, dto);
+            return NoContent();
+
+        }
+ 
 
         // DELETE: api/Reservations/{id}
-        [HttpDelete("clubreservation/{ReservationId}")]
-        public async Task<ActionResult> DeleteClubReservation(int ReservationId)
+        [HttpDelete("{ReservationId}")]
+        public async Task<ActionResult> DeleteReservation(int ReservationId)
         {
             await _serviceManager.ReservationService.DeleteReservationAsync(ReservationId);
             return NoContent();

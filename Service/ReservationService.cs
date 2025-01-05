@@ -6,6 +6,8 @@ using Entities.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Extensions.ObjectPool;
 
 namespace Service
 {
@@ -20,7 +22,6 @@ namespace Service
             _mapper = mapper;
         }
 
-        // Get all reservations
         public async Task<IEnumerable<ReservationDto>> GetAllReservationsAsync(bool trackChanges)
         {
             var reservations = await _repositoryManager.Reservation.GetAllReservationsAsync(trackChanges);
@@ -38,7 +39,6 @@ namespace Service
 
         }
 
-        // Get a specific reservation by ID
         public async Task<ReservationDto> GetReservationByIdAsync(int reservationId, bool trackChanges)
         {
             var reservation = await _repositoryManager.Reservation.GetReservationAsync(reservationId, trackChanges);
@@ -49,7 +49,6 @@ namespace Service
             return _mapper.Map<ReservationDto>(reservation);
         }
 
-        // Get reservations by user ID
         public async Task<IEnumerable<ReservationDto>> GetUserReservationsAsync(int userId, bool trackChanges)
         {
             var reservations = await _repositoryManager.Reservation.GetReservationsByUserId(userId, trackChanges);
@@ -67,8 +66,6 @@ namespace Service
             _repositoryManager.Reservation.CreateReservation(reservation);
             await _repositoryManager.SaveAsync();
         }
-
-
 
         public async Task<ClubReservationDto> CreateClubReservationAsync(ClubReservationDto reservationDto)
         {
@@ -175,6 +172,9 @@ namespace Service
             await _repositoryManager.SaveAsync();
         }
 
+
+
+
         public async Task CreateLectureReservationAsync(LectureReservationCreateDto lectureReservationCreateDto)
         {
             var room = await _repositoryManager.Room.GetRoomByNameAsync(lectureReservationCreateDto.RoomName, trackChanges: false);
@@ -195,11 +195,27 @@ namespace Service
             {
                 InstructorId = lectureReservationCreateDto.InstructorId,
                 ReservationId = newReservation.ReservationId,
-                IsLecturePostpone = false,
                 Code = lectureReservationCreateDto.LectureCode
             };
             _repositoryManager.LectureReservation.CreateLectureReservation(lectureReservation);
             await _repositoryManager.SaveAsync();
+
+        }
+
+        public async Task UpdateLectureReservationAsync(int reservationId, LectureReservationUpdateDto lectureReservationUpdateDto)
+        {
+            var reservation = await _repositoryManager.Reservation.GetReservationAsync(reservationId, true);
+            if (reservation is null)
+                throw new ArgumentNullException("reservation bulunamadı");
+            var room = await _repositoryManager.Room.GetRoomByNameAsync(lectureReservationUpdateDto.RoomName, false);
+            if (room is null)
+                throw new ArgumentNullException("room bulunamadı");
+            reservation.RoomId = room.RoomId;
+            reservation.StartTime = lectureReservationUpdateDto.StartTime;
+            reservation.EndTime = lectureReservationUpdateDto.EndTime;
+            reservation.EventDate = lectureReservationUpdateDto.EventDate;
+            await _repositoryManager.SaveAsync();
+
 
         }
     }

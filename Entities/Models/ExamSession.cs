@@ -16,9 +16,6 @@ namespace Entities.Models
 
         [Required]
         public DateTime ExamDate { get; set; }
-        
-        [Required, StringLength(20)]
-        public string DayOfWeek { get; set; }
 
         [Required]
         public TimeSpan StartTime { get; set; }
