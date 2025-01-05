@@ -16,15 +16,21 @@ namespace Repository
         public async Task<IEnumerable<Exam>> GetAllExamsAsync(bool trackChanges)
         {
             return await FindAll(trackChanges)
-                .OrderBy(e => e.Name) 
-                .ToListAsync();
+                        .Include(e => e.Lecture)
+                            .ThenInclude(l => l.Enrollments)
+                        .Include(e => e.Lecture)
+                            .ThenInclude(l => l.Department)
+                        .OrderBy(e => e.Name)
+                        .ToListAsync();
         }
 
-        
+
         public async Task<Exam> GetExamAsync(int examId, bool trackChanges)
         {
             return await FindByCondition(e => e.ExamId == examId, trackChanges)
-                .SingleOrDefaultAsync();
+                                    .Include(e => e.Lecture)
+                                    .ThenInclude(l => l.Department)
+                                    .Include(e => e.Lecture).SingleOrDefaultAsync();
         }
 
         public void CreateExam(Exam exam)
@@ -37,8 +43,8 @@ namespace Repository
             var existingExam = await GetExamAsync(exam.ExamId, true);
             if (existingExam != null)
             {
-                existingExam.Name = exam.Name;
-                existingExam.LectureCode = exam.LectureCode;
+                existingExam.Type = exam.Type;
+                existingExam.Duration = exam.Duration;
 
                 Update(existingExam);
             }

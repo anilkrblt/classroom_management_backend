@@ -112,11 +112,10 @@ namespace Service
 
             if (!isValid)
             {
-                Console.WriteLine("validate user içersinde", isValid);
                 return (false, null);
             }
+            Console.WriteLine("valid mi: ", isValid);
 
-            // Kullanıcının rollerini al
             var roles = await _userManager.GetRolesAsync(_user);
 
             return (true, roles.ToList());

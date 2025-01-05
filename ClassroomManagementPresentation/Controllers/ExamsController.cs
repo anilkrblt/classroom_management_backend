@@ -35,23 +35,23 @@ namespace ClassroomManagementPresentation.Controllers
 
             return Ok(exam);
         }
-       /* [HttpPost("examsessions")]
-        public async Task<ExamSessionDto> CreateExamSessions(ExamSessionCreateDto dto){
 
-
-
-        }*/
-
-        // POST: api/Exams
         [HttpPost]
-        public async Task<ActionResult> CreateExam([FromBody] ExamDto examDto)
+        public async Task<List<ExamListDto>> CreateExams(ExamSessionCreateDto dto)
         {
-            if (examDto == null)
-                return BadRequest("ExamDto object is null.");
-
-            await _serviceManager.ExamService.CreateExamAsync(examDto);
-            return CreatedAtAction(nameof(GetExam), new { id = examDto.ExamId }, examDto);
+            var exams = await _serviceManager.ExamService.CreateAllExamsAsync(dto);
+            return exams;
         }
+
+        [HttpPost("/examsessions")]
+        public async Task<List<ExamScheduleDto>> CreateExamSessions(ExamSessionCreateDto dto)
+        {
+
+            var examShedule = await _serviceManager.ExamService.CreateAllExamSessionsAsync(dto);
+            return examShedule;
+        }
+
+
 
         // PUT: api/Exams/{id}
         [HttpPut("{id}")]

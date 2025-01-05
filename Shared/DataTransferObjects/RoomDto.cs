@@ -72,9 +72,14 @@ namespace Shared.DataTransferObjects
         public string? Equipment { get; set; }
 
         public bool IsActive { get; set; }
-        public int RoomType { get; set; } // 0: Classroom, 1: ElectricLab vs. Enum için int
+        public int RoomType { get; set; } 
         public int DepartmentId { get; set; }
         public int BuildingId { get; set; }
+    }
+    public record ExamRoomDto
+    {
+        public string RoomName { get; set; }
+        public string ExamCapacity { get; set; }
     }
 
 }

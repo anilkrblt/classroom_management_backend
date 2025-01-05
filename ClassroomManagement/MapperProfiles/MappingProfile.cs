@@ -191,7 +191,7 @@ namespace ClassroomManagement.MapperProfiles
                 .ForMember(dest => dest.RoomName, opt => opt.MapFrom(src => src.Room.Name))
                 .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.StartTime))
                 .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.EndTime))
-                .ForMember(dest => dest.DayOfWeek, opt => opt.MapFrom(src => src.Date.DayOfWeek));
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date));
 
 
             CreateMap<Student, StudentDto>()
@@ -200,7 +200,11 @@ namespace ClassroomManagement.MapperProfiles
                     src.Enrollments.SelectMany(e => e.Lecture.LectureSessions)));
 
 
-
+            CreateMap<Exam, ExamSessionPostDto>()
+                .ForMember(dest => dest.LectureCode, opt => opt.MapFrom(src => src.LectureCode))
+                .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.Duration))
+                .ForMember(dest => dest.Grade, opt => opt.MapFrom(src => src.Lecture.Grade))
+                .ForMember(dest => dest.StudentCount, opt => opt.MapFrom(src => src.Lecture.Enrollments.Count));
 
 
 
@@ -262,7 +266,10 @@ namespace ClassroomManagement.MapperProfiles
 
 
 
+            CreateMap<Room, ExamRoomDto>();
 
+            CreateMap<Exam, ExamListDto>().ForMember(dest => dest.DepartmentName,
+                                             opt => opt.MapFrom(src => src.Lecture.Department.Name));
 
 
 

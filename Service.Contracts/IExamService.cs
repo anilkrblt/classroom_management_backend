@@ -12,7 +12,13 @@ namespace Service.Contracts
         // Get a specific exam by ID
         Task<ExamDto> GetExamByIdAsync(int examId, bool trackChanges);
 
+
         // Create a new exam
+
+        Task<List<ExamListDto>> CreateAllExamsAsync(ExamSessionCreateDto dto);
+        Task<List<ExamScheduleDto>> CreateAllExamSessionsAsync(ExamSessionCreateDto dto);
+
+
         Task CreateExamAsync(ExamDto examDto);
 
         // Update an existing exam

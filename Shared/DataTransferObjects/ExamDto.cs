@@ -35,7 +35,7 @@ namespace Shared.DataTransferObjects
 
     }
 
-    public record ExamSessionDto
+    public record ExamScheduleDto
     {
 
         public string LectureCode { get; set; }
@@ -48,6 +48,32 @@ namespace Shared.DataTransferObjects
     }
 
 
+    public record ExamSessionPostDto
+    {
 
+        public string LectureCode { get; set; }
+        public int StudentCount { get; set; }
+        public int Duration { get; set; }
+        public int Grade { get; set; }
+    }
+
+    public record ExamSessionCreate
+    {
+        public List<ExamSessionPostDto> exams { get; set; }
+        public List<ExamRoomDto> rooms { get; set; }
+    }
+
+    public record ExamListDto
+    {
+        public string Name { get; set; }
+
+        public string Type { get; set; }
+
+        public int Duration { get; set; }
+
+        public string LectureCode { get; set; }
+        public string DepartmentName { get; set; }
+
+    }
 
 }
