@@ -16,8 +16,9 @@ namespace Repository
         public async Task<IEnumerable<Enrollment>> GetAllEnrollmentsAsync(bool trackChanges)
         {
             return await FindAll(trackChanges)
-                .OrderBy(e => e.EnrollmentId) 
-                .ToListAsync();
+                        .Include(e => e.Student)
+                        .OrderBy(e => e.EnrollmentId)
+                        .ToListAsync();
         }
 
         public async Task<Enrollment> GetEnrollmentAsync(int enrollmentId, bool trackChanges)

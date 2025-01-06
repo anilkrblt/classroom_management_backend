@@ -204,12 +204,14 @@ namespace Service
                 RoomId = room.RoomId,
                 InstructorId = lectureReservation.InstructorId,
                 IsExtraLesson = 1,
-                Date = newReservation.EventDate
+                Date = newReservation.EventDate.Date
             };
             _repositoryManager.LectureSession.CreateLectureSession(newLectureSession);
             await _repositoryManager.SaveAsync();
             var enrollments = await _repositoryManager.Enrollment.GetAllEnrollmentsAsync(false);
             var students = enrollments.Where(e => e.LectureCode == lectureReservationCreateDto.LectureCode).Select(e => e.Student);
+          
+            
             var notif = new Notification
             {
                 CreatedAt = DateTime.Now,
@@ -234,6 +236,7 @@ namespace Service
                 _repositoryManager.NotificationRecipient.CreateNotificationRecipient(notifRecive);
             }
             await _repositoryManager.SaveAsync();
+            
         }
 
         public async Task UpdateLectureReservationAsync(int reservationId, LectureReservationUpdateDto lectureReservationUpdateDto)
