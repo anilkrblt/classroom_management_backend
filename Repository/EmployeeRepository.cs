@@ -37,7 +37,6 @@ namespace Repository
             {
                 existingEmployee.Name = employee.Name;
                 existingEmployee.Email = employee.Email;
-                existingEmployee.Password = employee.Password;
                 existingEmployee.IsAdmin = employee.IsAdmin;
 
                 Update(existingEmployee);
@@ -53,9 +52,9 @@ namespace Repository
             }
         }
 
-        public Employee AuthenticateEmployee(string email, string password)
+        public Employee GetEmployeeByEmail(string email)
         {
-            var employee = FindByCondition(e => e.Email == email && e.Password == password, false).SingleOrDefault();
+            var employee = FindByCondition(e => e.Email == email, false).SingleOrDefault();
             if (employee is null)
                 return null;
             return employee;

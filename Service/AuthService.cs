@@ -37,9 +37,9 @@ namespace Service
             _configuration = configuration;
         }
 
-        public InstructorLoginDto AuthenticateInstructor(string email, string password)
+        public InstructorLoginDto GetInstructorData(string email)
         {
-            var instructor = _repositoryManager.Instructor.AuthenticateInstructor(email, password);
+            var instructor = _repositoryManager.Instructor.GetInstructorByEmail(email);
 
             if (instructor == null) return null;
             var instructorDto = _mapper.Map<InstructorDto>(instructor);
@@ -57,9 +57,9 @@ namespace Service
         }
 
 
-        public EmployeeLoginDto AuthenticateEmployee(string email, string password)
+        public EmployeeLoginDto GetEmployeeData(string email)
         {
-            var employee = _repositoryManager.Employee.AuthenticateEmployee(email, password);
+            var employee = _repositoryManager.Employee.GetEmployeeByEmail(email);
 
             if (employee == null) return null;
 
@@ -72,21 +72,21 @@ namespace Service
         }
 
 
-        public StudentLoginDto AuthenticateStudent(string email, string password)
+        public StudentLoginDto GetStudentData(string email)
         {
-            var student = _repositoryManager.Student.AuthenticateStudent(email, password);
+            var student = _repositoryManager.Student.GetStudentByEmail(email);
 
             if (student == null) return null;
             var studentDto = _mapper.Map<StudentLoginDto>(student);
             return studentDto;
         }
 
-        public T AuthenticateUser<T>(string email, string password, Func<string, string, T> authenticateFunc) where T : class
+        public T GetUserData<T>(string email, Func<string, T> authenticateFunc) where T : class
         {
-            var user = authenticateFunc(email, password);
+            var user = authenticateFunc(email);
 
             if (user == null)
-                throw new UnauthorizedAccessException("Invalid email or password.");
+                throw new UnauthorizedAccessException("Invalid email.");
 
             return user;
         }
@@ -106,17 +106,18 @@ namespace Service
         public async Task<(bool IsValidUser, List<string> Roles)> ValidateUser(UserForAuthenticationDto userForAuth)
         {
             _user = await _userManager.FindByEmailAsync(userForAuth.Email);
-           
+
 
             var isValid = _user != null && await _userManager.CheckPasswordAsync(_user, userForAuth.Password);
-
+            Console.WriteLine($"*********************valid mi: {isValid}");
             if (!isValid)
             {
                 return (false, null);
             }
-            Console.WriteLine("valid mi: ", isValid);
+
 
             var roles = await _userManager.GetRolesAsync(_user);
+            Console.WriteLine($"*********************rol bu : {roles.FirstOrDefault()}");
 
             return (true, roles.ToList());
         }
@@ -144,6 +145,42 @@ namespace Service
 
             return claims;
         }
+
+
+        public async Task MassPasswordResetAsync()
+        {
+
+            var allUsers = _userManager.Users.ToList();
+            string newPassword = "0123456789";
+
+            foreach (var user in allUsers)
+            {
+                if (string.IsNullOrEmpty(user.SecurityStamp))
+                {
+                    user.SecurityStamp = Guid.NewGuid().ToString();
+
+                    // Değişikliği veritabanına kaydet
+                    var updateResult = await _userManager.UpdateAsync(user);
+                    if (!updateResult.Succeeded)
+                    {
+                        // Hata yönetimi
+                        // örn: updateResult.Errors
+                    }
+                }
+                // 1) Kullanıcı için reset token alıyoruz
+                var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                // 2) ResetPasswordAsync ile yeni şifre atıyoruz
+                var resetResult = await _userManager.ResetPasswordAsync(user, resetToken, newPassword);
+
+                if (!resetResult.Succeeded)
+                {
+
+                }
+            }
+        }
+
+
 
         public async Task<string> CreateToken()
         {

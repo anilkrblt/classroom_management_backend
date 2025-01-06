@@ -11,10 +11,11 @@ namespace Service.Contracts
     {
 
         Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistration);
-        public EmployeeLoginDto AuthenticateEmployee(string email, string password);
-        public InstructorLoginDto AuthenticateInstructor(string email, string password);
-        public StudentLoginDto AuthenticateStudent(string email, string password);
-        T AuthenticateUser<T>(string email, string password, Func<string, string, T> authenticateFunc) where T : class;
+        public EmployeeLoginDto GetEmployeeData(string email);
+        public InstructorLoginDto GetInstructorData(string email);
+        public StudentLoginDto GetStudentData(string email);
+        T GetUserData<T>(string email, Func<string, T> authenticateFunc) where T : class;
+        Task MassPasswordResetAsync();
 
         Task<(bool IsValidUser, List<string> Roles)> ValidateUser(UserForAuthenticationDto userForAuth);
         Task<string> CreateToken();

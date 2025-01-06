@@ -199,6 +199,11 @@ namespace Service
             };
             _repositoryManager.LectureReservation.CreateLectureReservation(lectureReservation);
             await _repositoryManager.SaveAsync();
+            var newLectureSession = new LectureSession
+            {
+                StartTime = newReservation.StartTime,
+                EndTime = newReservation.EndTime
+            };
 
         }
 

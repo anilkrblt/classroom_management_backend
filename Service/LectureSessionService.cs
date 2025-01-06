@@ -59,14 +59,21 @@ namespace Service
         }
 
         // Update an existing lecture session
-        public async Task UpdateLectureSessionAsync(int lectureSessionId, LectureSessionDto lectureSessionDto)
+        public async Task UpdateLectureSessionAsync(int lectureSessionId, LectureSessionUpdateDto lectureSessionDto)
         {
             var lectureSession = await _repositoryManager.LectureSession.GetLectureSessionAsync(lectureSessionId, trackChanges: true);
 
             if (lectureSession == null)
                 throw new KeyNotFoundException($"LectureSession with ID {lectureSessionId} not found.");
+            var room = await _repositoryManager.Room.GetRoomByNameAsync(lectureSessionDto.RoomName, false);
+            if (room == null)
+                throw new KeyNotFoundException($"room not found.");
+            lectureSession.Date = lectureSessionDto.Date;
+            lectureSession.StartTime = lectureSessionDto.StartTime;
+            lectureSession.EndTime = lectureSession.EndTime;
+            lectureSession.RoomId = room.RoomId;
 
-            _mapper.Map(lectureSessionDto, lectureSession);
+
             await _repositoryManager.SaveAsync();
         }
 

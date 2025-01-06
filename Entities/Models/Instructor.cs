@@ -19,9 +19,6 @@ namespace Entities.Models
         [Required, EmailAddress, StringLength(150)]
         public string Email { get; set; }
 
-        [Required, StringLength(100, MinimumLength = 6)]
-        public string Password { get; set; }
-
         [StringLength(50)]
         public string Title { get; set; }
 

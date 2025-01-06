@@ -40,9 +40,9 @@ namespace Repository
         {
             Create(instructor);
         }
-        public Instructor AuthenticateInstructor(string email, string password)
+        public Instructor GetInstructorByEmail(string email)
         {
-            var instructor = FindByCondition(i => i.Email == email && i.Password == password, false).SingleOrDefault();
+            var instructor = FindByCondition(i => i.Email == email, false).SingleOrDefault();
             if (instructor is null)
                 return null;
             return instructor;
@@ -56,7 +56,6 @@ namespace Repository
             {
                 existingInstructor.Name = instructor.Name;
                 existingInstructor.Email = instructor.Email;
-                existingInstructor.Password = instructor.Password;
                 existingInstructor.Title = instructor.Title;
                 existingInstructor.IsAdmin = instructor.IsAdmin;
                 existingInstructor.DepartmentId = instructor.DepartmentId;

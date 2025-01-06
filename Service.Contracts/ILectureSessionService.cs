@@ -19,7 +19,7 @@ namespace Service.Contracts
         Task CreateLectureSessionAsync(LectureSessionDto lectureSessionDto);
 
         // Update an existing lecture session
-        Task UpdateLectureSessionAsync(int lectureSessionId, LectureSessionDto lectureSessionDto);
+        Task UpdateLectureSessionAsync(int lectureSessionId, LectureSessionUpdateDto lectureSessionDto);
 
         // Delete a lecture session
         Task DeleteLectureSessionAsync(int lectureSessionId);

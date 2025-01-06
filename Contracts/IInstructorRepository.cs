@@ -13,7 +13,7 @@ namespace Contracts
         
 
 
-        Instructor AuthenticateInstructor(string email, string password);
+        Instructor GetInstructorByEmail(string email);
 
 
         Task UpdateInstructorAsync(Instructor instructor);

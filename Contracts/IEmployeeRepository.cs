@@ -9,7 +9,7 @@ namespace Contracts
         Task<IEnumerable<Employee>> GetAllEmployeesAsync(bool trackChanges);
         Task<Employee> GetEmployeeAsync(int employeeId, bool trackChanges);
 
-        Employee AuthenticateEmployee(string email, string password);
+        Employee GetEmployeeByEmail(string email);
 
 
         void CreateEmployee(Employee employee);

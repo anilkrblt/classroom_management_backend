@@ -10,7 +10,7 @@ namespace Contracts
         Task<Student> GetStudentAsync(int studentId, bool trackChanges);
         Task<IEnumerable<Student>> GetStudentsByDepartmentId(int departmentId, bool trackChanges);
 
-        Student AuthenticateStudent(string email, string password);
+        Student GetStudentByEmail(string email);
 
 
         void CreateStudent(Student student);

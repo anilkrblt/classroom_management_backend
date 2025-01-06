@@ -66,7 +66,6 @@ namespace Repository
             {
                 existingStudent.FullName = student.FullName;
                 existingStudent.Email = student.Email;
-                existingStudent.Password = student.Password;
                 existingStudent.GradeLevel = student.GradeLevel;
                 existingStudent.DepartmentId = student.DepartmentId;
 
@@ -84,11 +83,15 @@ namespace Repository
             }
         }
 
-        public Student AuthenticateStudent(string email, string password)
+        public Student GetStudentByEmail(string email)
         {
-            var student = FindByCondition(s => s.Email == email && s.Password == password, false).SingleOrDefault();
-            if (student is null)
-                return null;
+            var student = FindByCondition(s => s.Email == email, false)
+                        .Include(s => s.Enrollments)
+                            .ThenInclude(e => e.Lecture)
+                                .ThenInclude(l => l.LectureSessions)
+                                    .ThenInclude(ls => ls.Room)
+                        .Include(s => s.Department).SingleOrDefault();
+
             return student;
         }
     }

@@ -305,19 +305,39 @@ namespace ClassroomManagement.MapperProfiles
             CreateMap<Reservation, ReservationDto>();
 
 
+         
+
+            CreateMap<LectureSession, UserLecturesDto>()
+                // LectureSession tablosunda LectureCode sütunu var, 
+                // aynı zamanda Lecture.Name gibi bilgilere de erişebilirsiniz.
+                .ForMember(dest => dest.LectureCode, opt => opt.MapFrom(src => src.LectureCode))
+                .ForMember(dest => dest.LectureName, opt => opt.MapFrom(src => src.Lecture.Name))
+                // Oda adını, Room tablosundan alırsınız (RoomName vb. property varsayarak)
+                .ForMember(dest => dest.RoomName, opt => opt.MapFrom(src => src.Room.Name))
+                .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.StartTime))
+                .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.EndTime))
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date));
+
             // Student -> StudentLoginDto Mapleme
             CreateMap<Student, StudentLoginDto>()
-                .ForMember(dest => dest.Grade, opt => opt.MapFrom(src => src.GradeLevel))
-                .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.Name))
-                .ForMember(dest => dest.StudentClubs, opt => opt.MapFrom(src => src.ClubMemberships.Select(cm => new StudentClubs
-                {
-                    ClubId = cm.ClubId,
-                    ClubName = cm.Club.Name,
-                    ClubShorcut = cm.Club.NameShortcut,
-                    IsManager = cm.IsClubManager
-                })))
-                    .ForMember(dest => dest.Schedule, opt => opt.MapFrom(src => src.Enrollments.Select(e => e.Lecture.LectureSessions)));
-
+            .ForMember(dest => dest.Grade,
+                       opt => opt.MapFrom(src => src.GradeLevel))
+            .ForMember(dest => dest.DepartmentName,
+                       opt => opt.MapFrom(src => src.Department.Name))
+            .ForMember(dest => dest.StudentClubs,
+                       opt => opt.MapFrom(src => src.ClubMemberships.Select(cm => new StudentClubs
+                       {
+                           ClubId = cm.ClubId,
+                           ClubName = cm.Club.Name,
+                           ClubShorcut = cm.Club.NameShortcut,
+                           IsManager = cm.IsClubManager
+                       })))
+            // Burada Enrollment -> Lecture -> LectureSessions ilişkisi var
+            // Her Enrollment üzerinden LectureSessions'a ulaşıp 
+            // tek bir listeye dönüştürmek için "SelectMany" genelde daha uygun olur:
+            .ForMember(dest => dest.Schedule,
+                       opt => opt.MapFrom(src => src.Enrollments
+                           .SelectMany(e => e.Lecture.LectureSessions)));
         }
     }
 }
