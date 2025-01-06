@@ -22,3 +22,7 @@ InstructorPreference->PreferenceId,InstructorId,LectureCode,PreferredTime,Unavai
 AspNetUsers -> Id, FirstName, LastName, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash
 AspNetUserRoles -> UserId, RoleId
 AspNetRoles -> Id,  Name, NormalizedName
+
+
+
+tamam bir de hocaları sana atacağım veriden çıkarmanı istiyorum. veri tabanı tablolarım bu şekilde Instructor -> InstructorId, Name, Email, Password, Title, DepartmentId, IsAdmin, UserId ve UserId kısmını şimdilik boş bırak. Email ise şu formatta isimsoyisim@trakya.edu.tr ve şifre kısmını da sallayabilirsin önemli değil ayrıca is admin kısmı hepsinde 0 olsun. biyo müh departmanı için öğretmenleri buradan çek.
