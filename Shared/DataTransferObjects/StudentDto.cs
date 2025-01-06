@@ -12,6 +12,7 @@
     }
     public record UserLecturesDto
     {
+        public int LectureSessionId { get; set; }
         public string LectureCode { get; set; }
         public string LectureName { get; set; }
         public string RoomName { get; set; }

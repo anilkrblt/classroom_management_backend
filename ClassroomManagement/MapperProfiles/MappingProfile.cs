@@ -186,6 +186,7 @@ namespace ClassroomManagement.MapperProfiles
 
 
             CreateMap<LectureSession, UserLecturesDto>()
+                .ForMember(dest => dest.LectureSessionId, opt => opt.MapFrom(src => src.LectureSessionId))
                 .ForMember(dest => dest.LectureCode, opt => opt.MapFrom(src => src.LectureCode))
                 .ForMember(dest => dest.LectureName, opt => opt.MapFrom(src => src.Lecture.Name))
                 .ForMember(dest => dest.RoomName, opt => opt.MapFrom(src => src.Room.Name))
@@ -305,7 +306,7 @@ namespace ClassroomManagement.MapperProfiles
             CreateMap<Reservation, ReservationDto>();
 
 
-         
+
 
             CreateMap<LectureSession, UserLecturesDto>()
                 // LectureSession tablosunda LectureCode sütunu var, 

@@ -464,3 +464,31 @@
 2025-01-06 20:25:02.1524 Debug FileTarget(Name=logfile): Creating file appender: 'C:\Users\ACER\Desktop\classroom_management_backend\ClassroomManagement\bin\Debug\net8.0\.\logs\2025-01-06_logfile.txt'
 2025-01-06 20:25:02.1677 Trace FileTarget(Name=logfile): Opening C:\Users\ACER\Desktop\classroom_management_backend\ClassroomManagement\bin\Debug\net8.0\.\logs\2025-01-06_logfile.txt with allowFileSharedWriting=False
 2025-01-06 20:25:02.1677 Debug FileTarget(Name=logfile): DirectoryNotFoundException - Attempting to create directory for FileName: C:\Users\ACER\Desktop\classroom_management_backend\ClassroomManagement\bin\Debug\net8.0\.\logs\2025-01-06_logfile.txt
+2025-01-06 21:00:18.5114 Info AppDomain Shutting down. LogFactory closing...
+2025-01-06 21:00:18.5114 Debug Stop watching file-filter 'NLog.config' in directory: C:\Users\ACER\Desktop\classroom_management_backend\ClassroomManagement\bin\Debug\net8.0
+2025-01-06 21:00:18.5114 Trace Flushing all 1 targets...
+2025-01-06 21:00:18.5114 Trace ForEachItemInParallel() 1 items
+2025-01-06 21:00:18.5275 Trace FileTarget(Name=logfile): FlushAsync
+2025-01-06 21:00:18.5275 Trace Continuation invoked: 
+2025-01-06 21:00:18.5275 Trace Parallel task completed. 0 items remaining
+2025-01-06 21:00:18.5275 Debug Flush completed
+2025-01-06 21:00:18.5275 Trace FileTarget(Name=logfile): FlushAsync Done
+2025-01-06 21:00:18.5275 Debug Closing logging configuration...
+2025-01-06 21:00:18.5275 Trace Closing FileTarget(Name=logfile)
+2025-01-06 21:00:18.5275 Debug FileTarget(Name=logfile): Closing...
+2025-01-06 21:00:18.5275 Trace FileTarget(Name=logfile): FinalizeFile 'C:\Users\ACER\Desktop\classroom_management_backend\ClassroomManagement\bin\Debug\net8.0\.\logs\2025-01-06_logfile.txt, isArchiving: False'
+2025-01-06 21:00:18.5275 Debug FileTarget(Name=logfile): FileAppender Invalidate Closing File: 'C:\Users\ACER\Desktop\classroom_management_backend\ClassroomManagement\bin\Debug\net8.0\.\logs\2025-01-06_logfile.txt'
+2025-01-06 21:00:18.5275 Trace FileTarget: Closing 'C:\Users\ACER\Desktop\classroom_management_backend\ClassroomManagement\bin\Debug\net8.0\.\logs\2025-01-06_logfile.txt'
+2025-01-06 21:00:18.5275 Debug FileTarget(Name=logfile): Closed.
+2025-01-06 21:00:18.5275 Trace Closing .\logs\${shortdate}_logfile.txt
+2025-01-06 21:00:18.5275 Trace Closing Layout Renderer: ${literal}
+2025-01-06 21:00:18.5275 Trace Closing Layout Renderer: ${shortdate}
+2025-01-06 21:00:18.5275 Trace Closing Layout Renderer: ${literal}
+2025-01-06 21:00:18.5417 Trace Closing ${longdate} ${level:uppercase=true} ${message}
+2025-01-06 21:00:18.5417 Trace Closing Layout Renderer: ${longdate}
+2025-01-06 21:00:18.5417 Trace Closing Layout Renderer: ${literal}
+2025-01-06 21:00:18.5417 Trace Closing Layout Renderer: ${level}
+2025-01-06 21:00:18.5417 Trace Closing Layout Renderer: ${literal}
+2025-01-06 21:00:18.5417 Trace Closing Layout Renderer: ${message}
+2025-01-06 21:00:18.5417 Debug Finished closing logging configuration.
+2025-01-06 21:00:18.5417 Info LogFactory has been closed.
