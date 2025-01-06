@@ -61,7 +61,7 @@ namespace ClassroomManagementPresentation.Controllers
         }*/
 
         // PUT: api/LectureSessions/{id}
-        [HttpPut("{id}")]
+        [HttpPut("{lectureSessionId}")]
         public async Task<ActionResult> UpdateLectureSession(int lectureSessionId, [FromBody] LectureSessionUpdateDto dto)
         {
             if (dto == null)
