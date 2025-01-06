@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassroomManagementPresenta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoggerService", "LoggerService\LoggerService.csproj", "{1370348D-204C-4C1C-86FD-0F0504D18DA4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassroomManagement.Tests", "ClassroomManagement.Tests\ClassroomManagement.Tests.csproj", "{CF903A6E-6DCC-46C4-A919-9683CDFB0E3F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{1370348D-204C-4C1C-86FD-0F0504D18DA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1370348D-204C-4C1C-86FD-0F0504D18DA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1370348D-204C-4C1C-86FD-0F0504D18DA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF903A6E-6DCC-46C4-A919-9683CDFB0E3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF903A6E-6DCC-46C4-A919-9683CDFB0E3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF903A6E-6DCC-46C4-A919-9683CDFB0E3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF903A6E-6DCC-46C4-A919-9683CDFB0E3F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

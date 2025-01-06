@@ -13,35 +13,32 @@ namespace Repository
         {
         }
 
-        // Get all notification recipients
         public async Task<IEnumerable<NotificationRecipient>> GetAllNotificationRecipientsAsync(bool trackChanges)
         {
             return await FindAll(trackChanges)
-                .OrderBy(nr => nr.Id) // Recipients sorted by ID
+                .OrderBy(nr => nr.Id) 
                 .ToListAsync();
         }
 
-        // Get a specific notification recipient by ID
         public async Task<NotificationRecipient> GetNotificationRecipientAsync(int id, bool trackChanges)
         {
             return await FindByCondition(nr => nr.Id == id, trackChanges)
                 .SingleOrDefaultAsync();
         }
 
-        // Create a new notification recipient
         public void CreateNotificationRecipient(NotificationRecipient notificationRecipient)
         {
             Create(notificationRecipient);
         }
 
-        // Update an existing notification recipient
         public async Task UpdateNotificationRecipientAsync(NotificationRecipient notificationRecipient)
         {
             var existingRecipient = await GetNotificationRecipientAsync(notificationRecipient.Id, true);
             if (existingRecipient != null)
             {
                 existingRecipient.NotificationId = notificationRecipient.NotificationId;
-                existingRecipient.StudentId = notificationRecipient.StudentId;
+                existingRecipient.IsRead = notificationRecipient.IsRead;
+                existingRecipient.ReadAt = DateTime.Now;
 
                 Update(existingRecipient);
             }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Entities.Models
 {
-   
+
     [Table("NotificationRecipient")]
     public class NotificationRecipient
     {
@@ -16,11 +16,16 @@ namespace Entities.Models
 
         [ForeignKey("Notification")]
         public int NotificationId { get; set; }
-
-        [ForeignKey("Student")]
-        public int StudentId { get; set; }
-
         public Notification Notification { get; set; }
-        public Student Student { get; set; }
+
+        // Eğer bir "Users" tablonuz varsa
+        [ForeignKey("User")]
+        public string UserId { get; set; }
+        public User User { get; set; }
+
+        // Bildirimin okunma durumu
+        public bool IsRead { get; set; }
+        public DateTime? ReadAt { get; set; }
     }
+
 }

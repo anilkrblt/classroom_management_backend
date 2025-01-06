@@ -20,9 +20,13 @@ namespace ClassroomManagement.Extensions
                                         {
                                             context.Response.StatusCode = contextFeature.Error switch
                                             {
-                                               
+                                                UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
+                                                KeyNotFoundException => StatusCodes.Status404NotFound,
+                                                ArgumentException => StatusCodes.Status400BadRequest,
+                                                _ => StatusCodes.Status500InternalServerError
                                             };
                                             logger.LogError($"Something went wrong: {contextFeature.Error}");
+                                            
                                             await context.Response.WriteAsync(new ErrorDetails()
                                             {
                                                 StatusCode = context.Response.StatusCode,

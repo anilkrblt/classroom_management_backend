@@ -29,6 +29,7 @@ namespace Repository
         public void CreateNotification(Notification notification)
         {
             Create(notification);
+        
         }
 
         public async Task UpdateNotificationAsync(Notification notification)

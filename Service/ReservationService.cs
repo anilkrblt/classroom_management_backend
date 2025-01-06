@@ -172,15 +172,12 @@ namespace Service
             await _repositoryManager.SaveAsync();
         }
 
-
-
-
         public async Task CreateLectureReservationAsync(LectureReservationCreateDto lectureReservationCreateDto)
         {
             var room = await _repositoryManager.Room.GetRoomByNameAsync(lectureReservationCreateDto.RoomName, trackChanges: false);
             if (room == null)
                 throw new KeyNotFoundException($"Room '{lectureReservationCreateDto.RoomName}' not found.");
-
+            lectureReservationCreateDto.EventDate = lectureReservationCreateDto.EventDate.Date;
             var newReservation = new Reservation
             {
                 StartTime = lectureReservationCreateDto.StartTime,
@@ -201,10 +198,42 @@ namespace Service
             await _repositoryManager.SaveAsync();
             var newLectureSession = new LectureSession
             {
-                StartTime = newReservation.StartTime,
-                EndTime = newReservation.EndTime
+                StartTime = lectureReservationCreateDto.StartTime,
+                EndTime = lectureReservationCreateDto.EndTime,
+                LectureCode = lectureReservationCreateDto.LectureCode,
+                RoomId = room.RoomId,
+                InstructorId = lectureReservation.InstructorId,
+                IsExtraLesson = 1,
+                Date = newReservation.EventDate
             };
+            _repositoryManager.LectureSession.CreateLectureSession(newLectureSession);
+            await _repositoryManager.SaveAsync();
+            var enrollments = await _repositoryManager.Enrollment.GetAllEnrollmentsAsync(false);
+            var students = enrollments.Where(e => e.LectureCode == lectureReservationCreateDto.LectureCode).Select(e => e.Student);
+            var notif = new Notification
+            {
+                CreatedAt = DateTime.Now,
+                Message = "Yeni bildiriminiz var",
+                NotificationType = "EkDersBildirimi",
+                Title = $"{newReservation.StartTime} - {newReservation.EndTime} {newReservation.EventDate} tarihine {lectureReservation.Code} dersi eklenmiştir! "
 
+            };
+            _repositoryManager.Notification.CreateNotification(notif);
+            await _repositoryManager.SaveAsync();
+
+            foreach (var student in students)
+            {
+
+                var notifRecive = new NotificationRecipient
+                {
+                    IsRead = false,
+                    NotificationId = notif.NotificationId,
+                    ReadAt = DateTime.MinValue,
+                    UserId = student.UserId
+                };
+                _repositoryManager.NotificationRecipient.CreateNotificationRecipient(notifRecive);
+            }
+            await _repositoryManager.SaveAsync();
         }
 
         public async Task UpdateLectureReservationAsync(int reservationId, LectureReservationUpdateDto lectureReservationUpdateDto)

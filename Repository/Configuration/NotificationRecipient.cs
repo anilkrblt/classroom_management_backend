@@ -14,12 +14,7 @@ namespace Repository.Configuration
         {
         NotificationRecipient.HasData
         (
-            new NotificationRecipient
-            {
-                Id = 1,
-                NotificationId = 1,
-                StudentId = 1
-            }
+       
           
         );
         }

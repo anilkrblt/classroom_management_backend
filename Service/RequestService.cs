@@ -20,14 +20,12 @@ namespace Service
             _mapper = mapper;
         }
 
-        // Get all requests
         public async Task<IEnumerable<RequestDto>> GetAllRequestsAsync(bool trackChanges)
         {
             var requests = await _repositoryManager.Request.GetAllRequestsAsync(trackChanges);
             return _mapper.Map<IEnumerable<RequestDto>>(requests);
         }
 
-        // Get a specific request by ID
         public async Task<RequestDto> GetRequestByIdAsync(int requestId, bool trackChanges)
         {
             var request = await _repositoryManager.Request.GetRequestAsync(requestId, trackChanges);
@@ -38,7 +36,6 @@ namespace Service
             return _mapper.Map<RequestDto>(request);
         }
 
-        // Get requests by room ID
         public async Task<IEnumerable<RequestDto>> GetRequestsByRoomIdAsync(int roomId, bool trackChanges)
         {
             var requests = await _repositoryManager.Request.GetRequestsByRoomIdAsync(roomId, trackChanges);
@@ -49,7 +46,6 @@ namespace Service
             return _mapper.Map<IEnumerable<RequestDto>>(requests);
         }
 
-        // Get requests by user ID
         public async Task<IEnumerable<RequestDto>> GetRequestsByUserIdAsync(int userId, bool trackChanges)
         {
             var requests = await _repositoryManager.Request.GetRequestsByUserIdAsync(userId, trackChanges);

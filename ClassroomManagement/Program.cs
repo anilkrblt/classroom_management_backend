@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
+using Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Configure services using extensions
 builder.Services.ConfigureCors();
 builder.Services.ConfigureISSIntegration();
-// builder.Services.ConfigureLoggerService();
+builder.Services.ConfigureLoggerService();
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 
@@ -84,6 +85,10 @@ builder.Services.AddSwaggerGen(c =>
 
 
 var app = builder.Build();
+
+var logger = app.Services.GetRequiredService<ILoggerManager>();
+app.ConfigureExceptionHandler(logger);
+
 
 if (app.Environment.IsDevelopment())
 {
