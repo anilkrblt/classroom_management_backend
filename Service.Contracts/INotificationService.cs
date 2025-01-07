@@ -15,6 +15,8 @@ namespace Service.Contracts
         // Create a new notification
         Task CreateNotificationAsync(NotificationDto notificationDto);
 
+        Task<IEnumerable<NotificationDto>> GetAllNotificationsWithUserIdAsync(string userId, bool trackChanges);
+
         // Update an existing notification
         Task UpdateNotificationAsync(int notificationId, NotificationDto notificationDto);
 

@@ -41,34 +41,37 @@ namespace ClassroomManagementPresentation.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Authenticate([FromBody] UserForAuthenticationDto userForAuth)
         {
-            var result = await _serviceManager.AuthService.ValidateUser(userForAuth);
+            var (IsValidUser, Roles, userId) = await _serviceManager.AuthService.ValidateUser(userForAuth);
 
 
-            if (!result.IsValidUser)
+            if (!IsValidUser)
             {
                 return Unauthorized();
             }
-            if (result.Roles.Contains("Instructor"))
+            var userNotifs =await _serviceManager.NotificationService.GetAllNotificationsWithUserIdAsync(userId, false);
+            userNotifs = userNotifs.ToList();
+            if (Roles.Contains("Instructor"))
             {
                 var instructor = _serviceManager.AuthService.GetUserData(userForAuth.Email, _serviceManager.AuthService.GetInstructorData);
-                return Ok(new { Token = await _serviceManager.AuthService.CreateToken(), User = instructor });
+                return Ok(new { Token = await _serviceManager.AuthService.CreateToken(),  Notifications = userNotifs, User = instructor });
             }
-            else if (result.Roles.Contains("Employee"))
+            else if (Roles.Contains("Employee"))
             {
                 var employee = _serviceManager.AuthService.GetUserData(userForAuth.Email, _serviceManager.AuthService.GetEmployeeData);
-                return Ok(new { Token = await _serviceManager.AuthService.CreateToken(), User = employee });
+                return Ok(new { Token = await _serviceManager.AuthService.CreateToken(), User = employee, Notifications = userNotifs });
             }
-            else if (result.Roles.Contains("Student"))
+            else if (Roles.Contains("Student"))
             {
                 var student = _serviceManager.AuthService.GetUserData(userForAuth.Email, _serviceManager.AuthService.GetStudentData);
-                return Ok(new { Token = await _serviceManager.AuthService.CreateToken(), User = student });
+                return Ok(new { Token = await _serviceManager.AuthService.CreateToken(), User = student, Notifications = userNotifs });
             }
 
             return Unauthorized("rol yok");
         }
 
         [HttpPost("/resetpasswords")]
-        public async Task<IActionResult> ResetPasswords(){
+        public async Task<IActionResult> ResetPasswords()
+        {
             await _serviceManager.AuthService.MassPasswordResetAsync();
             return Ok();
         }

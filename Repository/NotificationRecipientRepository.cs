@@ -16,7 +16,8 @@ namespace Repository
         public async Task<IEnumerable<NotificationRecipient>> GetAllNotificationRecipientsAsync(bool trackChanges)
         {
             return await FindAll(trackChanges)
-                .OrderBy(nr => nr.Id) 
+                .Include(nr => nr.Notification)
+                .OrderBy(nr => nr.Id)
                 .ToListAsync();
         }
 

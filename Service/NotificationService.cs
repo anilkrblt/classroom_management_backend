@@ -26,6 +26,23 @@ namespace Service
             var notifications = await _repositoryManager.Notification.GetAllNotificationsAsync(trackChanges);
             return _mapper.Map<IEnumerable<NotificationDto>>(notifications);
         }
+        public async Task<IEnumerable<NotificationDto>> GetAllNotificationsWithUserIdAsync(string userId, bool trackChanges)
+        {
+            var receivers = await _repositoryManager.NotificationRecipient.GetAllNotificationRecipientsAsync(trackChanges);
+            var userReceivers = receivers.Where(r => r.UserId == userId).ToList();
+
+            var notifications = userReceivers.Select(r => r.Notification).Distinct().ToList();
+
+            var notificationDtos = _mapper.Map<IEnumerable<NotificationDto>>(notifications).ToList();
+
+            foreach (var dto in notificationDtos)
+            {
+                var relatedReceivers = userReceivers.Where(r => r.NotificationId == dto.NotificationId);
+                dto.IsRead = relatedReceivers.Any(r => r.IsRead);
+            }
+
+            return notificationDtos;
+        }
 
         // Get a specific notification by ID
         public async Task<NotificationDto> GetNotificationByIdAsync(int notificationId, bool trackChanges)

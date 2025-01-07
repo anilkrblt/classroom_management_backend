@@ -16,14 +16,16 @@ namespace Repository
         public async Task<IEnumerable<ClubMembership>> GetAllClubMembershipsAsync(bool trackChanges)
         {
             return await FindAll(trackChanges)
-                .OrderBy(cm => cm.ClubMembershipId) 
+                .Include(m => m.Student)
+                .OrderBy(cm => cm.ClubMembershipId)
                 .ToListAsync();
         }
 
         public async Task<ClubMembership> GetClubMembershipAsync(int clubMembershipId, bool trackChanges)
         {
             return await FindByCondition(cm => cm.ClubMembershipId == clubMembershipId, trackChanges)
-                .SingleOrDefaultAsync();
+                        .Include(m => m.Student)
+                        .SingleOrDefaultAsync();
         }
 
         public void CreateClubMembership(ClubMembership clubMembership)

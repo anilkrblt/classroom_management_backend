@@ -17,7 +17,7 @@ namespace Service.Contracts
         T GetUserData<T>(string email, Func<string, T> authenticateFunc) where T : class;
         Task MassPasswordResetAsync();
 
-        Task<(bool IsValidUser, List<string> Roles)> ValidateUser(UserForAuthenticationDto userForAuth);
+        Task<(bool IsValidUser, List<string> Roles, string userId)> ValidateUser(UserForAuthenticationDto userForAuth);
         Task<string> CreateToken();
 
     }

@@ -35,7 +35,7 @@ namespace Service
                 throw new KeyNotFoundException($"club reservation not found.");
 
             var reservationDtos = _mapper.Map<IEnumerable<ClubReservationGetDto>>(ClubReservations);
-           
+
             return reservationDtos;
 
         }
@@ -138,6 +138,37 @@ namespace Service
                 BannerPath = clubReservation.Banner
             };
 
+
+            var memberships = await _repositoryManager.ClubMembership.GetAllClubMembershipsAsync(false);
+            var students = memberships.Where(m => m.ClubId == club.ClubId).Select(m => m.Student);
+
+
+            var notif = new Notification
+            {
+                CreatedAt = DateTime.Now,
+                Title = $"{club.NameShortcut} klübü etkinliği",
+                NotificationType = "ClupEventBildirimi",
+                Message = $"{returnDto.StartTime} - {returnDto.EndTime} {newReservation.EventDate} tarihine {club.NameShortcut} klübü etkinliği bulunmaktadır! "
+
+            };
+            _repositoryManager.Notification.CreateNotification(notif);
+            await _repositoryManager.SaveAsync();
+
+            foreach (var student in students)
+            {
+
+                var notifRecive = new NotificationRecipient
+                {
+                    IsRead = false,
+                    NotificationId = notif.NotificationId,
+                    ReadAt = DateTime.MinValue,
+                    UserId = student.UserId
+                };
+                _repositoryManager.NotificationRecipient.CreateNotificationRecipient(notifRecive);
+            }
+            await _repositoryManager.SaveAsync();
+
+
             return returnDto;
         }
 
@@ -211,8 +242,8 @@ namespace Service
             await _repositoryManager.SaveAsync();
             var enrollments = await _repositoryManager.Enrollment.GetAllEnrollmentsAsync(false);
             var students = enrollments.Where(e => e.LectureCode == lectureReservationCreateDto.LectureCode).Select(e => e.Student);
-          
-            
+
+
             var notif = new Notification
             {
                 CreatedAt = DateTime.Now,
@@ -237,7 +268,7 @@ namespace Service
                 _repositoryManager.NotificationRecipient.CreateNotificationRecipient(notifRecive);
             }
             await _repositoryManager.SaveAsync();
-            
+
         }
 
         public async Task UpdateLectureReservationAsync(int reservationId, LectureReservationUpdateDto lectureReservationUpdateDto)

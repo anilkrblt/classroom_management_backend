@@ -16,14 +16,16 @@ namespace Repository
         public async Task<IEnumerable<Notification>> GetAllNotificationsAsync(bool trackChanges)
         {
             return await FindAll(trackChanges)
-                .OrderBy(n => n.CreatedAt) 
-                .ToListAsync();
+                        .Include(n => n.NotificationRecipients)
+                        .OrderBy(n => n.CreatedAt) 
+                        .ToListAsync();
         }
 
         public async Task<Notification> GetNotificationAsync(int notificationId, bool trackChanges)
         {
             return await FindByCondition(n => n.NotificationId == notificationId, trackChanges)
-                .SingleOrDefaultAsync();
+                        .Include(n => n.NotificationRecipients)
+                        .SingleOrDefaultAsync();
         }
 
         public void CreateNotification(Notification notification)

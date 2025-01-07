@@ -42,7 +42,7 @@ namespace Repository
         }
         public Instructor GetInstructorByEmail(string email)
         {
-            var instructor = FindByCondition(i => i.Email == email, false).SingleOrDefault();
+            var instructor = FindByCondition(i => i.Email == email, false).Include(i => i.Department).SingleOrDefault();
             if (instructor is null)
                 return null;
             return instructor;

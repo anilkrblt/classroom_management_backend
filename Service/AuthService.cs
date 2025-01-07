@@ -103,23 +103,21 @@ namespace Service
         }
 
 
-        public async Task<(bool IsValidUser, List<string> Roles)> ValidateUser(UserForAuthenticationDto userForAuth)
+        public async Task<(bool IsValidUser, List<string> Roles, string userId)> ValidateUser(UserForAuthenticationDto userForAuth)
         {
             _user = await _userManager.FindByEmailAsync(userForAuth.Email);
 
 
             var isValid = _user != null && await _userManager.CheckPasswordAsync(_user, userForAuth.Password);
-            Console.WriteLine($"*********************valid mi: {isValid}");
             if (!isValid)
             {
-                return (false, null);
+                return (false, [], "");
             }
 
-
+            var userId = _user.Id.ToString();
             var roles = await _userManager.GetRolesAsync(_user);
-            Console.WriteLine($"*********************rol bu : {roles.FirstOrDefault()}");
 
-            return (true, roles.ToList());
+            return (true, roles.ToList(), userId);
         }
 
 
