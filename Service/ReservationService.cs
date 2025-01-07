@@ -35,6 +35,7 @@ namespace Service
                 throw new KeyNotFoundException($"club reservation not found.");
 
             var reservationDtos = _mapper.Map<IEnumerable<ClubReservationGetDto>>(ClubReservations);
+           
             return reservationDtos;
 
         }

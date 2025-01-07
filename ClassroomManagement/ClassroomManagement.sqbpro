@@ -1,32 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="ClassroomManagement.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="1"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="4901"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="LectureSession" custom_title="0" dock_id="1" table="4,14:mainLectureSession"/><dock_state state="000000ff00000000fd00000001000000020000043b000002e6fc0100000001fb000000160064006f0063006b00420072006f007700730065003101000000000000043b0000012700ffffff000002580000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="AspNetRoleClaims" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="29"/><column index="2" value="47"/><column index="3" value="66"/><column index="4" value="70"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="AspNetRoles" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="29"/><column index="2" value="85"/><column index="3" value="103"/><column index="4" value="113"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="AspNetUserLogins" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="85"/><column index="2" value="76"/><column index="3" value="128"/><column index="4" value="48"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="AspNetUserRoles" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="288"/><column index="2" value="47"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Building" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="66"/><column index="2" value="54"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Department" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="87"/><column index="2" value="288"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="LectureInstructor" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="79"/><column index="2" value="79"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="LectureSession" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="104"/><column index="2" value="70"/><column index="3" value="70"/><column index="4" value="79"/><column index="5" value="55"/><column index="6" value="79"/><column index="7" value="87"/><column index="8" value="156"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Room" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="53"/><column index="2" value="41"/><column index="3" value="56"/><column index="4" value="86"/><column index="5" value="54"/><column index="6" value="78"/><column index="7" value="117"/><column index="8" value="195"/><column index="9" value="68"/><column index="10" value="89"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1*">INSERT INTO LectureSession (LectureSessionId, StartTime, EndTime, LectureCode, RoomId, InstructorId, IsExtraLesson, Date) VALUES
-(1, '09:30', '11:30', 'BIL101', 5, 1000, 0, '2025-01-17'),
-(2, '08:00', '10:00', 'BIL205', 12, 1000, 0, '2025-01-17'),
-(3, '10:15', '12:15', 'FIZ101', 7, 1001, 0, '2025-01-18'),
-(4, '13:00', '15:00', 'FIZ101', 3, 1002, 0, '2025-01-18'),
-(5, '11:00', '13:00', 'BIL104', 20, 1003, 0, '2025-01-19'),
-(6, '14:30', '16:30', 'BIL202', 8, 1003, 0, '2025-01-19'),
-(7, '08:30', '10:30', 'ZYD101', 15, 1004, 0, '2025-01-20'),
-(8, '10:00', '12:00', 'BILYD202', 29, 1004, 0, '2025-01-20'),
-(9, '12:30', '14:30', 'BILYD302', 22, 1004, 0, '2025-01-21'),
-(10, '09:00', '11:00', 'ZAI101', 3, 1005, 0, '2025-01-21'),
-(11, '13:30', '15:30', 'ZTD101', 17, 1006, 0, '2025-01-22'),
-(12, '08:00', '10:00', 'MAT101', 6, 1007, 0, '2025-01-22'),
-(13, '15:00', '17:00', 'BIL408', 10, 1008, 0, '2025-01-23'),
-(14, '09:30', '11:30', 'BIL410', 4, 1008, 0, '2025-01-23'),
-(15, '10:00', '12:00', 'BIL205', 14, 1009, 0, '2025-01-24'),
-(16, '14:00', '16:00', 'BIL413', 27, 1009, 0, '2025-01-24'),
-(17, '08:30', '10:30', 'BIL201', 2, 1010, 0, '2025-01-25'),
-(18, '11:00', '13:00', 'BIL203', 19, 1011, 0, '2025-01-25'),
-(19, '13:30', '15:30', 'BIL204', 11, 1012, 0, '2025-01-26'),
-(20, '15:00', '17:00', 'BIL373', 24, 1012, 0, '2025-01-26'),
-(21, '09:00', '11:00', 'BIL404', 7, 1012, 0, '2025-01-27'),
-(22, '10:30', '12:30', 'BIL303', 16, 1013, 0, '2025-01-27'),
-(23, '14:00', '16:00', 'BIL305', 5, 1014, 0, '2025-01-28'),
-(24, '08:00', '10:00', 'BIL403', 28, 1014, 0, '2025-01-28'),
-(25, '11:30', '13:30', 'BIL306', 9, 1015, 0, '2025-01-29'),
-(26, '13:00', '15:00', 'BIL407', 13, 1015, 0, '2025-01-29'),
-(27, '09:30', '11:30', 'BIL302', 20, 1016, 0, '2025-01-30'),
-(28, '12:00', '14:00', 'BIL201', 1, 1016, 0, '2025-01-30'),
-(29, '14:30', '16:30', 'BIL304', 22, 1017, 0, '2025-01-31'),
-(30, '08:00', '10:00', 'BIL401', 18, 1017, 0, '2025-01-31');
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="ClassroomManagement.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="0"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="4901"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="AspNetRoleClaims" custom_title="0" dock_id="1" table="4,16:mainAspNetRoleClaims"/><dock_state state="000000ff00000000fd00000001000000020000000000000000fc0100000001fb000000160064006f0063006b00420072006f00770073006500310100000000ffffffff0000011300ffffff000000000000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1*">CREATE TRIGGER UpdateClubReservationStatusAfterUpdate
+AFTER UPDATE OF EventDate ON Reservation
+WHEN NEW.EventDate &lt; DATE('now')
+BEGIN
+    UPDATE ClubReservation
+    SET Status = 'outdated'
+    WHERE ReservationId = NEW.ReservationId;
+END;
+
+CREATE TRIGGER UpdateClubReservationStatusAfterInsert
+AFTER INSERT ON Reservation
+WHEN NEW.EventDate &lt; DATE('now')
+BEGIN
+    UPDATE ClubReservation
+    SET Status = 'outdated'
+    WHERE ReservationId = NEW.ReservationId;
+END;
 </sql><current_tab id="0"/></tab_sql></sqlb_project>

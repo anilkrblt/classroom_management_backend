@@ -3,12 +3,12 @@ Club -> ClubId, Name, NameShortcut, ClubLogoPath
 ClubMembership -> ClubMembershipId, StudentId, ClubId, CreatedAt, UpdatedAt, IsClubManager
 ClubReservation ->Id, ClubId, ReservationId, EventRegisterLink, EventName, Title, Details, Status, Banner, StudentId
 Department -> DepartmentId, Name
-Employee -> EmployeeId, Name, Email, Password, IsAdmin, UserId
+Employee -> EmployeeId, Name, Email, IsAdmin, UserId
 Enrollment -> EnrollmentId, StudentId, LectureCode
 Exam -> ExamId, Name, Type, Duration, LectureCode
 ExamSession -> ExamSessionId, ExamDate, StartTime, EndTime, RoomId, ExamId
-Instructor -> InstructorId, Name, Email, Password, Title, DepartmentId, IsAdmin, UserId
-Student -> StudentId,FullName,Email,Password,GradeLevel,Department,IdUserId
+Instructor -> InstructorId, Name, Email, Title, DepartmentId, IsAdmin, UserId
+Student -> StudentId,FullName,Email,GradeLevel,Department,IdUserId
 Room->     RoomId,Name,Capacity,ExamCapacity,IsActive,RoomType,IsProjectorWorking,Equipment,BuildingId,DepartmentId
 Reservation -> ReservationId,StartTime,EndTime,EventDate,RoomId
 Request -> RequestId,Type,Title,Content,Status,SolveDescription,ImagePaths,CreatedAt,UpdatedAt,UserName,UserId,RoomId
