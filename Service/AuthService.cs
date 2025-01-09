@@ -47,7 +47,7 @@ namespace Service
 
             return new InstructorLoginDto
             {
-                InstructorId = instructorDto.Id,
+                Id = instructorDto.InstructorId,
                 InstructorName = instructorDto.InstructorName,
                 Email = instructorDto.Email,
                 Title = instructorDto.Title,
@@ -78,6 +78,7 @@ namespace Service
 
             if (student == null) return null;
             var studentDto = _mapper.Map<StudentLoginDto>(student);
+            studentDto.Id = student.StudentId;
             return studentDto;
         }
 

@@ -323,6 +323,8 @@ namespace ClassroomManagement.MapperProfiles
 
             // Student -> StudentLoginDto Mapleme
             CreateMap<Student, StudentLoginDto>()
+            .ForMember(dest => dest.Id,
+                       opt => opt.MapFrom(src => src.StudentId))
             .ForMember(dest => dest.Grade,
                        opt => opt.MapFrom(src => src.GradeLevel))
             .ForMember(dest => dest.DepartmentName,

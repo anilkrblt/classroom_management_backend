@@ -57,7 +57,7 @@ namespace ClassroomManagementPresentation.Controllers
                 return BadRequest("InstructorDto object is null.");
 
             await _serviceManager.InstructorService.CreateInstructorAsync(instructorDto);
-            return CreatedAtAction(nameof(GetInstructor), new { id = instructorDto.Id }, instructorDto);
+            return CreatedAtAction(nameof(GetInstructor), new { id = instructorDto.InstructorId }, instructorDto);
         }
 
         // PUT: api/Instructors/{id}
