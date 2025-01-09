@@ -47,7 +47,7 @@ namespace Service
 
             return new InstructorLoginDto
             {
-                InstructorId = instructorDto.InstructorId,
+                InstructorId = instructorDto.Id,
                 InstructorName = instructorDto.InstructorName,
                 Email = instructorDto.Email,
                 Title = instructorDto.Title,
@@ -65,7 +65,7 @@ namespace Service
 
             return new EmployeeLoginDto
             {
-                EmployeeId = employee.EmployeeId,
+                Id = employee.EmployeeId,
                 Name = employee.Name,
                 Email = employee.Email,
             };

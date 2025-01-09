@@ -36,7 +36,7 @@ namespace ClassroomManagementPresentation.Controllers
 
             return Ok(instructor);
         }
-
+        /*
         // GET: api/Instructors/{id}/lectures
         [HttpGet("{id}/lectures")]
         public async Task<ActionResult<IEnumerable<LectureDto>>> GetInstructorsLectures(int id)
@@ -47,7 +47,7 @@ namespace ClassroomManagementPresentation.Controllers
                 return NotFound($"No lectures found for Instructor with ID {id}.");
 
             return Ok(lectures);
-        }
+        }*/
 
         // POST: api/Instructors
         [HttpPost]
@@ -57,7 +57,7 @@ namespace ClassroomManagementPresentation.Controllers
                 return BadRequest("InstructorDto object is null.");
 
             await _serviceManager.InstructorService.CreateInstructorAsync(instructorDto);
-            return CreatedAtAction(nameof(GetInstructor), new { id = instructorDto.InstructorId }, instructorDto);
+            return CreatedAtAction(nameof(GetInstructor), new { id = instructorDto.Id }, instructorDto);
         }
 
         // PUT: api/Instructors/{id}

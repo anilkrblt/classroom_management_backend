@@ -8,7 +8,7 @@ namespace Shared.DataTransferObjects
     public record InstructorDto
     {
 
-        public int InstructorId { get; set; }
+        public int Id { get; set; }
         public string InstructorName { get; set; }
         public string Email { get; set; }
         public string? Title { get; set; }
