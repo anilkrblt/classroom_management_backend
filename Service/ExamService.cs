@@ -93,8 +93,35 @@ namespace Service
         public async Task<List<ExamScheduleDto>> CreateAllExamSessionsAsync(ExamSessionCreateDto dto)
         {
             var postExams = await _repositoryManager.Exam.GetAllExamsAsync(false);
+            foreach (var exam in postExams)
+            {
+                // İlgili ders var mı kontrol edelim
+                if (exam.Lecture != null)
+                {
+                    var lecture = exam.Lecture;
+
+                    if (lecture.DepartmentId == 2)
+                    {
+                        lecture.Grade += 4;
+                    }
+                    else if (lecture.DepartmentId == 3)
+                    {
+                        lecture.Grade += 8;
+                    }
+                    else if (lecture.DepartmentId == 4)
+                    {
+                        lecture.Grade += 12;
+                    }
+                    else if (lecture.DepartmentId == 5)
+                    {
+                        lecture.Grade += 16;
+                    }
+                }
+            }
 
             var examSessionPostdto = _mapper.Map<List<ExamSessionPostDto>>(postExams);
+
+
 
             var rooms = await _repositoryManager.Room.GetAllRoomsAsync(false);
             var examRooms = _mapper.Map<List<ExamRoomDto>>(rooms);
