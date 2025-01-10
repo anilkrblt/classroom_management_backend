@@ -158,7 +158,7 @@ namespace Service
             Console.WriteLine("**********************************");
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var url = "http://127.0.0.1:8000/planning";
+            var url = "https://algoritma.onrender.com/planning";
             using var client = new HttpClient();
 
 
