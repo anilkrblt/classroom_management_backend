@@ -37,9 +37,9 @@ namespace ClassroomManagementPresentation.Controllers
         }
 
         [HttpPost]
-        public async Task<List<ExamListDto>> CreateExams(ExamSessionCreateDto dto)
+        public async Task<List<ExamListDto>> CreateExams(string type)
         {
-            var exams = await _serviceManager.ExamService.CreateAllExamsAsync(dto);
+            var exams = await _serviceManager.ExamService.CreateAllExamsAsync(type);
             return exams;
         }
 

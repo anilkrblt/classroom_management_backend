@@ -1,5 +1,6 @@
 
 using System.Dynamic;
+using System.Text.Json.Serialization;
 
 namespace Shared.DataTransferObjects
 {
@@ -72,14 +73,19 @@ namespace Shared.DataTransferObjects
         public string? Equipment { get; set; }
 
         public bool IsActive { get; set; }
-        public int RoomType { get; set; } 
+        public int RoomType { get; set; }
         public int DepartmentId { get; set; }
         public int BuildingId { get; set; }
     }
     public record ExamRoomDto
     {
+        [JsonPropertyName("room_name")]
         public string RoomName { get; set; }
-        public string ExamCapacity { get; set; }
+
+        [JsonPropertyName("exam_capacity")]
+        public int ExamCapacity { get; set; }
     }
+
+
 
 }

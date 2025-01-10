@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Shared.DataTransferObjects
@@ -27,41 +28,75 @@ namespace Shared.DataTransferObjects
     public record ExamSessionCreateDto
     {
 
-        public string Type { get; set; }
+        public List<string> Dates { get; set; }
 
-        public DateTime StartTime { get; set; }
-
-        public DateTime EndTime { get; set; }
 
     }
 
     public record ExamScheduleDto
     {
-
+        public string Date { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
         public string LectureCode { get; set; }
-        public List<string> RoomNames { get; set; }
-        public TimeSpan StartTime { get; set; }
-        public TimeSpan EndTime { get; set; }
-
-        public DateTime Date { get; set; }
+        public string RoomNames { get; set; }
+        public int Duration { get; set; }
 
     }
 
 
     public record ExamSessionPostDto
     {
-
+        [JsonPropertyName("lecture_code")]
         public string LectureCode { get; set; }
+
+        [JsonPropertyName("student_count")]
         public int StudentCount { get; set; }
+
+        [JsonPropertyName("duration")]
         public int Duration { get; set; }
+
+        [JsonPropertyName("grade")]
         public int Grade { get; set; }
     }
 
+
     public record ExamSessionCreate
     {
-        public List<ExamSessionPostDto> exams { get; set; }
-        public List<ExamRoomDto> rooms { get; set; }
+        [JsonPropertyName("exams")]
+        public List<ExamSessionPostDto> Exams { get; set; }
+
+        [JsonPropertyName("rooms")]
+        public List<ExamRoomDto> Rooms { get; set; }
+
+        [JsonPropertyName("day_time")]
+        public List<ExamDateRangeDto> DateRange { get; set; }
     }
+
+
+
+    public class ExamDateRangeDto
+    {
+        public string Tarih { get; set; }
+        public List<string> BaslangicSaatleri { get; set; }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public record ExamListDto
     {

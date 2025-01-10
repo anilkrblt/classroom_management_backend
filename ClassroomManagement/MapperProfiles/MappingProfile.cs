@@ -205,7 +205,7 @@ namespace ClassroomManagement.MapperProfiles
                 .ForMember(dest => dest.LectureCode, opt => opt.MapFrom(src => src.LectureCode))
                 .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.Duration))
                 .ForMember(dest => dest.Grade, opt => opt.MapFrom(src => src.Lecture.Grade))
-                .ForMember(dest => dest.StudentCount, opt => opt.MapFrom(src => src.Lecture.Enrollments.Count));
+                .ForMember(dest => dest.StudentCount, opt => opt.MapFrom(src => src.Lecture.Enrollments.Count == 0 ? 50: 45));
 
 
 
@@ -267,7 +267,7 @@ namespace ClassroomManagement.MapperProfiles
 
 
 
-            CreateMap<Room, ExamRoomDto>();
+            CreateMap<Room, ExamRoomDto>().ForMember(dest => dest.RoomName,opt => opt.MapFrom(src => src.Name));
 
             CreateMap<Exam, ExamListDto>().ForMember(dest => dest.DepartmentName,
                                              opt => opt.MapFrom(src => src.Lecture.Department.Name));

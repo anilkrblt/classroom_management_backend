@@ -67,20 +67,21 @@ namespace Service
 
 
 
-        public async Task<List<ExamListDto>> CreateAllExamsAsync(ExamSessionCreateDto dto)
+        public async Task<List<ExamListDto>> CreateAllExamsAsync(string type)
         {
             var lectures = await _repositoryManager.Lecture.GetAllLecturesAsync(false);
             foreach (var lecture in lectures)
             {
                 var exam = new Exam
                 {
-                    Type = dto.Type,
-                    Name = lecture.Name + $"Dersi {dto.Type} Sınavı",
+                    Type = type,
+                    Name = lecture.Name + $"Dersi {type} Sınavı",
                     LectureCode = lecture.Code,
                     Duration = 60
                 };
                 _repositoryManager.Exam.CreateExam(exam);
             }
+            await _repositoryManager.SaveAsync();
             var postExams = await _repositoryManager.Exam.GetAllExamsAsync(false);
 
             var examList = _mapper.Map<List<ExamListDto>>(postExams);
@@ -97,15 +98,40 @@ namespace Service
 
             var rooms = await _repositoryManager.Room.GetAllRoomsAsync(false);
             var examRooms = _mapper.Map<List<ExamRoomDto>>(rooms);
+
+
+            var examDates = new List<ExamDateRangeDto> { };
+            var examHours = new List<string>
+                {
+                    "09:00","09:30","10:00","10:30","11:00","11:30",
+                    "13:00","13:30","14:00","14:30","15:00","15:30",
+                    "16:00","16:30","17:00","17:30"
+                };
+            foreach (var date in dto.Dates)
+            {
+                var item = new ExamDateRangeDto
+                {
+                    Tarih = date,
+                    BaslangicSaatleri = examHours
+                };
+                examDates.Add(item);
+
+            }
             var data = new ExamSessionCreate
             {
-                exams = examSessionPostdto,
-                rooms = examRooms
+                Exams = examSessionPostdto,
+                Rooms = examRooms,
+                DateRange = examDates
             };
 
             var json = JsonSerializer.Serialize(data);
+
+            Console.WriteLine("********** JSON to send **********");
+            Console.WriteLine(json);
+            Console.WriteLine("**********************************");
+
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var url = "https://example.com/api/endpoint";
+            var url = "http://127.0.0.1:8000/planning";
             using var client = new HttpClient();
 
 
@@ -117,13 +143,16 @@ namespace Service
                 Console.WriteLine("Response: " + responseData);
 
                 var examSchedule = JsonSerializer.Deserialize<List<ExamScheduleDto>>(responseData);
-                return examSchedule;
+                if (examSchedule is not null)
+                    return examSchedule;
+                return new List<ExamScheduleDto> { };
             }
             else
             {
                 Console.WriteLine("Failed: " + response.StatusCode);
+                throw new Exception($"Exam schedule creation failed with status: {response.StatusCode}");
+
             }
-            throw new NotImplementedException();
         }
     }
 }
