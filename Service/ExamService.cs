@@ -90,7 +90,7 @@ namespace Service
 
 
 
-        public async Task<List<ExamScheduleDto>> CreateAllExamSessionsAsync(ExamSessionCreateDto dto)
+        public async Task<ExamScheduleAndMoreDto> CreateAllExamSessionsAsync(ExamSessionCreateDto dto)
         {
             var postExams = await _repositoryManager.Exam.GetAllExamsAsync(false);
             foreach (var exam in postExams)
@@ -169,11 +169,15 @@ namespace Service
                 var responseData = await response.Content.ReadAsStringAsync();
                 Console.WriteLine("Response: " + responseData);
 
-                var examSchedule = JsonSerializer.Deserialize<List<ExamScheduleDto>>(responseData);
+                var examSchedule = JsonSerializer.Deserialize<ExamScheduleAndMoreDto>(responseData);
+
                 if (examSchedule is not null)
                     return examSchedule;
-                return new List<ExamScheduleDto> { };
+
+                return new ExamScheduleAndMoreDto { ExamSchedule = new List<ExamScheduleDto>(), UnAssignedLectures = new List<string>() };
             }
+
+
             else
             {
                 Console.WriteLine("Failed: " + response.StatusCode);

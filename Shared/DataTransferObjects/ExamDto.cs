@@ -33,6 +33,14 @@ namespace Shared.DataTransferObjects
 
     }
 
+
+    public record ExamScheduleAndMoreDto
+    {
+        [JsonPropertyName("planning")]
+        public List<ExamScheduleDto> ExamSchedule { get; set; }
+        [JsonPropertyName("unscheduled_exams")]
+        public List<string> UnAssignedLectures { get; set; }
+    }
     public record ExamScheduleDto
     {
         public string Date { get; set; }
@@ -40,7 +48,9 @@ namespace Shared.DataTransferObjects
         public string EndTime { get; set; }
         public string LectureCode { get; set; }
         public string RoomNames { get; set; }
+        [JsonPropertyName("Duration (minute)")]
         public int Duration { get; set; }
+
 
     }
 
