@@ -72,12 +72,12 @@ namespace ClassroomManagementPresentation.Controllers
 
         [HttpDelete]
         [Route("/unassign/{id:int}")]
-        public async Task<ActionResult> DeleteLectureInstructor([FromRoute] int InstructorId, [FromBody] string lectureCode)
+        public async Task<ActionResult> DeleteLectureInstructor([FromRoute] int id, [FromBody] string lectureCode)
         {
             if (lectureCode == null)
                 return BadRequest("Ders kodu null olamaz!");
 
-            await _serviceManager.LectureService.DeleteLectureInstructorAsync(InstructorId, lectureCode);
+            await _serviceManager.LectureService.DeleteLectureInstructorAsync(id, lectureCode);
             return NoContent();
         }
 
