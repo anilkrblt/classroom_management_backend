@@ -77,7 +77,10 @@ namespace Shared.DataTransferObjects
 
     public class ExamDateRangeDto
     {
+        [JsonPropertyName("date")]
         public string Tarih { get; set; }
+
+        [JsonPropertyName("start_times")]
         public List<string> BaslangicSaatleri { get; set; }
     }
 
