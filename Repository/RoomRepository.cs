@@ -25,7 +25,7 @@ namespace Repository
                                                 .ThenInclude(ls => ls.Instructor)
                                               .Include(r => r.Reservations)
                                                 .ThenInclude(r => r.ClubReservations
-                                                    .Where(cr => cr.Status == "approved"))
+                                                    .Where(cr => cr.Status.ToLower() == "approved"))
                                                     .ThenInclude(cr => cr.Club)
                                               .OrderBy(r => r.Name)
                                               .ToListAsync();
@@ -41,6 +41,10 @@ namespace Repository
                                                 .ThenInclude(l => l.Department)
                                         .Include(r => r.LectureSessions)
                                             .ThenInclude(ls => ls.Instructor)
+                                        .Include(r => r.Reservations)
+                                            .ThenInclude(r => r.ClubReservations
+                                                .Where(cr => cr.Status.ToLower() == "approved"))
+                                                .ThenInclude(cr => cr.Club)
                                         .SingleOrDefaultAsync();
         }
 
