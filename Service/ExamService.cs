@@ -67,15 +67,17 @@ namespace Service
 
 
 
-        public async Task<List<ExamListDto>> CreateAllExamsAsync(string type)
+        public async Task<List<ExamListDto>> CreateAllExamsAsync(ExamCreateDto dto)
         {
             var lectures = await _repositoryManager.Lecture.GetAllLecturesAsync(false);
+            lectures = lectures.Where(l => l.Term == dto.Term);
             foreach (var lecture in lectures)
             {
                 var exam = new Exam
                 {
-                    Type = type,
-                    Name = lecture.Name + $"Dersi {type} Sınavı",
+                    Type = dto.Type,
+                    Name = lecture.Name + $"Dersi {dto.Type} Sınavı",
+                    Year = dto.Year,
                     LectureCode = lecture.Code,
                     Duration = 60
                 };
@@ -83,6 +85,7 @@ namespace Service
             }
             await _repositoryManager.SaveAsync();
             var postExams = await _repositoryManager.Exam.GetAllExamsAsync(false);
+            postExams = postExams.Where(e => e.Year == dto.Year && e.Type == dto.Type);
 
             var examList = _mapper.Map<List<ExamListDto>>(postExams);
             return examList;
@@ -93,6 +96,7 @@ namespace Service
         public async Task<ExamScheduleExtendedAndMoreDto> CreateAllExamSessionsAsync(ExamSessionCreateDto dto)
         {
             var postExams = await _repositoryManager.Exam.GetAllExamsAsync(false);
+            postExams = postExams.Where(e => e.Year == dto.Year);
             foreach (var exam in postExams)
             {
                 // İlgili ders var mı kontrol edelim

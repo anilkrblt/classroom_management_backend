@@ -11,26 +11,26 @@ namespace Shared.DataTransferObjects
 
         public int ExamId { get; set; }
         public DateTime ExamDate { get; set; }
-
         public DateTime StartTime { get; set; }
-
         public DateTime EndTime { get; set; }
-
         public string Code { get; set; }
-
         public string Name { get; set; }
-
-
-
-
     }
 
     public record ExamSessionCreateDto
     {
-
+        public int Year { get; set; }
+        public string Term { get; set; }
+        public string Type { get; set; }
         public List<string> Dates { get; set; }
 
 
+    }
+    public record ExamCreateDto
+    {
+        public int Year { get; set; }
+        public string Term { get; set; }
+        public string Type { get; set; }
     }
 
 
