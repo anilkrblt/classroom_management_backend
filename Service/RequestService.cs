@@ -78,6 +78,7 @@ namespace Service
 
             _repositoryManager.Request.CreateRequest(requestEntity);
             await _repositoryManager.SaveAsync();
+            
         }
 
         public async Task UpdateRequestAsync(int requestId, RequestDto requestDto)

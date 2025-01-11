@@ -21,14 +21,12 @@ namespace Service
             _mapper = mapper;
         }
 
-        // Get all exams
         public async Task<IEnumerable<ExamDto>> GetAllExamsAsync(bool trackChanges)
         {
             var exams = await _repositoryManager.Exam.GetAllExamsAsync(trackChanges);
             return _mapper.Map<IEnumerable<ExamDto>>(exams);
         }
 
-        // Get a specific exam by ID
         public async Task<ExamDto> GetExamByIdAsync(int examId, bool trackChanges)
         {
             var exam = await _repositoryManager.Exam.GetExamAsync(examId, trackChanges);
@@ -90,8 +88,6 @@ namespace Service
             var examList = _mapper.Map<List<ExamListDto>>(postExams);
             return examList;
         }
-
-
 
         public async Task<ExamScheduleExtendedAndMoreDto> CreateAllExamSessionsAsync(ExamSessionCreateDto dto)
         {
@@ -248,9 +244,7 @@ namespace Service
             _repositoryManager.ExamSession.DeleteAllExamSessions(examList);
             await _repositoryManager.SaveAsync();
         }
-
-
-
+        
         public async Task CreateExamSession(ExamScheduleExtendedDto dto, string Term, string Type, string LectureCode, int ExamYear)
         {
             if (dto == null)

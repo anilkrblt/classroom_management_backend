@@ -72,8 +72,36 @@ namespace Service
             lectureSession.StartTime = lectureSessionDto.StartTime;
             lectureSession.EndTime = lectureSession.EndTime;
             lectureSession.RoomId = room.RoomId;
+            await _repositoryManager.SaveAsync();
 
 
+            var enrollments = await _repositoryManager.Enrollment.GetAllEnrollmentsAsync(false);
+            var students = enrollments.Where(e => e.LectureCode == lectureSession.LectureCode).Select(e => e.Student);
+
+
+            var notif = new Notification
+            {
+                CreatedAt = DateTime.Now,
+                Title = $"{lectureSession.LectureCode} dersiniz güncellenmiştir!",
+                NotificationType = "LectureUpdateBildirimi",
+                Message = $"dersine bişiler oldu la   !! "
+
+            };
+            _repositoryManager.Notification.CreateNotification(notif);
+            await _repositoryManager.SaveAsync();
+
+            foreach (var student in students)
+            {
+
+                var notifRecive = new NotificationRecipient
+                {
+                    IsRead = false,
+                    NotificationId = notif.NotificationId,
+                    ReadAt = DateTime.MinValue,
+                    UserId = student.UserId
+                };
+                _repositoryManager.NotificationRecipient.CreateNotificationRecipient(notifRecive);
+            }
             await _repositoryManager.SaveAsync();
         }
 
@@ -86,6 +114,35 @@ namespace Service
                 throw new KeyNotFoundException($"LectureSession with ID {lectureSessionId} not found.");
 
             await _repositoryManager.LectureSession.DeleteLectureSessionAsync(lectureSession);
+            await _repositoryManager.SaveAsync();
+
+            var enrollments = await _repositoryManager.Enrollment.GetAllEnrollmentsAsync(false);
+            var students = enrollments.Where(e => e.LectureCode == lectureSession.LectureCode).Select(e => e.Student);
+
+
+            var notif = new Notification
+            {
+                CreatedAt = DateTime.Now,
+                Title = $"{lectureSession.LectureCode} dersiniz iptal edilmiştir!",
+                NotificationType = "LectureUpdateBildirimi",
+                Message = $"dersine bişiler oldu la   !! "
+
+            };
+            _repositoryManager.Notification.CreateNotification(notif);
+            await _repositoryManager.SaveAsync();
+
+            foreach (var student in students)
+            {
+
+                var notifRecive = new NotificationRecipient
+                {
+                    IsRead = false,
+                    NotificationId = notif.NotificationId,
+                    ReadAt = DateTime.MinValue,
+                    UserId = student.UserId
+                };
+                _repositoryManager.NotificationRecipient.CreateNotificationRecipient(notifRecive);
+            }
             await _repositoryManager.SaveAsync();
         }
     }

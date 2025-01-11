@@ -127,6 +127,64 @@ namespace Service
             room.IsActive = false;
 
             await _repositoryManager.SaveAsync();
+
+            var clubRez = await _repositoryManager.ClubReservation.GetAllClubReservationsAsync(false);
+            var rezs = clubRez.Where(cr => cr.Reservation.RoomId == room.RoomId).Select(cr => cr.ClubId);
+
+            var clubMemberships = await _repositoryManager.ClubMembership.GetAllClubMembershipsAsync(false);
+            var managerIds = clubMemberships.Where(cm => cm.IsClubManager == true && rezs.Contains(cm.ClubId)).Select(cm => cm.Student.UserId);
+
+            var notifClub = new Notification
+            {
+                CreatedAt = DateTime.Now,
+                Title = $"Klüp başkanının dikkatine",
+                NotificationType = "ClupEventBildirimi",
+                Message = $"Rezervasyon yaptığınız sınıfınızda arıza meydana geldiği için yönetici sınıfı kapatmıştır!"
+
+            };
+            var lectureSessions = await _repositoryManager.LectureSession.GetAllLectureSessionsAsync(false);
+            var notifLs = lectureSessions.Where(ls => ls.RoomId == room.RoomId).ToList();
+            var instructors = notifLs.Select(ls => ls.Instructor);
+
+            var notifLec = new Notification
+            {
+                CreatedAt = DateTime.Now,
+                Title = $"Öğretmenin dikkatine",
+                NotificationType = "LectureEventBildirimi",
+                Message = $"Sınıfınızda arıza meydana geldiği için yönetici sınıfı kapatmıştır!"
+
+            };
+            _repositoryManager.Notification.CreateNotification(notifClub);
+            _repositoryManager.Notification.CreateNotification(notifLec);
+
+            await _repositoryManager.SaveAsync();
+            foreach (var instructor in instructors)
+            {
+                var notifReciveLec = new NotificationRecipient
+                {
+                    IsRead = false,
+                    NotificationId = notifLec.NotificationId,
+                    ReadAt = DateTime.MinValue,
+                    UserId = instructor.UserId
+                };
+                _repositoryManager.NotificationRecipient.CreateNotificationRecipient(notifReciveLec);
+            }
+            await _repositoryManager.SaveAsync();
+
+            foreach (var manager in managerIds)
+            {
+
+                var notifReciveClub = new NotificationRecipient
+                {
+                    IsRead = false,
+                    NotificationId = notifClub.NotificationId,
+                    ReadAt = DateTime.MinValue,
+                    UserId = manager
+                };
+
+                _repositoryManager.NotificationRecipient.CreateNotificationRecipient(notifReciveClub);
+            }
+            await _repositoryManager.SaveAsync();
         }
     }
 }
