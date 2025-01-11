@@ -90,7 +90,7 @@ namespace Service
 
 
 
-        public async Task<List<ExamScheduleDto>> CreateAllExamSessionsAsync(ExamSessionCreateDto dto)
+        public async Task<List<ExamScheduleExtendedDto>> CreateAllExamSessionsAsync(ExamSessionCreateDto dto)
         {
             var postExams = await _repositoryManager.Exam.GetAllExamsAsync(false);
             foreach (var exam in postExams)
@@ -118,7 +118,6 @@ namespace Service
                     }
                 }
             }
-
             var examSessionPostdto = _mapper.Map<List<ExamSessionPostDto>>(postExams);
 
 
@@ -170,9 +169,30 @@ namespace Service
                 Console.WriteLine("Response: " + responseData);
 
                 var examSchedule = JsonSerializer.Deserialize<List<ExamScheduleDto>>(responseData);
+
+                var examScheduleExtended = new List<ExamScheduleExtendedDto>();
+                var lectures = await _repositoryManager.Lecture.GetAllLecturesAsync(false);
+                foreach (var exam in examSchedule!)
+                {
+                    var lecture = lectures.Where(l => l.Code == exam.LectureCode).FirstOrDefault();
+                    var item = new ExamScheduleExtendedDto
+                    {
+                        Date = exam.Date,
+                        Duration = exam.Duration,
+                        StartTime = exam.StartTime,
+                        EndTime = exam.EndTime,
+                        RoomNames = exam.RoomNames,
+                        LectureCode = exam.LectureCode,
+                        LectureName = lecture!.Name,
+                        DepartmentName = lecture.Department.Name,
+                        Grade = lecture.Grade,
+                    };
+                    examScheduleExtended.Add(item);
+
+                }
                 if (examSchedule is not null)
-                    return examSchedule;
-                return new List<ExamScheduleDto> { };
+                    return examScheduleExtended;
+                return new List<ExamScheduleExtendedDto> { };
             }
             else
             {

@@ -43,6 +43,20 @@ namespace Shared.DataTransferObjects
         public int Duration { get; set; }
 
     }
+    public record ExamScheduleExtendedDto
+    {
+        public string Date { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
+        public string LectureCode { get; set; }
+        public string LectureName { get; set; }
+        public int Grade { get; set; }
+        public string DepartmentName { get; set; }
+        public string RoomNames { get; set; }
+        public int Duration { get; set; }
+
+
+    }
 
 
     public record ExamSessionPostDto

@@ -16,7 +16,7 @@ namespace Service.Contracts
         // Create a new exam
 
         Task<List<ExamListDto>> CreateAllExamsAsync(string type);
-        Task<List<ExamScheduleDto>> CreateAllExamSessionsAsync(ExamSessionCreateDto dto);
+        Task<List<ExamScheduleExtendedDto>> CreateAllExamSessionsAsync(ExamSessionCreateDto dto);
 
 
         Task CreateExamAsync(ExamDto examDto);

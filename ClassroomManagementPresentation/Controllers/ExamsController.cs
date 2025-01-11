@@ -44,7 +44,7 @@ namespace ClassroomManagementPresentation.Controllers
         }
 
         [HttpPost("/examsessions")]
-        public async Task<List<ExamScheduleDto>> CreateExamSessions(ExamSessionCreateDto dto)
+        public async Task<List<ExamScheduleExtendedDto>> CreateExamSessions(ExamSessionCreateDto dto)
         {
 
             var examShedule = await _serviceManager.ExamService.CreateAllExamSessionsAsync(dto);
