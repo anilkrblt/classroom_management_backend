@@ -41,6 +41,20 @@ namespace Shared.DataTransferObjects
         [JsonPropertyName("unscheduled_exams")]
         public List<string> UnAssignedLectures { get; set; }
     }
+    public record ExamScheduleExtendedAndMoreDto
+    {
+        [JsonPropertyName("planning")]
+        public List<ExamScheduleExtendedDto> ExamSchedule { get; set; }
+        [JsonPropertyName("unscheduled_exams")]
+        public List<UnAssignedLecturesDto> UnAssignedLectures { get; set; }
+    }
+    public record UnAssignedLecturesDto
+    {
+        public string LectureName { get; set; }
+        public string LectureCode { get; set; }
+        public string DepartmentName { get; set; }
+        public int Grade { get; set; }
+    }
     public record ExamScheduleDto
     {
         public string Date { get; set; }
@@ -63,7 +77,6 @@ namespace Shared.DataTransferObjects
         public int Grade { get; set; }
         public string DepartmentName { get; set; }
         public string RoomNames { get; set; }
-        [JsonPropertyName("Duration (minute)")]
         public int Duration { get; set; }
 
 

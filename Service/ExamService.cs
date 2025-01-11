@@ -90,7 +90,7 @@ namespace Service
 
 
 
-        public async Task<List<ExamScheduleExtendedDto>> CreateAllExamSessionsAsync(ExamSessionCreateDto dto)
+        public async Task<ExamScheduleExtendedAndMoreDto> CreateAllExamSessionsAsync(ExamSessionCreateDto dto)
         {
             var postExams = await _repositoryManager.Exam.GetAllExamsAsync(false);
             foreach (var exam in postExams)
@@ -171,6 +171,8 @@ namespace Service
                 var examSchedule = JsonSerializer.Deserialize<ExamScheduleAndMoreDto>(responseData);
 
                 var examScheduleExtended = new List<ExamScheduleExtendedDto>();
+                var unAssignedLectures = new List<UnAssignedLecturesDto>();
+
                 var lectures = await _repositoryManager.Lecture.GetAllLecturesAsync(false);
                 foreach (var exam in examSchedule!.ExamSchedule)
                 {
@@ -190,9 +192,27 @@ namespace Service
                     examScheduleExtended.Add(item);
 
                 }
+                foreach (var lecCode in examSchedule!.UnAssignedLectures)
+                {
+                    var lecture = lectures.Where(l => l.Code == lecCode).FirstOrDefault();
+                    var item = new UnAssignedLecturesDto
+                    {
+                        LectureCode = lecCode,
+                        LectureName = lecture!.Name,
+                        DepartmentName = lecture.Department.Name,
+                        Grade = lecture.Grade,
+                    };
+                    unAssignedLectures.Add(item);
+
+                }
+
                 if (examSchedule is not null)
-                    return examScheduleExtended;
-                return new List<ExamScheduleExtendedDto> { };
+                    return new ExamScheduleExtendedAndMoreDto
+                    {
+                        ExamSchedule = examScheduleExtended,
+                        UnAssignedLectures = unAssignedLectures
+                    };
+                return new ExamScheduleExtendedAndMoreDto { };
             }
 
 
