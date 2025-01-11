@@ -232,8 +232,21 @@ namespace Service
         public async Task DeleteAllExamSessionsAsync(ExamSessionDeleteDto dto)
         {
             var exams = await _repositoryManager.ExamSession.GetAllExamSessionsAsync(true);
-            var examList = exams.Where(e => dto.Year == e.Exam.Year && dto.Type == e.Exam.Type).ToList();
+            var examList = exams.Where(e => dto.Year == e.Exam.Year && dto.Type == e.Exam.Type && dto.Term == e.Exam.Lecture.Term).ToList();
+            Console.WriteLine("Exam List:");
+            foreach (var exam in examList)
+            {
+                Console.WriteLine($"ExamSessionId: {exam.ExamSessionId}, ExamDate: {exam.ExamDate}, Term: {exam.Exam.Lecture.Term}");
+            }
+
+            // Boş kontrolü
+            if (!examList.Any())
+            {
+                Console.WriteLine("Exam listesi boş. Silinecek bir şey yok.");
+                return;
+            }
             _repositoryManager.ExamSession.DeleteAllExamSessions(examList);
+            await _repositoryManager.SaveAsync();
         }
 
 

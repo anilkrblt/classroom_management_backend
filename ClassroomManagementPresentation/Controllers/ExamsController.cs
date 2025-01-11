@@ -52,7 +52,7 @@ namespace ClassroomManagementPresentation.Controllers
         }
 
         [HttpDelete("/examsessions")]
-        public async Task<ActionResult> DeleteExamSessions( ExamSessionDeleteDto dto)
+        public async Task<ActionResult> DeleteExamSessions(ExamSessionDeleteDto dto)
         {
 
             await _serviceManager.ExamService.DeleteAllExamSessionsAsync(dto);

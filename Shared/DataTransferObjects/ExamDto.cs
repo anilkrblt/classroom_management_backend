@@ -36,6 +36,7 @@ namespace Shared.DataTransferObjects
     {
         public int Year { get; set; }
         public string Type { get; set; }
+        public string Term { get; set; }
     }
 
 

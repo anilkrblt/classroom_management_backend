@@ -16,8 +16,10 @@ namespace Repository
         public async Task<IEnumerable<ExamSession>> GetAllExamSessionsAsync(bool trackChanges)
         {
             return await FindAll(trackChanges)
-                .OrderBy(es => es.ExamDate)
-                .ToListAsync();
+                        .Include(es => es.Exam)
+                            .ThenInclude(e => e.Lecture)
+                        .OrderBy(es => es.ExamDate)
+                        .ToListAsync();
         }
 
         public async Task<ExamSession> GetExamSessionAsync(int examSessionId, bool trackChanges)
@@ -60,7 +62,9 @@ namespace Repository
             {
 
                 Delete(exam);
+
             }
+            RepositoryContext.SaveChanges();
         }
     }
 }
