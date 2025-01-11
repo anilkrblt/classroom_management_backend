@@ -12,7 +12,7 @@ namespace Service.Contracts
         // Get a specific room by ID
         Task<RoomDto> GetRoomByIdAsync(int roomId, bool trackChanges);
 
-        
+
 
         // Get rooms by building ID
         Task<IEnumerable<RoomDto>> GetRoomsByBuildingIdAsync(int buildingId, bool trackChanges);
@@ -22,6 +22,8 @@ namespace Service.Contracts
 
         // Create a new room
         Task<RoomDto> CreateRoomAsync(RoomCreationForBuildingDto creationDto);
+        Task UpdateRoomStatusByNameAsync(string roomName);
+
 
         // Update an existing room
         Task UpdateRoomAsync(int roomId, RoomUpdateForBuildingDto updateDto);

@@ -25,7 +25,7 @@ namespace Service
         {
             var rooms = await _repositoryManager.Room.GetAllRoomsAsync(trackChanges);
             var roomDto = _mapper.Map<IEnumerable<RoomDto>>(rooms);
-            
+
             return roomDto;
 
 
@@ -115,6 +115,17 @@ namespace Service
                 throw new KeyNotFoundException($"Room with ID {roomId} not found.");
 
             await _repositoryManager.Room.DeleteRoomAsync(room);
+            await _repositoryManager.SaveAsync();
+        }
+
+        public async Task UpdateRoomStatusByNameAsync(string roomName)
+        {
+            var room = await _repositoryManager.Room.GetRoomByNameAsync(roomName, true);
+            if (room == null)
+                throw new KeyNotFoundException($"Room with name {roomName} not found.");
+
+            room.IsActive = false;
+
             await _repositoryManager.SaveAsync();
         }
     }

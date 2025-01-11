@@ -89,6 +89,12 @@ namespace ClassroomManagementPresentation.Controllers
             return NoContent();
         }
 
+        [HttpPut("close")]
+        public async Task<ActionResult> CloseRoom(string roomName)
+        {
+            await _serviceManager.RoomService.UpdateRoomStatusByNameAsync(roomName);
+            return NoContent();
+        }
 
         // DELETE: api/Rooms/{id}
         [HttpDelete("{id}")]
