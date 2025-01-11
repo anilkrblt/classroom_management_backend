@@ -63,6 +63,7 @@ namespace Shared.DataTransferObjects
         public int Grade { get; set; }
         public string DepartmentName { get; set; }
         public string RoomNames { get; set; }
+        [JsonPropertyName("Duration (minute)")]
         public int Duration { get; set; }
 
 

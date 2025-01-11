@@ -168,11 +168,11 @@ namespace Service
                 var responseData = await response.Content.ReadAsStringAsync();
                 Console.WriteLine("Response: " + responseData);
 
-                var examSchedule = JsonSerializer.Deserialize<List<ExamScheduleDto>>(responseData);
+                var examSchedule = JsonSerializer.Deserialize<ExamScheduleAndMoreDto>(responseData);
 
                 var examScheduleExtended = new List<ExamScheduleExtendedDto>();
                 var lectures = await _repositoryManager.Lecture.GetAllLecturesAsync(false);
-                foreach (var exam in examSchedule!)
+                foreach (var exam in examSchedule!.ExamSchedule)
                 {
                     var lecture = lectures.Where(l => l.Code == exam.LectureCode).FirstOrDefault();
                     var item = new ExamScheduleExtendedDto
