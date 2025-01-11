@@ -32,6 +32,11 @@ namespace Shared.DataTransferObjects
         public string Term { get; set; }
         public string Type { get; set; }
     }
+    public record ExamSessionDeleteDto
+    {
+        public int Year { get; set; }
+        public string Type { get; set; }
+    }
 
 
     public record ExamScheduleAndMoreDto

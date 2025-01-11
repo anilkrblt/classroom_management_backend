@@ -58,5 +58,15 @@ namespace Repository
                 Delete(existingExam);
             }
         }
+
+        public async Task<Exam> GetExamWithLectureCodeAsync(string Term, string Type, string LectureCode, int ExamYear, bool trackChanges)
+        {
+            return await FindByCondition(e => e.LectureCode == LectureCode && e.Type == Type && e.Lecture.Term == Term && e.Year == ExamYear, trackChanges)
+                        .Include(e => e.Lecture)
+                            .ThenInclude(l => l.Enrollments)
+                        .Include(e => e.Lecture)
+                            .ThenInclude(l => l.Department)
+                        .FirstOrDefaultAsync();
+        }
     }
 }

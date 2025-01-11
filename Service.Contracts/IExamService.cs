@@ -18,6 +18,7 @@ namespace Service.Contracts
         Task<List<ExamListDto>> CreateAllExamsAsync(ExamCreateDto dto);
         Task<ExamScheduleExtendedAndMoreDto> CreateAllExamSessionsAsync(ExamSessionCreateDto dto);
 
+        Task DeleteAllExamSessionsAsync(ExamSessionDeleteDto dto);
 
         Task CreateExamAsync(ExamDto examDto);
 

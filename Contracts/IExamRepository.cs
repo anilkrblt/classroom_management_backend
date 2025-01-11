@@ -8,6 +8,7 @@ namespace Contracts
     {
         Task<IEnumerable<Exam>> GetAllExamsAsync(bool trackChanges);
         Task<Exam> GetExamAsync(int examId, bool trackChanges);
+        Task<Exam> GetExamWithLectureCodeAsync(string Term, string Type, string LectureCode, int ExamYear, bool trackChanges);
 
         void CreateExam(Exam exam);
 

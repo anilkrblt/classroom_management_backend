@@ -16,7 +16,7 @@ namespace Repository
         public async Task<IEnumerable<ExamSession>> GetAllExamSessionsAsync(bool trackChanges)
         {
             return await FindAll(trackChanges)
-                .OrderBy(es => es.ExamDate) 
+                .OrderBy(es => es.ExamDate)
                 .ToListAsync();
         }
 
@@ -51,6 +51,15 @@ namespace Repository
             if (existingExamSession != null)
             {
                 Delete(existingExamSession);
+            }
+        }
+
+        public void DeleteAllExamSessions(List<ExamSession> examSessions)
+        {
+            foreach (var exam in examSessions)
+            {
+
+                Delete(exam);
             }
         }
     }

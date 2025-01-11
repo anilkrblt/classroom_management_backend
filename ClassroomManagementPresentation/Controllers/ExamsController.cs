@@ -51,7 +51,13 @@ namespace ClassroomManagementPresentation.Controllers
             return examShedule;
         }
 
+        [HttpDelete("/examsessions")]
+        public async Task<ActionResult> DeleteExamSessions( ExamSessionDeleteDto dto)
+        {
 
+            await _serviceManager.ExamService.DeleteAllExamSessionsAsync(dto);
+            return Ok();
+        }
 
         // PUT: api/Exams/{id}
         [HttpPut("{id}")]

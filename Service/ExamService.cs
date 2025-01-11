@@ -193,9 +193,10 @@ namespace Service
                         DepartmentName = lecture.Department.Name,
                         Grade = lecture.Grade,
                     };
+                    CreateExamSession(item, dto.Term, dto.Type, exam.LectureCode, dto.Year);
                     examScheduleExtended.Add(item);
-
                 }
+                await _repositoryManager.SaveAsync();
                 foreach (var lecCode in examSchedule!.UnAssignedLectures)
                 {
                     var lecture = lectures.Where(l => l.Code == lecCode).FirstOrDefault();
@@ -227,5 +228,70 @@ namespace Service
 
             }
         }
+
+        public async Task DeleteAllExamSessionsAsync(ExamSessionDeleteDto dto)
+        {
+            var exams = await _repositoryManager.ExamSession.GetAllExamSessionsAsync(true);
+            var examList = exams.Where(e => dto.Year == e.Exam.Year && dto.Type == e.Exam.Type).ToList();
+            _repositoryManager.ExamSession.DeleteAllExamSessions(examList);
+        }
+
+
+
+        public async Task CreateExamSession(ExamScheduleExtendedDto dto, string Term, string Type, string LectureCode, int ExamYear)
+        {
+            if (dto == null)
+            {
+                throw new ArgumentNullException(nameof(dto), "DTO null olamaz.");
+            }
+
+            if (string.IsNullOrWhiteSpace(dto.RoomNames))
+            {
+                throw new ArgumentException("RoomNames null veya boş olamaz.");
+            }
+
+            var examRooms = dto.RoomNames.Split(',')
+                                         .Select(r => r.Trim())
+                                         .Where(r => !string.IsNullOrEmpty(r))
+                                         .ToList();
+
+            var exam = await _repositoryManager.Exam.GetExamWithLectureCodeAsync(Term, Type, LectureCode, ExamYear, false);
+            if (exam == null)
+            {
+                throw new InvalidOperationException("Belirtilen kriterlere uygun bir sınav bulunamadı.");
+            }
+
+            foreach (var roomName in examRooms)
+            {
+                var room = await _repositoryManager.Room.GetRoomByNameAsync(roomName, false);
+                if (room == null)
+                {
+                    throw new InvalidOperationException($"'{roomName}' adlı oda bulunamadı.");
+                }
+
+                if (DateTime.TryParse(dto.Date, out DateTime examDate) &&
+                    TimeSpan.TryParse(dto.StartTime, out TimeSpan startTime) &&
+                    TimeSpan.TryParse(dto.EndTime, out TimeSpan endTime))
+                {
+                    var examSession = new ExamSession
+                    {
+                        ExamDate = examDate,
+                        StartTime = startTime,
+                        EndTime = endTime,
+                        RoomId = room.RoomId,
+                        ExamId = exam.ExamId
+                    };
+
+                    _repositoryManager.ExamSession.CreateExamSession(examSession);
+                }
+                else
+                {
+                    throw new ArgumentException("Geçersiz tarih veya saat formatı.");
+                }
+            }
+
+            await _repositoryManager.SaveAsync();
+        }
+
     }
 }

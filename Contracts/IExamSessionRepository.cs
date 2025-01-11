@@ -12,6 +12,9 @@ namespace Contracts
         void CreateExamSession(ExamSession examSession);
 
         Task UpdateExamSessionAsync(ExamSession examSession);
+
+        void DeleteAllExamSessions(List<ExamSession> examSessions);
+
         Task DeleteExamSessionAsync(ExamSession examSession);
     }
 }
