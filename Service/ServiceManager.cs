@@ -31,7 +31,7 @@ namespace Service
 
 
         public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper,
-                              UserManager<User> userManager, IConfiguration configuration)
+                              UserManager<User> userManager, IConfiguration configuration, ILoggerManager logger)
         {
             _studentService = new Lazy<IStudentService>(() =>
                 new StudentService(repositoryManager, mapper));
@@ -58,7 +58,7 @@ namespace Service
                 new LectureService(repositoryManager, mapper));
 
             _lectureSessionService = new Lazy<ILectureSessionService>(() =>
-                new LectureSessionService(repositoryManager, mapper));
+                new LectureSessionService(repositoryManager, mapper, logger));
 
             _roomService = new Lazy<IRoomService>(() =>
                 new RoomService(repositoryManager, mapper));

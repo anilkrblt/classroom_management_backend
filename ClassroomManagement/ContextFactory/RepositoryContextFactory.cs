@@ -18,9 +18,10 @@ namespace ClassroomManagement.ContextFactory
              .Build();
 
             var builder = new DbContextOptionsBuilder<RepositoryContext>()
-
-           //.UseSqlServer(configuration.GetConnectionString("sqlConnection"), b => b.MigrationsAssembly("CompanyEmployees"));
+        
+           //.UseSqlServer(configuration.GetConnectionString("sqlConnection"), b => b.MigrationsAssembly("ClassroomManagement"));
            .UseSqlite(configuration.GetConnectionString("sqliteConnection"), b => b.MigrationsAssembly("ClassroomManagement"));
+           
             return new RepositoryContext(builder.Options);
         }
     }

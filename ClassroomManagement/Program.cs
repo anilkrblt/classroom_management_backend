@@ -6,17 +6,22 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using Contracts;
+using NLog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Load NLog configuration
-// LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
+LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 
 // Configure services using extensions
 builder.Services.ConfigureCors();
+
 builder.Services.ConfigureISSIntegration();
+
 builder.Services.ConfigureLoggerService();
+
 builder.Services.ConfigureRepositoryManager();
+
 builder.Services.ConfigureServiceManager();
 
 builder.Services.ConfigureSqlContext(builder.Configuration);
