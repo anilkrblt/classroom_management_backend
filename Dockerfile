@@ -11,6 +11,7 @@ COPY ["Repository/Repository.csproj", "Repository/"]
 COPY ["LoggerService/LoggerService.csproj", "LoggerService/"]
 COPY ["Entities/Entities.csproj", "Entities/"]
 COPY ["Contracts/Contracts.csproj", "Contracts/"]
+COPY ["ClassroomManagement.Tests/ClassroomManagement.Tests.csproj", "ClassroomManagement.Tests/"]
 COPY ["ClassroomManagementPresentation/ClassroomManagementPresentation.csproj", "ClassroomManagementPresentation/"]
 COPY ["ClassroomManagement/ClassroomManagement.csproj", "ClassroomManagement/"]
 

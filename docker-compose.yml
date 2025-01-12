@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  classroom-management:
+    image: classroom-management
+    ports:
+      - "8080:8080"
+    environment:
+      - SECRET=YourVeryStrongAndLongSecretKey123!
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ./ClassroomManagement/ClassroomManagement.db:/app/ClassroomManagement.db
