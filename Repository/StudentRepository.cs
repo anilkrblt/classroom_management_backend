@@ -21,6 +21,8 @@ namespace Repository
                         .ThenInclude(l => l.LectureSessions)
                             .ThenInclude(ls => ls.Room)
                 .Include(s => s.Department)
+                .Include(s => s.ClubMemberships)
+                    .ThenInclude(cm => cm.Club)
                 .OrderBy(s => s.FullName)
                 .ToListAsync();
         }
