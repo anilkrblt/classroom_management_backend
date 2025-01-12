@@ -24,10 +24,7 @@ COPY . .
 # Web API projesinin bulunduğu dizine geçiş yap
 WORKDIR "/src/ClassroomManagement"
 
-# SQLite veritabanı dosyasını publish dizinine kopyala
-COPY ["ClassroomManagement/ClassroomManagement.db", "./"]
-
-# Yayınlama işlemi
+# Yayınlama işlemi (SQLite dosyasını publish dizinine kopyalayarak)
 RUN dotnet publish "ClassroomManagement.csproj" -c Release -o /app/publish
 
 # 2. Aşama: Çalıştırma imajı için resmi .NET Runtime imajını kullan
@@ -36,6 +33,9 @@ WORKDIR /app
 
 # Publish edilmiş dosyaları kopyala
 COPY --from=build /app/publish .
+
+# SQLite veritabanını kopyala
+COPY ["ClassroomManagement/ClassroomManagement.db", "/app/ClassroomManagement.db"]
 
 # Portu belirt (Render genellikle 10000 ve üstü portları kullanır, burada 8080 örnek)
 EXPOSE 8080
