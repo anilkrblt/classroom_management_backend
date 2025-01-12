@@ -19,7 +19,7 @@ namespace ClassroomManagementPresentation.Controllers
         }
 
         // GET: api/Departments
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DepartmentDto>>> GetDepartments()
         {

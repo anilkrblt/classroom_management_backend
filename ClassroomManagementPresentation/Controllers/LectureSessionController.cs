@@ -16,49 +16,49 @@ namespace ClassroomManagementPresentation.Controllers
         {
             _serviceManager = serviceManager;
         }
-        
-/*
-        // GET: api/LectureSessions
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<LectureSessionDto>>> GetLectureSessions()
-        {
-            var lectureSessions = await _serviceManager.LectureSessionService.GetAllLectureSessionsAsync(trackChanges: false);
-            return Ok(lectureSessions);
-        }
 
-        // GET: api/LectureSessions/{id}
-        [HttpGet("{id}")]
-        public async Task<ActionResult<LectureSessionDto>> GetLectureSession(int id)
-        {
-            var lectureSession = await _serviceManager.LectureSessionService.GetLectureSessionByIdAsync(id, trackChanges: false);
+        /*
+                // GET: api/LectureSessions
+                [HttpGet]
+                public async Task<ActionResult<IEnumerable<LectureSessionDto>>> GetLectureSessions()
+                {
+                    var lectureSessions = await _serviceManager.LectureSessionService.GetAllLectureSessionsAsync(trackChanges: false);
+                    return Ok(lectureSessions);
+                }
 
-            if (lectureSession == null)
-                return NotFound($"LectureSession with ID {id} not found.");
+                // GET: api/LectureSessions/{id}
+                [HttpGet("{id}")]
+                public async Task<ActionResult<LectureSessionDto>> GetLectureSession(int id)
+                {
+                    var lectureSession = await _serviceManager.LectureSessionService.GetLectureSessionByIdAsync(id, trackChanges: false);
 
-            return Ok(lectureSession);
-        }
+                    if (lectureSession == null)
+                        return NotFound($"LectureSession with ID {id} not found.");
 
-        // GET: api/LectureSessions/ByInstructor/{instructorId}
-        [HttpGet("ByInstructor/{instructorId}")]
-        public async Task<ActionResult<IEnumerable<LectureSessionDto>>> GetLectureSessionsByInstructor(int instructorId)
-        {
-            var lectureSessions = await _serviceManager.LectureSessionService.GetLectureSessionsByInstructorIdAsync(instructorId, trackChanges: false);
+                    return Ok(lectureSession);
+                }
 
-            if (lectureSessions == null || !lectureSessions.Any())
-                return NotFound($"No lecture sessions found for Instructor with ID {instructorId}.");
+                // GET: api/LectureSessions/ByInstructor/{instructorId}
+                [HttpGet("ByInstructor/{instructorId}")]
+                public async Task<ActionResult<IEnumerable<LectureSessionDto>>> GetLectureSessionsByInstructor(int instructorId)
+                {
+                    var lectureSessions = await _serviceManager.LectureSessionService.GetLectureSessionsByInstructorIdAsync(instructorId, trackChanges: false);
 
-            return Ok(lectureSessions);
+                    if (lectureSessions == null || !lectureSessions.Any())
+                        return NotFound($"No lecture sessions found for Instructor with ID {instructorId}.");
 
-        // POST: api/LectureSessions
-        [HttpPost]
-        public async Task<ActionResult> CreateLectureSession([FromBody] LectureSessionDto lectureSessionDto)
-        {
-            if (lectureSessionDto == null)
-                return BadRequest("LectureSessionDto object is null.");
+                    return Ok(lectureSessions);
 
-            await _serviceManager.LectureSessionService.CreateLectureSessionAsync(lectureSessionDto);
-            return CreatedAtAction(nameof(GetLectureSession), new { id = lectureSessionDto.LectureSessionId }, lectureSessionDto);
-        }*/
+                // POST: api/LectureSessions
+                [HttpPost]
+                public async Task<ActionResult> CreateLectureSession([FromBody] LectureSessionDto lectureSessionDto)
+                {
+                    if (lectureSessionDto == null)
+                        return BadRequest("LectureSessionDto object is null.");
+
+                    await _serviceManager.LectureSessionService.CreateLectureSessionAsync(lectureSessionDto);
+                    return CreatedAtAction(nameof(GetLectureSession), new { id = lectureSessionDto.LectureSessionId }, lectureSessionDto);
+                }*/
 
         // PUT: api/LectureSessions/{id}
         [HttpPut("{lectureSessionId}")]
@@ -69,6 +69,12 @@ namespace ClassroomManagementPresentation.Controllers
 
             await _serviceManager.LectureSessionService.UpdateLectureSessionAsync(lectureSessionId, dto);
             return NoContent();
+        }
+        [HttpPost("/schedule")]
+        public async Task<ActionResult> CreateSchedule()
+        {
+            await _serviceManager.LectureSessionService.CreateSchedule();
+            return Ok();
         }
 
         // DELETE: api/LectureSessions/{id}

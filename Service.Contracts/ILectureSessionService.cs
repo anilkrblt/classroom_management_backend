@@ -23,5 +23,7 @@ namespace Service.Contracts
 
         // Delete a lecture session
         Task DeleteLectureSessionAsync(int lectureSessionId);
+
+        Task CreateSchedule();
     }
 }

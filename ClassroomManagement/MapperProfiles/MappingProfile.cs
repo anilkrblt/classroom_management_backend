@@ -196,16 +196,36 @@ namespace ClassroomManagement.MapperProfiles
 
 
             CreateMap<Student, StudentDto>()
-                .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.Name))
-                .ForMember(dest => dest.Schedule, opt => opt.MapFrom(src =>
-                    src.Enrollments.SelectMany(e => e.Lecture.LectureSessions)));
+             .ForMember(dest => dest.Grade,
+                        opt => opt.MapFrom(src => src.GradeLevel))
+             .ForMember(dest => dest.IsManager,
+                        opt => opt.MapFrom(src => src.ClubMemberships.Any(cm => cm.IsClubManager) ? 1 : 0))
+             .ForMember(dest => dest.ClubId,
+           opt => opt.MapFrom(src => src.ClubMemberships.Any(cm => cm.IsClubManager)
+                                    ? src.ClubMemberships.First(cm => cm.IsClubManager).ClubId
+                                    : 0))
 
+             .ForMember(dest => dest.DepartmentName,
+                        opt => opt.MapFrom(src => src.Department.Name))
+             .ForMember(dest => dest.Schedule,
+                        opt => opt.MapFrom(src =>
+                            src.Enrollments.SelectMany(e => e.Lecture.LectureSessions)
+                                .Select(ls => new UserLecturesDto
+                                {
+                                    LectureSessionId = ls.LectureSessionId,
+                                    LectureCode = ls.Lecture.Code,
+                                    LectureName = ls.Lecture.Name,
+                                    RoomName = ls.Room.Name,
+                                    StartTime = ls.StartTime,
+                                    EndTime = ls.EndTime,
+                                    Date = ls.Date
+                                }).ToList()));
 
             CreateMap<Exam, ExamSessionPostDto>()
                 .ForMember(dest => dest.LectureCode, opt => opt.MapFrom(src => src.LectureCode))
                 .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.Duration))
                 .ForMember(dest => dest.Grade, opt => opt.MapFrom(src => src.Lecture.Grade))
-                .ForMember(dest => dest.StudentCount, opt => opt.MapFrom(src => src.Lecture.Enrollments.Count == 0 ? 50: 45));
+                .ForMember(dest => dest.StudentCount, opt => opt.MapFrom(src => src.Lecture.Enrollments.Count == 0 ? 50 : 45));
 
 
 
@@ -267,7 +287,7 @@ namespace ClassroomManagement.MapperProfiles
 
 
 
-            CreateMap<Room, ExamRoomDto>().ForMember(dest => dest.RoomName,opt => opt.MapFrom(src => src.Name));
+            CreateMap<Room, ExamRoomDto>().ForMember(dest => dest.RoomName, opt => opt.MapFrom(src => src.Name));
 
             CreateMap<Exam, ExamListDto>().ForMember(dest => dest.DepartmentName,
                                              opt => opt.MapFrom(src => src.Lecture.Department.Name));

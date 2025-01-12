@@ -7,6 +7,8 @@
         public string Email { get; set; }
         public string DepartmentName { get; set; }
         public int Grade { get; set; }
+        public int IsManager { get; set; }
+        public int ClubId { get; set; } // başkanı oldugu klübün id si
         public List<UserLecturesDto> Schedule { get; set; }
     }
     public record UserLecturesDto

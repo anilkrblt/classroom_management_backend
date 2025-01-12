@@ -16,6 +16,8 @@ namespace Repository
         public async Task<IEnumerable<InstructorPreference>> GetAllInstructorPreferencesAsync(bool trackChanges)
         {
             return await FindAll(trackChanges)
+                .Include(ip => ip.Lecture)
+                .Include(ip => ip.Instructor)
                 .OrderBy(ip => ip.PreferenceId) 
                 .ToListAsync();
         }
