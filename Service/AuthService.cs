@@ -110,6 +110,7 @@ namespace Service
 
 
             var isValid = _user != null && await _userManager.CheckPasswordAsync(_user, userForAuth.Password);
+            Console.WriteLine("giriş durumu: ", isValid);
             if (!isValid)
             {
                 return (false, [], "");
@@ -117,6 +118,12 @@ namespace Service
 
             var userId = _user.Id.ToString();
             var roles = await _userManager.GetRolesAsync(_user);
+            foreach (var rol in roles)
+            {
+                Console.WriteLine($"giriş durumu: {rol}" );
+
+            }
+
 
             return (true, roles.ToList(), userId);
         }

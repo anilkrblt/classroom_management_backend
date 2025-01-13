@@ -1,1 +1,552 @@
-<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="ClassroomManagement.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="1"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="4901"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="ExamSession" custom_title="0" dock_id="1" table="4,11:mainExamSession"/><dock_state state="000000ff00000000fd00000001000000020000043b000002e6fc0100000001fb000000160064006f0063006b00420072006f007700730065003101000000000000043b0000011b00ffffff000002580000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="AspNetRoleClaims" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="29"/><column index="2" value="47"/><column index="3" value="66"/><column index="4" value="70"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="ExamSession" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="93"/><column index="2" value="156"/><column index="3" value="70"/><column index="4" value="70"/><column index="5" value="55"/><column index="6" value="53"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1*">DELETE FROM ExamSession;</sql><current_tab id="0"/></tab_sql></sqlb_project>
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="ClassroomManagement.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="1"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="4901"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="Club" custom_title="0" dock_id="1" table="4,4:mainClub"/><dock_state state="000000ff00000000fd00000001000000020000043b000002e6fc0100000001fb000000160064006f0063006b00420072006f007700730065003101000000000000043b0000012700ffffff000002580000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="AspNetRoleClaims" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="29"/><column index="2" value="47"/><column index="3" value="66"/><column index="4" value="70"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="AspNetRoles" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="29"/><column index="2" value="85"/><column index="3" value="103"/><column index="4" value="113"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="AspNetUserRoles" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="288"/><column index="2" value="47"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="AspNetUsers" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="288"/><column index="2" value="65"/><column index="3" value="78"/><column index="4" value="226"/><column index="5" value="226"/><column index="6" value="226"/><column index="7" value="226"/><column index="8" value="96"/><column index="9" value="300"/><column index="10" value="257"/><column index="11" value="288"/><column index="12" value="87"/><column index="13" value="145"/><column index="14" value="111"/><column index="15" value="73"/><column index="16" value="96"/><column index="17" value="111"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Club" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="45"/><column index="2" value="249"/><column index="3" value="88"/><column index="4" value="300"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="ClubReservation" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="29"/><column index="2" value="47"/><column index="3" value="89"/><column index="4" value="226"/><column index="5" value="117"/><column index="6" value="109"/><column index="7" value="202"/><column index="8" value="70"/><column index="9" value="300"/><column index="10" value="66"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Department" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="87"/><column index="2" value="273"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Employee" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="74"/><column index="2" value="148"/><column index="3" value="55"/><column index="4" value="78"/><column index="5" value="48"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Enrollment" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="81"/><column index="2" value="66"/><column index="3" value="79"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="ExamSession" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="93"/><column index="2" value="156"/><column index="3" value="70"/><column index="4" value="70"/><column index="5" value="55"/><column index="6" value="53"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Instructor" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="77"/><column index="2" value="89"/><column index="3" value="210"/><column index="4" value="55"/><column index="5" value="132"/><column index="6" value="78"/><column index="7" value="288"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Lecture" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort><column index="0" mode="0"/></sort><column_widths><column index="1" value="70"/><column index="2" value="300"/><column index="3" value="41"/><column index="4" value="46"/><column index="5" value="89"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="LectureInstructor" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="79"/><column index="2" value="79"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="LectureSession" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort><column index="7" mode="0"/></sort><column_widths><column index="1" value="104"/><column index="2" value="70"/><column index="3" value="56"/><column index="4" value="79"/><column index="5" value="55"/><column index="6" value="79"/><column index="7" value="87"/><column index="8" value="156"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Request" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="66"/><column index="2" value="257"/><column index="3" value="132"/><column index="4" value="210"/><column index="5" value="70"/><column index="6" value="101"/><column index="7" value="300"/><column index="8" value="218"/><column index="9" value="218"/><column index="10" value="93"/><column index="11" value="46"/><column index="12" value="55"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Reservation" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="87"/><column index="2" value="70"/><column index="3" value="70"/><column index="4" value="156"/><column index="5" value="55"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Room" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="53"/><column index="2" value="41"/><column index="3" value="56"/><column index="4" value="86"/><column index="5" value="54"/><column index="6" value="78"/><column index="7" value="117"/><column index="8" value="195"/><column index="9" value="68"/><column index="10" value="89"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Student" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="64"/><column index="2" value="89"/><column index="3" value="226"/><column index="4" value="117"/><column index="5" value="70"/><column index="6" value="288"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1*">DELETE FROM Enrollment;
+INSERT INTO Enrollment (EnrollmentId, StudentId, LectureCode)
+VALUES
+    -- StudentId = 1
+    (1, 1, 'BIL101'),
+    (2, 1, 'BIL205'),
+    (3, 1, 'ZYD101'),
+    (4, 1, 'BIL408'),
+    (5, 1, 'BIL201'),
+    (6, 1, 'BIL304'),
+
+    -- StudentId = 2
+    (7, 2, 'FIZ101'),
+    (8, 2, 'BIL202'),
+    (9, 2, 'BILYD302'),
+    (10, 2, 'ZTD101'),
+    (11, 2, 'BIL205'),
+    (12, 2, 'BIL305'),
+
+    -- StudentId = 3
+    (13, 3, 'FIZ101'),
+    (14, 3, 'BIL104'),
+    (15, 3, 'BIL413'),
+    (16, 3, 'BIL201'),
+    (17, 3, 'BIL403'),
+    (18, 3, 'BIL302'),
+
+    -- StudentId = 4
+    (19, 4, 'BILYD202'),
+    (20, 4, 'ZAI101'),
+    (21, 4, 'MAT101'),
+    (22, 4, 'BIL410'),
+    (23, 4, 'BIL203'),
+    (24, 4, 'BIL401'),
+
+    -- StudentId = 5
+    (25, 5, 'BIL306'),
+    (26, 5, 'BIL406'),
+    (27, 5, 'BIL205'),
+    (28, 5, 'ZTD101'),
+    (29, 5, 'BIL373'),
+    (30, 5, 'BIL402'),
+
+    -- StudentId = 6
+    (31, 6, 'BIL412'),
+    (32, 6, 'BIL303'),
+    (33, 6, 'ZAI101'),
+    (34, 6, 'BIL104'),
+    (35, 6, 'BIL302'),
+    (36, 6, 'BIL373'),
+
+    -- StudentId = 7
+    (37, 7, 'BIL201'),
+    (38, 7, 'ZTD101'),
+    (39, 7, 'BIL401'),
+    (40, 7, 'BIL409'),
+    (41, 7, 'BIL404'),
+    (42, 7, 'BIL304'),
+
+    -- StudentId = 8
+    (43, 8, 'FIZ101'),
+    (44, 8, 'BIL306'),
+    (45, 8, 'BIL408'),
+    (46, 8, 'BIL405'),
+    (47, 8, 'BIL413'),
+    (48, 8, 'BIL305'),
+
+    -- StudentId = 9
+    (49, 9, 'BIL202'),
+    (50, 9, 'ZAI101'),
+    (51, 9, 'BIL303'),
+    (52, 9, 'BILYD202'),
+    (53, 9, 'MAT101'),
+    (54, 9, 'BIL412'),
+
+    -- StudentId = 10
+    (55, 10, 'BIL403'),
+    (56, 10, 'BIL406'),
+    (57, 10, 'BIL409'),
+    (58, 10, 'BIL203'),
+    (59, 10, 'BIL302'),
+    (60, 10, 'BIL104'),
+
+    -- StudentId = 11
+    (61, 11, 'BIL305'),
+    (62, 11, 'ZYD101'),
+    (63, 11, 'FIZ101'),
+    (64, 11, 'BIL205'),
+    (65, 11, 'BIL408'),
+    (66, 11, 'BIL412'),
+
+    -- StudentId = 12
+    (67, 12, 'BIL413'),
+    (68, 12, 'BIL304'),
+    (69, 12, 'BIL402'),
+    (70, 12, 'ZTD101'),
+    (71, 12, 'BIL403'),
+    (72, 12, 'BIL202'),
+
+    -- StudentId = 13
+    (73, 13, 'BIL205'),
+    (74, 13, 'FIZ101'),
+    (75, 13, 'BIL201'),
+    (76, 13, 'BIL401'),
+    (77, 13, 'BIL202'),
+    (78, 13, 'BIL305'),
+
+    -- StudentId = 14
+    (79, 14, 'BIL201'),
+    (80, 14, 'BIL373'),
+    (81, 14, 'ZAI101'),
+    (82, 14, 'BIL303'),
+    (83, 14, 'BIL410'),
+    (84, 14, 'BIL405'),
+
+    -- StudentId = 15
+    (85, 15, 'BIL104'),
+    (86, 15, 'BIL204'),
+    (87, 15, 'BIL403'),
+    (88, 15, 'BIL404'),
+    (89, 15, 'BIL302'),
+    (90, 15, 'BIL402'),
+
+    -- StudentId = 16
+    (91, 16, 'BIL306'),
+    (92, 16, 'BIL305'),
+    (93, 16, 'BIL401'),
+    (94, 16, 'BIL203'),
+    (95, 16, 'BIL409'),
+    (96, 16, 'BIL411'),
+
+    -- StudentId = 17
+    (97, 17, 'ZTD101'),
+    (98, 17, 'BIL373'),
+    (99, 17, 'BIL410'),
+    (100, 17, 'BIL404'),
+    (101, 17, 'BIL303'),
+    (102, 17, 'FIZ101'),
+
+    -- StudentId = 18
+    (103, 18, 'BIL406'),
+    (104, 18, 'BIL205'),
+    (105, 18, 'BIL202'),
+    (106, 18, 'BIL403'),
+    (107, 18, 'BIL306'),
+    (108, 18, 'BIL104'),
+
+    -- StudentId = 19
+    (109, 19, 'BIL201'),
+    (110, 19, 'ZYD101'),
+    (111, 19, 'BIL413'),
+    (112, 19, 'BIL305'),
+    (113, 19, 'BIL412'),
+    (114, 19, 'BIL373'),
+
+    -- StudentId = 20
+    (115, 20, 'BIL302'),
+    (116, 20, 'BIL412'),
+    (117, 20, 'MAT101'),
+    (118, 20, 'BIL304'),
+    (119, 20, 'ZAI101'),
+    (120, 20, 'BIL409'),
+
+    -- StudentId = 21
+    (121, 21, 'BIL203'),
+    (122, 21, 'BIL406'),
+    (123, 21, 'ZTD101'),
+    (124, 21, 'BIL104'),
+    (125, 21, 'BIL402'),
+    (126, 21, 'BIL303'),
+
+    -- StudentId = 22
+    (127, 22, 'BIL404'),
+    (128, 22, 'BIL413'),
+    (129, 22, 'BIL202'),
+    (130, 22, 'BIL405'),
+    (131, 22, 'BIL305'),
+    (132, 22, 'BIL302'),
+
+    -- StudentId = 23
+    (133, 23, 'ZYD101'),
+    (134, 23, 'BIL304'),
+    (135, 23, 'BIL306'),
+    (136, 23, 'BIL405'),
+    (137, 23, 'BIL413'),
+    (138, 23, 'FIZ101');
+DELETE FROM Enrollment;
+INSERT INTO Enrollment (EnrollmentId, StudentId, LectureCode)
+VALUES
+    -- StudentId = 1 (6 ders)
+    (1, 1, 'BIL101'),
+    (2, 1, 'FIZ101'),
+    (3, 1, 'BIL306'),
+    (4, 1, 'BIL304'),
+    (6, 1, 'BIL205'),
+
+    -- StudentId = 2
+    (7, 2, 'BIL104'),
+    (8, 2, 'BIL201'),
+    (9, 2, 'BIL412'),
+    (10, 2, 'BIL202'),
+    (11, 2, 'BIL404'),
+    (12, 2, 'BIL409'),
+
+    -- StudentId = 3
+    (13, 3, 'ZTD101'),
+    (14, 3, 'BIL405'),
+    (15, 3, 'BIL411'),
+    (16, 3, 'BIL413'),
+    (17, 3, 'BIL104'),
+    (18, 3, 'BIL303'),
+
+    -- StudentId = 4
+    (19, 4, 'ZAI101'),
+    (20, 4, 'BIL104'),
+    (21, 4, 'BIL305'),
+    (22, 4, 'BIL302'),
+    (23, 4, 'FIZ101'),
+    (24, 4, 'BIL406'),
+
+    -- StudentId = 5
+    (25, 5, 'BIL205'),
+    (26, 5, 'ZYD101'),
+    (27, 5, 'BIL201'),
+    (28, 5, 'BIL407'),  -- Diyelim listede yoksa bile &quot;rastgele&quot; diye ekledik ;)
+    (29, 5, 'BIL304'),
+    (30, 5, 'BIL202'),
+
+    -- StudentId = 6
+    (31, 6, 'BIL203'),
+    (32, 6, 'BIL305'),
+    (33, 6, 'BIL410'),
+    (34, 6, 'FIZ101'),
+    (35, 6, 'BIL401'),
+    (36, 6, 'BIL104'),
+
+    -- StudentId = 7
+    (37, 7, 'BIL202'),
+    (38, 7, 'ZAI101'),
+    (39, 7, 'BIL305'),
+    (40, 7, 'BIL201'),
+    (41, 7, 'MAT101'),
+    (42, 7, 'BIL404'),
+
+    -- StudentId = 8
+    (43, 8, 'BIL413'),
+    (44, 8, 'BIL205'),
+    (45, 8, 'BIL203'),
+    (46, 8, 'BIL373'),
+    (47, 8, 'BIL409'),
+    (48, 8, 'BIL408'),
+
+    -- StudentId = 9
+    (49, 9, 'BIL304'),
+    (50, 9, 'BIL402'),
+    (51, 9, 'ZTD101'),
+    (52, 9, 'BIL205'),
+    (53, 9, 'FIZ101'),
+    (54, 9, 'BIL306'),
+
+    -- StudentId = 10
+    (55, 10, 'BIL403'),
+    (56, 10, 'BIL302'),
+    (57, 10, 'BIL413'),
+    (58, 10, 'BIL411'),
+    (59, 10, 'BIL412'),
+    (60, 10, 'ZAI101'),
+
+    -- StudentId = 11
+    (61, 11, 'BIL201'),
+    (62, 11, 'BIL204'),
+    (63, 11, 'BIL410'),
+    (64, 11, 'BIL303'),
+    (65, 11, 'BIL406'),
+    (66, 11, 'BIL104'),
+
+    -- StudentId = 12
+    (67, 12, 'BIL412'),
+    (68, 12, 'BIL205'),
+    (69, 12, 'BIL201'),
+    (70, 12, 'BIL302'),
+    (71, 12, 'BIL304'),
+    (72, 12, 'ZTD101'),
+
+    -- StudentId = 13
+    (73, 13, 'BIL202'),
+    (74, 13, 'BIL402'),
+    (75, 13, 'FIZ101'),
+    (76, 13, 'BIL404'),
+    (77, 13, 'BIL106'), -- Rastgele uydurulmuş
+    (78, 13, 'BIL411'),
+
+    -- StudentId = 14
+    (79, 14, 'BIL203'),
+    (80, 14, 'BIL301'), -- Rastgele uydurulmuş
+    (81, 14, 'BIL305'),
+    (82, 14, 'BIL304'),
+    (83, 14, 'BIL409'),
+    (84, 14, 'BIL106'), -- Rastgele
+    
+    -- StudentId = 15
+    (85, 15, 'BIL405'),
+    (86, 15, 'ZYD101'),
+    (87, 15, 'BIL373'),
+    (88, 15, 'BIL201'),
+    (89, 15, 'BIL203'),
+    (90, 15, 'BIL406'),
+
+    -- StudentId = 16
+    (91, 16, 'BIL104'),
+    (92, 16, 'FIZ101'),
+    (93, 16, 'BIL402'),
+    (94, 16, 'BIL412'),
+    (95, 16, 'BIL403'),
+    (96, 16, 'BIL303'),
+
+    -- StudentId = 17
+    (97, 17, 'BIL410'),
+    (98, 17, 'BIL305'),
+    (99, 17, 'BIL373'),
+    (100, 17, 'BIL404'),
+    (101, 17, 'MAT101'),
+    (102, 17, 'BIL203'),
+
+    -- StudentId = 18
+    (103, 18, 'ZAI101'),
+    (104, 18, 'BIL204'),
+    (105, 18, 'BIL401'),
+    (106, 18, 'BIL406'),
+    (107, 18, 'BIL305'),
+    (108, 18, 'FIZ101'),
+
+    -- StudentId = 19
+    (109, 19, 'BIL302'),
+    (110, 19, 'BIL304'),
+    (111, 19, 'ZTD101'),
+    (112, 19, 'BIL409'),
+    (113, 19, 'BIL203'),
+    (114, 19, 'BIL202'),
+
+    -- StudentId = 20
+    (115, 20, 'BIL412'),
+    (116, 20, 'BIL403'),
+    (117, 20, 'BIL205'),
+    (118, 20, 'BIL104'),
+    (119, 20, 'BIL306'),
+    (120, 20, 'ZAI101'),
+
+    -- StudentId = 21
+    (121, 21, 'BIL204'),
+    (122, 21, 'ZYD101'),
+    (123, 21, 'BIL409'),
+    (124, 21, 'BIL303'),
+    (125, 21, 'BIL402'),
+    (126, 21, 'BIL405'),
+
+    -- StudentId = 22
+    (127, 22, 'FIZ101'),
+    (128, 22, 'BIL201'),
+    (129, 22, 'BIL203'),
+    (130, 22, 'BIL413'),
+    (131, 22, 'BIL305'),
+    (132, 22, 'BIL411'),
+
+    -- StudentId = 23
+    (133, 23, 'MAT101'),
+    (134, 23, 'BIL104'),
+    (135, 23, 'BIL402'),
+    (136, 23, 'BIL409'),
+    (137, 23, 'BIL304'),
+    (138, 23, 'BIL373');
+</sql><sql name="SQL 2*">DELETE FROM Enrollment;
+INSERT INTO Enrollment (EnrollmentId, StudentId, LectureCode)
+VALUES
+    -- StudentId = 1 (6 ders)
+    (1, 1, 'BIL101'),
+    (2, 1, 'FIZ101'),
+    (3, 1, 'BIL306'),
+    (4, 1, 'BIL304'),
+    (6, 1, 'BIL205'),
+
+    -- StudentId = 2
+    (7, 2, 'BIL104'),
+    (8, 2, 'BIL201'),
+    (9, 2, 'BIL412'),
+    (10, 2, 'BIL202'),
+    (11, 2, 'BIL404'),
+    (12, 2, 'BIL409'),
+
+    -- StudentId = 3
+    (13, 3, 'ZTD101'),
+    (14, 3, 'BIL405'),
+    (15, 3, 'BIL411'),
+    (16, 3, 'BIL413'),
+    (17, 3, 'BIL104'),
+    (18, 3, 'BIL303'),
+
+    -- StudentId = 4
+    (19, 4, 'ZAI101'),
+    (20, 4, 'BIL104'),
+    (21, 4, 'BIL305'),
+    (22, 4, 'BIL302'),
+    (23, 4, 'FIZ101'),
+    (24, 4, 'BIL406'),
+
+    -- StudentId = 5
+    (25, 5, 'BIL205'),
+    (26, 5, 'ZYD101'),
+    (27, 5, 'BIL201'),
+    (29, 5, 'BIL304'),
+    (30, 5, 'BIL202'),
+
+    -- StudentId = 6
+    (31, 6, 'BIL203'),
+    (32, 6, 'BIL305'),
+    (33, 6, 'BIL410'),
+    (34, 6, 'FIZ101'),
+    (35, 6, 'BIL401'),
+    (36, 6, 'BIL104'),
+
+    -- StudentId = 7
+    (37, 7, 'BIL202'),
+    (38, 7, 'ZAI101'),
+    (39, 7, 'BIL305'),
+    (40, 7, 'BIL201'),
+    (41, 7, 'MAT101'),
+    (42, 7, 'BIL404'),
+
+    -- StudentId = 8
+    (43, 8, 'BIL413'),
+    (44, 8, 'BIL205'),
+    (45, 8, 'BIL203'),
+    (46, 8, 'BIL373'),
+    (47, 8, 'BIL409'),
+    (48, 8, 'BIL408'),
+
+    -- StudentId = 9
+    (49, 9, 'BIL304'),
+    (50, 9, 'BIL402'),
+    (51, 9, 'ZTD101'),
+    (52, 9, 'BIL205'),
+    (53, 9, 'FIZ101'),
+    (54, 9, 'BIL306'),
+
+    -- StudentId = 10
+    (55, 10, 'BIL403'),
+    (56, 10, 'BIL302'),
+    (57, 10, 'BIL413'),
+    (58, 10, 'BIL411'),
+    (59, 10, 'BIL412'),
+    (60, 10, 'ZAI101'),
+
+    -- StudentId = 11
+    (61, 11, 'BIL201'),
+    (62, 11, 'BIL204'),
+    (63, 11, 'BIL410'),
+    (64, 11, 'BIL303'),
+    (65, 11, 'BIL406'),
+    (66, 11, 'BIL104'),
+
+    -- StudentId = 12
+    (67, 12, 'BIL412'),
+    (68, 12, 'BIL205'),
+    (69, 12, 'BIL201'),
+    (70, 12, 'BIL302'),
+    (71, 12, 'BIL304'),
+    (72, 12, 'ZTD101'),
+
+    -- StudentId = 13
+    (73, 13, 'BIL202'),
+    (74, 13, 'BIL402'),
+    (75, 13, 'FIZ101'),
+    (76, 13, 'BIL404'),
+    (78, 13, 'BIL411'),
+
+    -- StudentId = 14
+    (79, 14, 'BIL203'),
+    (81, 14, 'BIL305'),
+    (82, 14, 'BIL304'),
+    (83, 14, 'BIL409'),
+    
+    -- StudentId = 15
+    (85, 15, 'BIL405'),
+    (86, 15, 'ZYD101'),
+    (87, 15, 'BIL373'),
+    (88, 15, 'BIL201'),
+    (89, 15, 'BIL203'),
+    (90, 15, 'BIL406'),
+
+    -- StudentId = 16
+    (91, 16, 'BIL104'),
+    (92, 16, 'FIZ101'),
+    (93, 16, 'BIL402'),
+    (94, 16, 'BIL412'),
+    (95, 16, 'BIL403'),
+    (96, 16, 'BIL303'),
+
+    -- StudentId = 17
+    (97, 17, 'BIL410'),
+    (98, 17, 'BIL305'),
+    (99, 17, 'BIL373'),
+    (100, 17, 'BIL404'),
+    (101, 17, 'MAT101'),
+    (102, 17, 'BIL203'),
+
+    -- StudentId = 18
+    (103, 18, 'ZAI101'),
+    (104, 18, 'BIL204'),
+    (105, 18, 'BIL401'),
+    (106, 18, 'BIL406'),
+    (107, 18, 'BIL305'),
+    (108, 18, 'FIZ101'),
+
+    -- StudentId = 19
+    (109, 19, 'BIL302'),
+    (110, 19, 'BIL304'),
+    (111, 19, 'ZTD101'),
+    (112, 19, 'BIL409'),
+    (113, 19, 'BIL203'),
+    (114, 19, 'BIL202'),
+
+    -- StudentId = 20
+    (115, 20, 'BIL412'),
+    (116, 20, 'BIL403'),
+    (117, 20, 'BIL205'),
+    (118, 20, 'BIL104'),
+    (119, 20, 'BIL306'),
+    (120, 20, 'ZAI101'),
+
+    -- StudentId = 21
+    (121, 21, 'BIL204'),
+    (122, 21, 'ZYD101'),
+    (123, 21, 'BIL409'),
+    (124, 21, 'BIL303'),
+    (125, 21, 'BIL402'),
+    (126, 21, 'BIL405'),
+
+    -- StudentId = 22
+    (127, 22, 'FIZ101'),
+    (128, 22, 'BIL201'),
+    (129, 22, 'BIL203'),
+    (130, 22, 'BIL413'),
+    (131, 22, 'BIL305'),
+    (132, 22, 'BIL411'),
+
+    -- StudentId = 23
+    (133, 23, 'MAT101'),
+    (134, 23, 'BIL104'),
+    (135, 23, 'BIL402'),
+    (136, 23, 'BIL409'),
+    (137, 23, 'BIL304'),
+    (138, 23, 'BIL373');</sql><current_tab id="1"/></tab_sql></sqlb_project>

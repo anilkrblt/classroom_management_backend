@@ -63,12 +63,20 @@ namespace Service
             await _repositoryManager.SaveAsync();
         }
 
-
-
         public async Task<List<ExamListDto>> CreateAllExamsAsync(ExamCreateDto dto)
         {
-            var lectures = await _repositoryManager.Lecture.GetAllLecturesAsync(false);
-            lectures = lectures.Where(l => l.Term == dto.Term);
+
+            var lecturess = await _repositoryManager.Lecture.GetAllLecturesAsync(false);
+            var lectures = lecturess.Where(l => l.Term == dto.Term).ToList();
+            var lecs = lectures.Select(l => l.Code);
+
+            var exams = await _repositoryManager.Exam.GetAllExamsAsync(true);
+            var deletedExams = exams.Where(e => e.Type == dto.Type && dto.Year == e.Year && lecs.Contains(e.LectureCode));
+            foreach (var exam in deletedExams)
+            {
+                await _repositoryManager.Exam.DeleteExamAsync(exam);
+            }
+            await _repositoryManager.SaveAsync();
             foreach (var lecture in lectures)
             {
                 var exam = new Exam
@@ -244,7 +252,7 @@ namespace Service
             _repositoryManager.ExamSession.DeleteAllExamSessions(examList);
             await _repositoryManager.SaveAsync();
         }
-        
+
         public async Task CreateExamSession(ExamScheduleExtendedDto dto, string Term, string Type, string LectureCode, int ExamYear)
         {
             if (dto == null)

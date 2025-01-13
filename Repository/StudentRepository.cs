@@ -60,7 +60,6 @@ namespace Repository
             Create(student);
         }
 
-        // Update an existing student
         public async Task UpdateStudentAsync(Student student)
         {
             var existingStudent = await GetStudentAsync(student.StudentId, true);
