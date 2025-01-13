@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Reflection;
+using System.IO;
+using System.Text.RegularExpressions;  // StreamWriter için gerekli
 
 namespace GeneticAlgorithmExample
 {
@@ -72,7 +74,7 @@ namespace GeneticAlgorithmExample
                 .OrderByDescending(x => x.Fitness)
                 .ToList();
 
-            double totalRank = _populationSize * (_populationSize + 1) / 2.0; 
+            double totalRank = _populationSize * (_populationSize + 1) / 2.0;
 
             List<double> selectionProbabilities = rankedPopulation
                 .Select((x, rank) => (_populationSize - rank) / totalRank)
@@ -140,7 +142,7 @@ namespace GeneticAlgorithmExample
                         unusedValidValues = ValidIntersectionValues(chromosome, i);
                         if (unusedValidValues.Count != 0)
                         {
-                            if(i < Data.InstructorAndPreferences.Count)
+                            if (i < Data.InstructorAndPreferences.Count)
                             {
                                 var instructorPreference = ValidInstructorPreferences(Data.InstructorAndPreferences[i], unusedValidValues);
 
@@ -179,7 +181,7 @@ namespace GeneticAlgorithmExample
         private List<int> ValidIntersectionValues(Chromosome chromosome, int index)
         {
             var validInstructorValues = ValidValues(chromosome, index, Data.InstructorsAndIndexes).indexes;
-            
+
             List<int> validGradeValues;
             var maxIndex = Data
                 .GradesAndIndexes
@@ -196,7 +198,7 @@ namespace GeneticAlgorithmExample
                 var branchValidValues = branchValidValuesAndKey.indexes;
 
                 var notConflictValidValues = ValidNotConflictValues(chromosome, index, key);
-                
+
                 validGradeValues = branchValidValues
                     .Intersect(notConflictValidValues)
                     .ToList();
@@ -275,7 +277,7 @@ namespace GeneticAlgorithmExample
             return quotientCount;
         }
 
-        private (string key,List<int> indexes) ValidValues(Chromosome chromosome, int index, Dictionary<string, int[]> keyValuePairs)
+        private (string key, List<int> indexes) ValidValues(Chromosome chromosome, int index, Dictionary<string, int[]> keyValuePairs)
         {
             var indexesAndKey = keyValuePairs
                 .Where(kv => kv.Value.Contains(index))
@@ -291,7 +293,7 @@ namespace GeneticAlgorithmExample
                 var indexValue = chromosome.Genes[listIndex];
                 var quotient = indexValue / 9;
 
-                if(!quotients.Contains(quotient))
+                if (!quotients.Contains(quotient))
                     quotients.Add(quotient);
             }
 
@@ -376,13 +378,13 @@ namespace GeneticAlgorithmExample
 
         public void DriveGA(int generations)
         {
-            
+
             double maxMutationRate = 0.8;
             double minMutationRate = 0.6;
 
             double maxCrossoverRate = 0.75;
             double minCrossoverRate = 0.1;
-            
+
 
             for (int generation = 0; generation < generations; generation++)
             {
@@ -413,36 +415,167 @@ namespace GeneticAlgorithmExample
             Console.WriteLine("Genetic Algorithm Completed.");
         }
 
-        public void ShowBestSolution()
+
+
+public void ShowBestSolution()
+    {
+        // 1) "scheduleValues" sözlüğü: 
+        //    hangi "gün + sınıf" kombinasyonunun hangi gene değeri ile eşlendiğini tutuyor.
+        Dictionary<string, int> scheduleValues = new Dictionary<string, int>();
+
+        for (int day = 0; day < Data.days.Count; day++)
         {
-            Dictionary<string, int> scheduleValues = new Dictionary<string, int>();
-
-            for (int day = 0; day < Data.days.Count; day++)
+            for (int classroom = 0; classroom < Data.classrooms.Count; classroom++)
             {
-                for (int classroom = 0; classroom < Data.classrooms.Count; classroom++)
-                {
-                    scheduleValues[$"{Data.days[day]} {Data.classrooms[classroom]}"] = day * Data.classrooms.Count + classroom;
-                }
+                // Örnek key: "Pazartesi A1" -> day * #classrooms + classroom
+                scheduleValues[$"{Data.days[day]} {Data.classrooms[classroom]}"]
+                    = day * Data.classrooms.Count + classroom;
             }
-            var sessions = new List<string>();
+        }
 
-            foreach (var geneValue in _bestSolution.Genes)
-            {
-                var session = scheduleValues
-                   .Where(kv => kv.Value == geneValue)
-                   .Select(kv => kv.Key)
-                   .First();
+        // 2) Genetik algoritmanın ürettiği en iyi çözümdeki genlerin 
+        //    takvim üzerinde hangi "gün + sınıf" değerine karşılık geldiğini buluyoruz.
+        var sessions = new List<string>();
+        foreach (var geneValue in _bestSolution.Genes)
+        {
+            // geneValue’yu, sözlükte hangi "gün + sınıf" eşlemiş bul
+            // (Key = "Pazartesi A1", Value = integer).
+            var session = scheduleValues
+                .Where(kv => kv.Value == geneValue)
+                .Select(kv => kv.Key)
+                .First();
 
-                sessions.Add(session);
-            }
+            sessions.Add(session);
+        }
 
+        // 3) Çıktıyı CSV formatında bir dosyaya yazdıralım.
+        //    Örneğin "DersProgrami.csv" adında bir dosya oluşturuyoruz.
+        string filePath = "DersProgrami.csv";
+        using (var writer = new StreamWriter(filePath))
+        {
+            // -------------------------------------------------------------
+            // CSV başlık satırını yazalım.
+            // Burada 6 sütun kullanacağız: 
+            // (1) Ders Kodu 
+            // (2) Öğretim Üyesi 
+            // (3) Grup 
+            // (4) Süre 
+            // (5) Ek Bilgi 
+            // (6) Atanmış Zaman-Mekan
+            // -------------------------------------------------------------
+            writer.WriteLine("Ders Kodu;Öğretim Üyesi;Grup;Süre;Ek Bilgi;Atanmış Zaman-Mekan");
+
+            // 4) Her bir ders (Data.schedule.Keys) için o derse denk gelen
+            //    atama bilgisini (sessions[i]) CSV formatında yazacağız.
             int i = 0;
-
             foreach (var schedule in Data.schedule.Keys)
             {
-                Console.WriteLine($"{schedule} -> {sessions[i]}");
+                // Örnek schedule:
+                // "BLM112 Dr. Öğr. Üyesi Tarık Yerlikaya (1AB) 2 saat -> Pazartesi 08:30 - 10:30 A2"
+                // Bu metni Regex veya String.Split gibi yöntemlerle parçalara ayıracağız.
+                // Aşağıdaki Regex ve Split örnek amaçlıdır; kendi formatınıza göre düzenlemeniz gerekebilir.
+
+                // 1) Ders kodu (örneğin BLM112) -> genelde ilk boşluk öncesi
+                // 2) Öğretim Üyesi (örneğin "Dr. Öğr. Üyesi Tarık Yerlikaya")
+                // 3) Grup (örneğin "(1AB)")
+                // 4) Süre (örneğin "2 saat")
+                // 5) Ek bilgi (örneğin "-> Pazartesi 08:30 - 10:30 A2")
+
+                // NOT: Bu kısım verinizin yapısına göre özelleştirilmeli!
+                // Basit bir Regex örneği kurgulayalım:
+                //  ^(\S+)                      -> Ders kodu: İlk boşluğa dek (\S+)
+                //  \s+(Dr.*?)(\(\d.*?\))?      -> "Öğretim Üyesi" ve parantez içi grup(isteğe bağlı)
+                //  (.*?)                       -> Kalan her şey
+                //  ->\s*(.+)$                  -> "->" den sonraki kısım
+                // Bu, tamamen örnek bir yaklaşımdır. Verinizde ufak tefek farklılıklar varsa Regex değişmeli.
+
+                // Kolaylık olsun diye şimdilik bir "yaygın format" kabul edelim.
+                // Arama yaparken ufak bir string manipülasyonu deneyelim.
+                // Belli parçaları bulmak için approach: "Split" + el ile ayıklama.
+
+                // Örnek yaklaşım:
+                // 1) "->" işaretine böl
+                // 2) Sol taraf -> "BLM112 Dr. Öğr. Üyesi Tarık Yerlikaya (1AB) 2 saat"
+                // 3) Sağ taraf -> "Pazartesi 08:30 - 10:30 A2"
+
+                var parts = schedule.Split(new string[] { "->" }, StringSplitOptions.None);
+                string leftSide = parts.Length > 0 ? parts[0].Trim() : "";
+                string rightSide = parts.Length > 1 ? parts[1].Trim() : "";
+
+                // leftSide: "BLM112 Dr. Öğr. Üyesi Tarık Yerlikaya (1AB) 2 saat"
+                // rightSide: "Pazartesi 08:30 - 10:30 A2"
+
+                // leftSide'daki "Ders kodu", "Öğretim üyesi", "Grup" ve "Süre" gibi bilgileri parçalıyoruz.
+                // Basit bir yaklaşımla, ders kodunun ilk boşluğa kadar olan kısmı olduğunu varsayalım:
+                string[] leftParts = leftSide.Split(' ');
+                string dersKodu = leftParts[0]; // Örn. "BLM112"
+
+                // Şimdi geriye kalan kısımda "Dr. Öğr. Üyesi Tarık Yerlikaya (1AB) 2 saat" var.
+                // Bunu biraz daha detaylı parse edebiliriz. Örneğin:
+                // - Grup bilgisi -> genellikle parantez içinde ise Regex ile alabiliriz.
+                // - Süre -> genelde "1 saat" veya "2 saat" gibi bir string
+                // - Öğretim üyesi -> geri kalan kısım
+
+                // Bir Regex yapalım:
+                // ^(.*?)             -> "Öğretim üyesi" alanı (her şeyi yakala, ancak aç parantezden önce durdurabiliriz)
+                // \((.*?)\)          -> parantez içi "grup"
+                // \s+(.*?)\s*saat    -> "x saat"
+                Regex pattern = new Regex(@"^(.*?)\s*\((.*?)\)\s+(\d+)\s*saat");
+                // Group1: Öğretim üyesi
+                // Group2: Grup
+                // Group3: Süre (rakam)
+
+                // Not: Tabii ki bu yine verinin aynı formatta olduğu varsayımıyla çalışır.
+                // Elde ettiğimiz match ile parçalara ayırabiliriz.
+                var match = pattern.Match(leftSide);
+
+                string ogretimUyesi = "";
+                string grup = "";
+                string sure = "";
+                if (match.Success)
+                {
+                    ogretimUyesi = match.Groups[1].Value.Trim();
+                    grup = match.Groups[2].Value.Trim();
+                    sure = match.Groups[3].Value + " saat"; // match.Groups[3] => "2", ekliyoruz " saat"
+                }
+                else
+                {
+                    // Eşleşme yoksa, fallback: 
+                    ogretimUyesi = "Bilinmiyor";
+                    grup = "Bilinmiyor";
+                    sure = "Bilinmiyor";
+                }
+
+                // Ek bilgi => leftSide içinde "->" öncesi her şeyi, 
+                // ama biz zaten "->" ile sağ tarafa böldük.
+                // Dolayısıyla leftSide'da yazarak karışmasın diye 
+                // "Ek Bilgi" => "leftSide" ın geri kalanı demeyelim. 
+                // Burada "Ek Bilgi" için isterseniz rightSide'ı tabloya eklemek yerine,
+                // "Atanmış Zaman-Mekan" sütununa koyalım.
+                // Fakat örneğin "Ek Bilgi" diye 2 saat/1 saat vb. isterseniz 
+                // yeniden tasarlayabilirsiniz.
+
+                // Bizim "Atanmış Zaman-Mekan" ise, GA sonucunda elde ettiğimiz 
+                // sessions[i] (örn. "Pazartesi A1") 
+                // + orijinal "rightSide" (örn. "Pazartesi 08:30 - 10:30 A2").
+                // Hangisini tabloya koymak istediğinize siz karar verebilirsiniz.
+                // Şimdilik, GA'nın bulduğu atama ("sessions[i]") ile 
+                // asıl "rightSide" metnini birleştirip yazabiliriz:
+                string gaZamanMekan = $"{sessions[i]} ({rightSide})";
+
+                // Son olarak, CSV formatında yazarız:
+                writer.WriteLine(
+                    $"{dersKodu};{ogretimUyesi};{grup};{sure};{rightSide};{gaZamanMekan}"
+                );
+
                 i++;
             }
         }
+
+        // 5) Artık "DersProgrami.csv" dosyasını, Excel'de açabilirsiniz.
+        Console.WriteLine($"Ders programı '{filePath}' dosyasına kaydedildi.");
     }
+
+
+}
 }
