@@ -322,7 +322,6 @@ namespace ClassroomManagement.MapperProfiles
 
 
 
-            CreateMap<Notification, NotificationDto>();
 
 
             CreateMap<Reservation, ReservationDto>();

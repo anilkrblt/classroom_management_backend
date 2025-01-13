@@ -27,14 +27,15 @@ namespace ClassroomManagementPresentation.Controllers
 
         // GET: api/Notifications/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<NotificationDto>> GetNotification(int id)
+        public async Task<ActionResult<List<NotificationDto>>> GetNotification(Guid id)
         {
-            var notification = await _serviceManager.NotificationService.GetNotificationByIdAsync(id, trackChanges: false);
+            var notifications = await _serviceManager.NotificationService.GetAllNotificationsAsync(false);
+            var notifs = notifications.Where(n => n.UserId == id);
 
-            if (notification == null)
-                return NotFound($"Notification with ID {id} not found.");
+            if (notifs == null)
+                return NotFound($"Notification with not found.");
 
-            return Ok(notification);
+            return Ok(notifs);
         } 
 
         // PUT: api/Notifications/{id}

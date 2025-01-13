@@ -7,6 +7,7 @@ namespace Shared.DataTransferObjects
 {
     public record NotificationDto
     {
+        public Guid UserId { get; set; }
         public int NotificationId { get; set; }
         public string Title { get; set; }
         public string Message { get; set; }
