@@ -1,5 +1,5 @@
 Building -> BuildingId,Name 
-Club -> ClubId, Name, NameShortcut, ClubLogoPath
+Club -> ClubId, Name, NameShortcut, ClubLogoPath	
 ClubMembership -> ClubMembershipId, StudentId, ClubId, CreatedAt, UpdatedAt, IsClubManager
 ClubReservation ->Id, ClubId, ReservationId, EventRegisterLink, EventName, Title, Details, Status, Banner, StudentId
 Department -> DepartmentId, Name

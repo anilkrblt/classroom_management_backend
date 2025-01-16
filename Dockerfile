@@ -14,6 +14,8 @@ COPY ["Contracts/Contracts.csproj", "Contracts/"]
 COPY ["ClassroomManagement.Tests/ClassroomManagement.Tests.csproj", "ClassroomManagement.Tests/"]
 COPY ["ClassroomManagementPresentation/ClassroomManagementPresentation.csproj", "ClassroomManagementPresentation/"]
 COPY ["ClassroomManagement/ClassroomManagement.csproj", "ClassroomManagement/"]
+COPY ["GeneticAlgorithm/GeneticAlgorithm.csproj", "GeneticAlgorithm/"]
+
 
 # Bağımlılıkları geri yükle
 RUN dotnet restore "classroom_management_backend.sln"
